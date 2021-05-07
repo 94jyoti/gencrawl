@@ -12,7 +12,7 @@
   "detail": {
     "crawl_method": "SELENIUM",
     "parsing_type": "xpath",
-    "wait_time": 4,
+    "wait_time": 8,
     "iframe": "//iframe[@title='pcomTitle']",
     "navigation": [
       {
@@ -67,7 +67,26 @@
         "paths": [
           "//span[text()='Fund ID']/parent::th/parent::tr/parent::thead/parent::table/tbody/tr"
         ],
-        "return_type": "selector"
+        "return_type": "selector",
+        "child_return_strategy": "multiple_items"
+      },
+      "share_class": {
+        "paths": [
+          ".//td[1]//text()"
+        ],
+        "selector": "temp_class_blocks"
+      },
+      "cusip": {
+        "paths": [
+          ".//td[3]//text()"
+        ],
+        "selector": "temp_class_blocks"
+      },
+      "nasdaq_ticker": {
+        "paths": [
+          ".//td[4]//text()"
+        ],
+        "selector": "temp_class_blocks"
       }
     }
   }

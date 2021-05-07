@@ -6,18 +6,20 @@ from gencrawl.util.utility import Utility
 
 class FinancialDetailSpider(BaseSpider):
     crawl_domain = Statics.DOMAIN_FINANCIAL
-    name = f'{crawl_domain}_{Statics.TYPE_DETAIL}'
+    name = f'{crawl_domain}_{Statics.CRAWL_TYPE_DETAIL}_spider'
 
     @classmethod
     def from_crawler(cls, crawler, config, *args, **kwargs):
-        cls.crawl_type = Statics.TYPE_DETAIL
+        cls.crawl_type = Statics.CRAWL_TYPE_DETAIL
         return super().from_crawler(crawler, config, *args, **kwargs)
 
     def prepare_items(self, response, default_item={}):
-        item = self.exec_codes(response)
-        item.update(default_item)
-        # item = self.generate_item(obj, ProductItem)
-        return [item]
+        parsed_items = []
+        items = self.exec_codes(response)
+        for item in items:
+            item.update(default_item)
+            parsed_items.append(self.generate_item(item, FinancialDetailItem))
+        return parsed_items
 
     def get_items_or_req(self, response, default_item={}):
         items = self.prepare_items(response, default_item)
