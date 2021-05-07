@@ -7,6 +7,7 @@ from scrapy import Field, Item
 
 
 class BaseItem(Item):
+    url = Field()
     website = Field()
     language = Field()
     country = Field()

@@ -73,9 +73,9 @@ class BaseSpider(Spider):
         self.navigation = {}
         self.pagination = self.specific_config.get("pagination")
         self.ext_codes = self.specific_config['ext_codes']
-        self.default_return_type = Statics.RETURN_TYPE_STRING
-        self.default_selector = Statics.DEFAULT_SELECTOR
-        self.default_parsing_type = Statics.PARSING_TYPE_XPATH
+        self.default_return_type = Statics.RETURN_TYPE_DEFAULT
+        self.default_selector = Statics.SELECTOR_DEFAULT
+        self.default_parsing_type = Statics.PARSING_TYPE_DEFAULT
         self.ignore_fields = ['download_timeout', 'dont_proxy', 'download_slot', 'download_latency', 'depth', 'driver',
                               'selector']
 
@@ -112,7 +112,7 @@ class BaseSpider(Spider):
     def start_requests(self):
         for obj in self._get_start_urls():
             url = obj['url']
-            obj['selector'] = Statics.ROOT_SELECTOR
+            obj['selector'] = Statics.SELECTOR_ROOT
             yield self.make_request(url, callback=self.parse, method=self.crawl_method, meta=obj,
                                     wait_time=self.wait_time, wait_until=self.specific_config.get('wait_until'),
                                     iframe=self.specific_config.get("iframe"))
@@ -170,7 +170,7 @@ class BaseSpider(Spider):
     def iterate_exec_codes(self, selector_name, selector, ext_codes):
         obj = dict()
         selectors = dict()
-        codes = {c: v for c, v in ext_codes.items() if v.get("selector", Statics.ROOT_SELECTOR) == selector_name}
+        codes = {c: v for c, v in ext_codes.items() if v.get("selector", self.default_selector) == selector_name}
         for key in self._get_ordered_ext_keys(codes):
             jsn = codes[key]
             parsing_type = jsn.get('parsing_type') or self.default_parsing_type
@@ -185,12 +185,12 @@ class BaseSpider(Spider):
             else:
                 self.logger.error(f"Unknown parsing type - {parsing_type}")
             value = self.return_value(value, return_type)
+            obj[key] = value
             clean_ups = ext_codes.get(key).get('cleanup_functions')
             if clean_ups:
-                value = self.apply_cleanup_func(clean_ups, key, main_obj)
+                obj[key] = self.apply_cleanup_func(clean_ups, key, obj)
             if return_type == Statics.RETURN_TYPE_SELECTOR:
-                selectors[key] = value
-            obj[key] = value
+                selectors[key] = obj[key]
         return obj, selectors
 
     def get_mix_items(self, main_obj, selectors, selector_values, ext_codes):
@@ -201,7 +201,7 @@ class BaseSpider(Spider):
 
             for selector_name, values in selector_values.items():
                 return_strategy = ext_codes[selector_name].get(
-                    "child_return_strategy") or Statics.RETURN_STRATEGY_MULTIPLE_OBJECTS
+                    "child_return_strategy") or Statics.RETURN_STRATEGY_DEFAULT
                 if return_strategy == Statics.RETURN_STRATEGY_SINGLE_ITEM:
                     for value in values:
                         main_obj.update(value)
@@ -228,7 +228,7 @@ class BaseSpider(Spider):
         ext_codes = ext_codes or self.ext_codes
         selector_values = defaultdict(list)
         selector_name = response.meta.get('selector') or self.default_selector
-        codes = {c: v for c, v in ext_codes.items() if v.get("selector", Statics.ROOT_SELECTOR) == selector_name}
+        codes = {c: v for c, v in ext_codes.items() if v.get("selector", self.default_selector) == selector_name}
         main_obj, selectors = self.iterate_exec_codes(selector_name, response, codes)
         for selector_name, blocks in selectors.items():
             objs = []
@@ -248,7 +248,7 @@ class BaseSpider(Spider):
                 break
         return obj[key]
 
-    def apply_xpath(self, selector, paths, return_type=Statics.DEFAULT_RETURN_TYPE):
+    def apply_xpath(self, selector, paths, return_type=Statics.RETURN_TYPE_DEFAULT):
         values = []
         for path in paths:
             value = selector.xpath(path)

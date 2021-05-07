@@ -6,7 +6,7 @@ from gencrawl.util.utility import Utility
 
 class FinancialDetailSpider(BaseSpider):
     crawl_domain = Statics.DOMAIN_FINANCIAL
-    name = f'{crawl_domain}_{Statics.CRAWL_TYPE_DETAIL}_spider'
+    name = f'{crawl_domain}_{Statics.CRAWL_TYPE_DETAIL}'
 
     @classmethod
     def from_crawler(cls, crawler, config, *args, **kwargs):

@@ -36,8 +36,9 @@
     "ext_codes": {
       "instrument_name": {
         "paths": [
-          "//span[@class='hero--title_hidden']/text()"
-        ]
+          "//div[@class='fusioncharts-smartlabel-container']//div[contains(text(), 'Class')]/text()"
+        ],
+        "cleanup_functions": ["obj.get('instrument_name').split('Class')[0]"]
       },
       "portfolio_management_style": {
         "paths": [
