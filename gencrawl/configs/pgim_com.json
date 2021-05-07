@@ -1,0 +1,74 @@
+{
+  "website": "www.pgim.com",
+  "spider": "financial_detail",
+  "domain": "financial",
+  "crawl_method": "SCRAPY_GET",
+  "allowed_domains": [
+    "www.pgim.com"
+  ],
+  "parsing_type": "xpath",
+  "country": "US",
+  "language": "ENGLISH",
+  "detail": {
+    "crawl_method": "SELENIUM",
+    "parsing_type": "xpath",
+    "wait_time": 4,
+    "iframe": "//iframe[@title='pcomTitle']",
+    "navigation": [
+      {
+        "action": "click",
+        "wait_time": 4,
+        "iterate": false,
+        "$id": "root1",
+        "iframe": "//iframe[@title='pcomTitle']",
+        "ext_codes": {
+          "nav_path": {
+            "paths": [
+              "//a[text()='Performance']"
+            ],
+            "selector": "root",
+            "return_type": "str",
+            "parsing_type": "xpath"
+          }
+        }
+      }
+    ],
+    "ext_codes": {
+      "instrument_name": {
+        "paths": [
+          "//span[@class='hero--title_hidden']/text()"
+        ]
+      },
+      "portfolio_management_style": {
+        "paths": [
+          "//strong[contains(text(), 'Style:')]/following-sibling::text()[1]"
+        ]
+      },
+      "total_net_assets": {
+        "paths": [
+          "//strong[contains(text(), 'Total Net Assets:')]/following-sibling::text()[1]"
+        ]
+      },
+      "investment_objective": {
+        "paths": [
+          "(//div[contains(text(), 'Objective')])[last()]/following-sibling::p/text()"
+        ],
+        "cleanup_functions": [
+        ],
+        "selector": "root",
+        "return_type": "str",
+        "parsing_type": "xpath"
+      },
+      "date": {
+        "paths": ["//span[@class='h3-date']/text()"],
+        "selector": "root1"
+      },
+      "temp_class_blocks": {
+        "paths": [
+          "//span[text()='Fund ID']/parent::th/parent::tr/parent::thead/parent::table/tbody/tr"
+        ],
+        "return_type": "selector"
+      }
+    }
+  }
+}
