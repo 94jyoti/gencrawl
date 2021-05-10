@@ -1,6 +1,6 @@
 {
   "website": "www.pgim.com",
-  "spider": "financial_detail",
+  "spider": "financial_detail_pgim_com",
   "domain": "financial",
   "crawl_method": "SCRAPY_GET",
   "allowed_domains": [
@@ -45,7 +45,7 @@
           "//strong[contains(text(), 'Style:')]/following-sibling::text()[1]"
         ]
       },
-      "total_net_assets": {
+      "portfolio_assets": {
         "paths": [
           "//strong[contains(text(), 'Total Net Assets:')]/following-sibling::text()[1]"
         ]

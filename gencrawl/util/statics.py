@@ -27,7 +27,10 @@ class Statics:
     TEMP_FIELD_PREFIX = 'temp_'
     CONFIG_EXT = '.json'
     SITE_CONFIG_DIR = 'configs'
+
+    # selenium settings
     CHROME_SELENIUM_DRIVER = 'chrome'
+    WAIT_TIME_DEFAULT = 3
 
     # crawl methods
     CRAWL_METHOD_DEFAULT = 'SCRAPY_GET'

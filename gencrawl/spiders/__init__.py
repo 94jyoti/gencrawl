@@ -23,6 +23,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from collections import defaultdict
 from scrapy.http import HtmlResponse
+from collections.abc import Iterable
 # logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 
@@ -95,16 +96,16 @@ class BaseSpider(Spider):
         self.logger.info("Total urls to be crawled - {}".format(len(input_objs)))
         return input_objs
 
-    def make_request(self, url, callback=None, method="GET", headers={}, meta={}, body=None, wait_time=3,
-                     wait_until=None, iframe=None):
+    def make_request(self, url, callback=None, method=Statics.CRAWL_METHOD_DEFAULT, headers={}, meta={}, body=None,
+                     wait_time=Statics.WAIT_TIME_DEFAULT, wait_until=None, iframe=None):
         if method == Statics.CRAWL_METHOD_SELENIUM:
             request = GenSeleniumRequest(url=url, callback=callback, meta=meta, wait_time=wait_time,
                                          wait_until=wait_until, iframe=iframe)
         else:
             if method == Statics.CRAWL_METHOD_GET:
-                request = Request(url, callback=callback, method=method, meta=meta, headers=headers)
+                request = Request(url, callback=callback, meta=meta, headers=headers)
             elif method == Statics.CRAWL_METHOD_POST:
-                request = Request(url, callback=callback, method=method, meta=meta, headers=headers, body=body)
+                request = Request(url, callback=callback, method="POST", meta=meta, headers=headers, body=body)
             else:
                 self.logger.error(f"Request type is not supported - {method}")
         return request
@@ -129,8 +130,11 @@ class BaseSpider(Spider):
     def parse(self, response):
         default_item = self.get_default_item(response)
         items_or_req = self.get_items_or_req(response, default_item=default_item)
-        for item_or_req in items_or_req:
-            yield self.parse_navigation(response, item_or_req)
+        navigation = self.parse_navigation(response, items_or_req)
+        if isinstance(navigation, Iterable):
+            yield from navigation
+        else:
+            yield navigation
 
     def parse_navigation(self, response, item):
         navigation = self.navigation

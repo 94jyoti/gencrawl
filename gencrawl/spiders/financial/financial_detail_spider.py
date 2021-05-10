@@ -23,5 +23,5 @@ class FinancialDetailSpider(BaseSpider):
 
     def get_items_or_req(self, response, default_item={}):
         items = self.prepare_items(response, default_item)
-        for item in items:
-            yield item
+        return items
+
