@@ -10,7 +10,7 @@ class Statics:
     RETURN_TYPE_INT = 'int'
     RETURN_TYPE_JSON = 'json'
     RETURN_TYPE_LIST = 'list'
-    REUTRN_TYPE_JOIN = 'join'
+    RETURN_TYPE_JOIN = 'join'
     RETURN_TYPE_SELECTOR = 'selector'
     RETURN_TYPE_SELECTOR_JSON = 'selector-json'
 

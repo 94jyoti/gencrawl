@@ -69,6 +69,7 @@ class BaseSpider(Spider):
         self.parsing_type = self.specific_config.get('parsing_type') or config['parsing_type']
         self.crawl_method = self.specific_config.get("crawl_method") or config['crawl_method']
         self.wait_time = self.specific_config.get("wait_time") or config.get('wait_time')
+        self.default_parsing_type = self.specific_config.get("parsing_type") or config.get('parsing_type')
         self.navigation = self.specific_config.get("navigation")
         # TODO remove this check
         self.navigation = {}
@@ -76,7 +77,6 @@ class BaseSpider(Spider):
         self.ext_codes = self.specific_config['ext_codes']
         self.default_return_type = Statics.RETURN_TYPE_DEFAULT
         self.default_selector = Statics.SELECTOR_DEFAULT
-        self.default_parsing_type = Statics.PARSING_TYPE_DEFAULT
         self.ignore_fields = ['download_timeout', 'dont_proxy', 'download_slot', 'download_latency', 'depth', 'driver',
                               'selector']
 
@@ -247,9 +247,9 @@ class BaseSpider(Spider):
 
     def apply_cleanup_func(self, clean_ups, key, obj):
         for clean_up in clean_ups:
-            obj[key] = eval(clean_up)
             if not obj[key]:
                 break
+            obj[key] = eval(clean_up)
         return obj[key]
 
     def apply_xpath(self, selector, paths, return_type=Statics.RETURN_TYPE_DEFAULT):
@@ -289,12 +289,14 @@ class BaseSpider(Spider):
             return int(value[0])
         if return_type == Statics.RETURN_TYPE_STRING:
             return value[0]
-        elif return_type in [Statics.RETURN_TYPE_LIST, Statics.RETURN_TYPE_SELECTOR, Statics.RETURN_TYPE_SELECTOR_JSON]:
+        elif return_type in [Statics.RETURN_TYPE_LIST, Statics.RETURN_TYPE_SELECTOR]:
             return [v for v in value if v]
-        elif return_type == Statics.REUTRN_TYPE_JOIN:
+        elif return_type == Statics.RETURN_TYPE_JOIN:
             return ' '.join(value)
-        elif return_type in [Statics.RETURN_TYPE_JSON, Statics.RETURN_TYPE_SELECTOR_JSON]:
+        elif return_type in [Statics.RETURN_TYPE_JSON]:
             return json.loads(value[0])
+        elif return_type in [Statics.RETURN_TYPE_SELECTOR_JSON]:
+            return [json.loads(v) for v in value]
         else:
             self.logger.error(f'Unknown return type - {return_type}')
 
