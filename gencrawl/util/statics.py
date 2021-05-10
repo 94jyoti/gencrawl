@@ -12,6 +12,7 @@ class Statics:
     RETURN_TYPE_LIST = 'list'
     REUTRN_TYPE_JOIN = 'join'
     RETURN_TYPE_SELECTOR = 'selector'
+    RETURN_TYPE_SELECTOR_JSON = 'selector-json'
 
     # PARSING types
     PARSING_TYPE_DEFAULT = 'xpath'

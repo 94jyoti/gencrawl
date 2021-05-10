@@ -193,7 +193,7 @@ class BaseSpider(Spider):
             clean_ups = ext_codes.get(key).get('cleanup_functions')
             if clean_ups:
                 obj[key] = self.apply_cleanup_func(clean_ups, key, obj)
-            if return_type == Statics.RETURN_TYPE_SELECTOR:
+            if return_type in [Statics.RETURN_TYPE_SELECTOR, Statics.RETURN_TYPE_SELECTOR_JSON]:
                 selectors[key] = obj[key]
         return obj, selectors
 
@@ -289,11 +289,11 @@ class BaseSpider(Spider):
             return int(value[0])
         if return_type == Statics.RETURN_TYPE_STRING:
             return value[0]
-        elif return_type in [Statics.RETURN_TYPE_LIST, Statics.RETURN_TYPE_SELECTOR]:
+        elif return_type in [Statics.RETURN_TYPE_LIST, Statics.RETURN_TYPE_SELECTOR, Statics.RETURN_TYPE_SELECTOR_JSON]:
             return [v for v in value if v]
         elif return_type == Statics.REUTRN_TYPE_JOIN:
             return ' '.join(value)
-        elif return_type == Statics.RETURN_TYPE_JSON:
+        elif return_type in [Statics.RETURN_TYPE_JSON, Statics.RETURN_TYPE_SELECTOR_JSON]:
             return json.loads(value[0])
         else:
             self.logger.error(f'Unknown return type - {return_type}')
