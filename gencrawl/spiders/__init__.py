@@ -46,7 +46,7 @@ class BaseSpider(Spider):
             # for chrome driver
             settings_update['SELENIUM_DRIVER_NAME'] = Statics.CHROME_SELENIUM_DRIVER
             settings_update['SELENIUM_DRIVER_EXECUTABLE_PATH'] = SELENIUM_PATH
-            settings_update['SELENIUM_DRIVER_ARGUMENTS'] = ['--start-maximized'] #'--headless'
+            settings_update['SELENIUM_DRIVER_ARGUMENTS'] = ['--headless --start-maximized'] #'--headless'
         if settings_update:
             crawler.settings.frozen = False
             crawler.settings.update(settings_update)
@@ -68,7 +68,7 @@ class BaseSpider(Spider):
         self.website = config['website']
         self.parsing_type = self.specific_config.get('parsing_type') or config['parsing_type']
         self.crawl_method = self.specific_config.get("crawl_method") or config['crawl_method']
-        self.wait_time = self.specific_config.get("wait_time") or config['wait_time']
+        self.wait_time = self.specific_config.get("wait_time") or config.get('wait_time')
         self.navigation = self.specific_config.get("navigation")
         # TODO remove this check
         self.navigation = {}
