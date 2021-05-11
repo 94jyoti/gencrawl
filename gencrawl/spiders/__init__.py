@@ -24,6 +24,7 @@ from selenium.webdriver.common.by import By
 from collections import defaultdict
 from scrapy.http import HtmlResponse
 from collections.abc import Iterable
+from scrapy.selector import Selector
 # logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 
@@ -136,7 +137,7 @@ class BaseSpider(Spider):
         else:
             yield navigation
 
-    def parse_navigation(self, response, item):
+    def parse_navigation(self, response, items):
         navigation = self.navigation
         if navigation:
             if navigation[0].get("action") != "follow":
@@ -164,8 +165,8 @@ class BaseSpider(Spider):
                                 self.logger.warning(f"iframe not found - {iframe}")
                         response.meta['selector'] = nav['$id']
                         response = response.replace(body=str.encode(driver.page_source))
-                        item = self.prepare_items(response, default_item=item)[0]
-        return item
+                        items = self.prepare_items(response, default_item=item)[0]
+        return items
 
     def get_meta(self, meta):
         meta = {k: v for k, v in meta.items() if k not in self.ignore_meta_keys}
@@ -200,8 +201,15 @@ class BaseSpider(Spider):
     def get_mix_items(self, main_obj, selectors, selector_values, ext_codes):
         items = []
         if selectors:
-            for selector_name, values in selector_values.items():
-                main_obj[selector_name] = str(values)
+            for selector_name in selector_values:
+                p_values = list()
+                values = main_obj.get(selector_name)
+                if values:
+                    for value in values:
+                        if isinstance(value, Selector):
+                            value = value.extract()
+                        p_values.append(value)
+                    main_obj[selector_name] = p_values
 
             for selector_name, values in selector_values.items():
                 return_strategy = ext_codes[selector_name].get(
@@ -241,7 +249,6 @@ class BaseSpider(Spider):
                 obj, _ = self.iterate_exec_codes(selector_name, block, codes)
                 objs.append(obj)
             selector_values[selector_name] = objs
-
         items = self.get_mix_items(main_obj, selectors, selector_values, ext_codes)
         return items
 
@@ -309,7 +316,7 @@ class BaseSpider(Spider):
             if key in item_class.fields:
                 item[key] = obj.get(key)
             elif key not in self.ignore_fields:
-                temp_fields[key] = value
+                temp_fields[key] = str(value)[:Statics.MAX_OTHER_FIELDS_LENGTH] + "..."
         return item
 
     def _get_ordered_ext_keys(self, ext_codes):
