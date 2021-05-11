@@ -25,19 +25,27 @@
           "[json.loads(obj.get('temp_info_json_data'))]"
         ]
       },
-      "fund_name": {
+      "instrument_name": {
         "paths": [
           "['Fund']['FundName']"
         ],
         "selector": "temp_info_json_data"
       },
+	  "nasdaq_ticker":{
+		"paths":[
+		  "['FundDetail']['Identifier']"
+		  ],
+		  "selector":"temp_info_json_data"
+			},
       "share_class": {
         "paths": [
           "['ShareClass']"
         ],
         "selector": "temp_info_json_data"
-      }
-
+          }
+	 
+	 
+		
     }
   }
 }
