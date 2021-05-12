@@ -47,7 +47,7 @@ class BaseSpider(Spider):
             # for chrome driver
             settings_update['SELENIUM_DRIVER_NAME'] = Statics.CHROME_SELENIUM_DRIVER
             settings_update['SELENIUM_DRIVER_EXECUTABLE_PATH'] = SELENIUM_PATH
-            settings_update['SELENIUM_DRIVER_ARGUMENTS'] = ['--headless --start-maximized'] #'--headless'
+            settings_update['SELENIUM_DRIVER_ARGUMENTS'] = ['--start-maximized'] #'--headless'
         if settings_update:
             crawler.settings.frozen = False
             crawler.settings.update(settings_update)

@@ -88,11 +88,10 @@ class FinancialDetailItem(BaseItem):
     pay_date = Field()
     ordinary_income = Field()
     reinvestment_price = Field()
-    fund_manager = Field()
-    fund_manager_years_of_experience_in_industry = Field()
+    # [{"fund_manager": "", "fund_manager_years_of_experience_in_industry": "", "fund_manager_firm": "",
+    # "fund_manager_years_of_experience_with_fund": ""}]
+    fund_managers = Field()
     fees_total_12b_1 = Field()
-    fund_manager_firm = Field()
-    fund_manager_years_of_experience_with_fund = Field()
     sub_advisor = Field()
     record_date = Field()
     qualified_income = Field()

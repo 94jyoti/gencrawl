@@ -88,6 +88,32 @@
           ".//td[4]//text()"
         ],
         "selector": "temp_class_blocks"
+      },
+      "average_weighted_maturity": {
+        "paths": [
+          "//*[contains(text(), 'Average Maturity')]/parent::span/following-sibling::span//text()"
+        ]
+      },
+      "duration": {
+        "paths": [
+          "//*[contains(text(), 'Duration')]/parent::span/following-sibling::span//text()"
+        ]
+      },
+      "duration_as_of_date": {
+        "paths": [
+          "//*[contains(text(), 'Fund Statistics')]/small/text()"
+        ],
+        "cleanup_functions": [
+          "obj['duration_as_of_date'].replace('as of', '')"
+        ]
+      },
+      "average_weighted_maturity_as_of_date": {
+        "paths": [
+          "//*[contains(text(), 'Fund Statistics')]/small/text()"
+        ],
+        "cleanup_functions": [
+          "obj['duration_as_of_date'].replace('as of', '')"
+        ]
       }
     }
   }
