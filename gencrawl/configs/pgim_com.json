@@ -114,6 +114,15 @@
         "cleanup_functions": [
           "obj['duration_as_of_date'].replace('as of', '')"
         ]
+      },
+      "dividend_frequency": {
+        "paths": [
+          "//a[contains(@href, '/investments/historical-distribution')]/parent::strong/parent::strong/parent::*//text()"
+        ],
+        "return_type": "list",
+        "cleanup_functions": [
+          "obj['duration_as_of_date'].replace(', if any.', '')"
+        ]
       }
     }
   }

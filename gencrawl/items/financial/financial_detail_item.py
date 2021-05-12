@@ -76,26 +76,24 @@ class FinancialDetailItem(BaseItem):
     footnote = Field()
     effective_duration = Field()
     effective_duration_date = Field()
-    benchmark = Field()
-    cg_ex_date = Field()
-    cg_record_date = Field()
-    cg_pay_date = Field()
-    short_term_per_share = Field()
-    long_term_per_share = Field()
-    total_per_share = Field()
-    cg_reinvestment_price = Field()
-    ex_date = Field()
-    pay_date = Field()
-    ordinary_income = Field()
-    reinvestment_price = Field()
+
+    # ["Benchmark 1", ""Benchmark 2"]
+    benchmarks = Field()
+
+    # [{"ex_date": "", "record_date": "", "pay_date": "", "short_term_per_share": "", "long_term_per_share": "",
+    # "total_per_share": "", "reinvestment_price": ""}]
+    capital_gains = Field()
+
+    # [{"ex_date": "", "pay_date": "", "ordinary_income": "", "qualified_income": "", "record_date": "",
+    # "per_share": "", "reinvestment_price": ""}]
+    dividends = Field()
+
     # [{"fund_manager": "", "fund_manager_years_of_experience_in_industry": "", "fund_manager_firm": "",
     # "fund_manager_years_of_experience_with_fund": ""}]
     fund_managers = Field()
+
     fees_total_12b_1 = Field()
     sub_advisor = Field()
-    record_date = Field()
-    qualified_income = Field()
-    per_share = Field()
     sec_yield_7_day = Field()
     sec_yield_date_7_day = Field()
     effective_yield_7_day = Field()
