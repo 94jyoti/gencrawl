@@ -1,0 +1,106 @@
+key,value
+url,Fund URL
+instrument_name,Instrument Name
+nasdaq_ticker,Nasdaq Ticker
+cusip,CUSIP
+share_class,Share Class
+specific_fund_url,Specific Fund URL
+total_net_assets,Total Net Assets
+turnover_rate,Turnover Rate
+total_net_assets_date,Total Net Assets Date
+turnover_rate_date,Turnover Rate Date
+total_expense_gross,Total Expense (%) (Gross)
+total_expense_net,Total Expense (%) (Net)
+share_inception_date,Share Inception Date
+sector_allocation,Sector Allocation
+sector_allocation_date,Sector Allocation Date
+country_diversification,Country Diversification
+country_diversification_date,Country Diversification Date
+isin,ISIN
+asset_class,Asset Class
+portfolio_management_style,Management/Selection Process/Portfolio Management Style
+weighting_method,Weighting Method
+portfolio_consultant,Portfolio Consultant/Sub-Advisor
+portfolio_assets,Portfolio Assets
+portfolio_assets_date,Portfolio Assets Date
+number_of_shareholders,Number of Shareholders
+number_of_shareholders_date,Number of Shareholders Date
+total_shares_outstanding,Total Shares Outstanding
+total_shares_outstanding_date,Total Shares Outstanding Date
+annual_fund_operating_expenses_after_fee_waiver,Annual Fund Operating Expenses (after fee waiver)
+other_expenses,Other Expenses
+management_fee,Management Fee
+shareholder_service_fees,Shareholder Service Fees
+initial_sales_charge,Initial/Upfront Sales Charge
+deferred_sales_charge,Deferred Sales Charge
+contingent_deferred_sales_charge,Contingent Deferred Sales Charge
+redemption_fee,Redemption Fee
+exchange_fee,Exchange Fee
+account_fee,Account Fee
+purchase_fee,Purchase Fee
+expense_waivers,Expense Waivers
+management_fee_maximum,Management Fee Maximum
+maximum_sales_charge_full_load,Maximum Sales Charge (Full Load)
+dividend_expense_on_securities,Dividend Expense on Securities Sold Short and Interest Expense on Borrowings
+remainder_of_other_expenses,Remainder of Other Expenses
+acquired_fund_fees_and_expenses,Acquired Fund Fees and Expenses
+investment_objective,Investment Objective
+investment_strategy,Investment Strategy
+duration,Duration
+duration_as_of_date,Duration As of Date
+average_modified_duration,Average Modified Duration
+average_weighted_maturity,Average Weighted Maturity
+average_weighted_maturity_as_of_date,Average Weighted Maturity As of Date
+average_weighted_effective_maturity,Average Weighted Effective Maturity
+average_weighted_effective_maturity_as_of_date,Average Weighted Effective Maturity As of Date
+minimum_initial_investment,Minimum Initial Investment
+minimum_additional_investment,Minimum Additional Investment
+management_process,Management Process
+fund_distribution_type,Fund Distribution Type
+distribution_frequency,Distribution Frequency
+dividend_frequency,Dividend Frequency
+yields,Yields
+sec_yield,SEC Yield
+sec_yield_date,SEC Yield Date
+regional_diversification,Regional Diversification
+regional_diversification_date,Regional Diversification Date
+footnote_symbol,Footnote symbol
+footnote,Footnote
+effective_duration,Effective Duration
+effective_duration_date,Effective Duration Date
+benchmarks,Benchmark
+cg_ex_date,CG Ex Date
+cg_record_date,CG Record Date
+cg_pay_date,CG Pay Date
+short_term_per_share,Short Term (Per Share)
+long_term_per_share,Long Term (Per Share)
+total_per_share,Total (Per Share)
+cg_reinvestment_price,CG Reinvestment Price
+ex_date,Ex Date
+pay_date,Pay Date
+ordinary_income,Ordinary Income
+reinvestment_price,Reinvestment Price
+fund_managers,Fund Manager List Temp field
+fund_manager,Fund Manager
+fund_manager_years_of_experience_in_industry,Fund Manager  Years of Experience in Industry
+fees_total_12b_1,B- Fees (Total)
+fund_manager_firm,Fund Manager  Firm
+fund_manager_years_of_experience_with_fund,Fund Manager  Years of Experience with Fund
+fund_manager_firm,Fund Manager Firm
+sub_advisor,Sub-Advisor
+record_date,Record Date
+qualified_income,Qualified Income
+per_share,Per Share
+sec_yield_7_day,7-Day SEC Yield
+sec_yield_date_7_day,7-Day SEC Yield Date
+effective_yield_7_day,7-Day Effective Yield
+effective_yield_date_7_day,7-Day Effective Yield Date
+current_yield_7_day,7-Day Current Yield
+current_yield_date_7_day,7-Day Current Yield Date
+sec_yield_without_waivers_30_day,30 Day SEC Yield (without waivers)
+sec_yield_without_waivers_date_30_day,30 Day SEC Yield (without waivers) Date
+sec_yield_30_day,30-Day SEC Yield%
+sec_yield_date_30_day,30-Day SEC Yield% Date
+distribution_yield_12_month,12-Month Distribution Yield
+capital_gains,Capital Gains List Temp fields
+dividends,Dividends List Temp field

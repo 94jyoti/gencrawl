@@ -1,3 +1,5 @@
+import os
+
 # -*- coding: utf-8 -*-
 ENVIRONMENT = 'PRODUCTION'
 
@@ -26,9 +28,9 @@ DEFAULT_REQUEST_HEADERS = {
 }
 DOWNLOADER_MIDDLEWARES = {}
 ITEM_PIPELINES = {
-        'gencrawl.pipelines.Pipeline': 300,
+        'gencrawl.pipelines.nfn_pipelines.NFNPipeline': 300,
 }
-SELENIUM_PATH = '/home/sagar/Documents/forage/gencrawl/chromedriver'
+SELENIUM_PATH = os.path.join(os.getcwd(), "chromedriver")
 
 # encoding
 FEED_EXPORT_ENCODING = 'utf-8'

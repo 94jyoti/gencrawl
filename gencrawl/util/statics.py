@@ -29,6 +29,7 @@ class Statics:
     CONFIG_EXT = '.json'
     SITE_CONFIG_DIR = 'configs'
     MAX_OTHER_FIELDS_LENGTH = 1000
+    RES_DIR = 'res'
 
     # selenium settings
     CHROME_SELENIUM_DRIVER = 'chrome'

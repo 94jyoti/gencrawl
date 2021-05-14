@@ -2,19 +2,23 @@
 import re
 import hashlib
 import os
+import csv
 from datetime import datetime
+from unidecode import unidecode
+from w3lib.html import replace_entities, remove_tags
 
 
 class Utility:
 
     @staticmethod
-    def remove_html_from_text(text):
-        result = None
-        if Utility.is_not_empty(text):
-            text = text.replace('&amp;', '&').replace('<br>', '').replace('\n', ' ').replace('\t', ' ')
-            text = re.sub(r'<[^>]*>', " ", text)
-            result = re.sub(r'\s+', " ", text).strip()
-        return result
+    def sanitize(text):
+        if text:
+            text = unidecode(text)
+            text = replace_entities(text)
+            text = remove_tags(text)
+            text = re.sub('\\s+', ' ', text)
+            text = text.strip()
+        return text
 
     @staticmethod
     def format_number(text, return_type):
@@ -58,6 +62,26 @@ class Utility:
     @staticmethod
     def change_datetime_format(date_string, from_fmt="%Y-%m-%d", to_fmt="%Y-%m-%d"):
         return datetime.strptime(date_string, from_fmt).strftime(to_fmt)
+
+    @staticmethod
+    def read_csv(fp, encoding="utf-8", delimiter=","):
+        with open(fp, encoding=encoding) as f:
+            csvreader = csv.DictReader(f, delimiter=delimiter)
+            for line in csvreader:
+                yield line
+
+    @staticmethod
+    def write_csv(fp, data, fieldnames=[], encoding="utf-8", delimiter=","):
+        if not data:
+            return
+        if not fieldnames:
+            fieldnames = list(data[0].keys())
+        with open(fp, "w", encoding=encoding, newline='') as w:
+            csvwriter = csv.DictWriter(w, delimiter=delimiter, fieldnames=fieldnames)
+            csvwriter.writeheader()
+            for line in data:
+                line = {k: v.replace('\n', ' ') if v else v for k, v in line.items()}
+                csvwriter.writerow(line)
 
 
 
