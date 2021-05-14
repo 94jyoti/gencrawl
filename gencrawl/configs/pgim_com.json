@@ -14,25 +14,6 @@
     "parsing_type": "xpath",
     "wait_time": 8,
     "iframe": "//iframe[@title='pcomTitle']",
-    "navigation": [
-      {
-        "action": "click",
-        "wait_time": 4,
-        "iterate": false,
-        "$id": "root1",
-        "iframe": "//iframe[@title='pcomTitle']",
-        "ext_codes": {
-          "nav_path": {
-            "paths": [
-              "//a[text()='Performance']"
-            ],
-            "selector": "root",
-            "return_type": "str",
-            "parsing_type": "xpath"
-          }
-        }
-      }
-    ],
     "ext_codes": {
       "instrument_name": {
         "paths": [

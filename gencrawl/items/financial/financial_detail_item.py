@@ -8,6 +8,7 @@ from gencrawl.items import BaseItem
 
 
 class FinancialDetailItem(BaseItem):
+    fund_url = Field()
     instrument_name = Field()
     nasdaq_ticker = Field()
     cusip = Field()

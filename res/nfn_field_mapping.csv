@@ -1,5 +1,5 @@
 key,value
-url,Fund URL
+fund_url,Fund URL
 instrument_name,Instrument Name
 nasdaq_ticker,Nasdaq Ticker
 cusip,CUSIP

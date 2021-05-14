@@ -4,6 +4,9 @@ class Statics:
     CRAWL_TYPE_DETAIL = 'detail'
     CRAWL_TYPE_LISTING = 'listing'
 
+    # url keys
+    URL_KEY_FINANCIAL_DETAIL = "fund_url"
+
     # return types
     RETURN_TYPE_DEFAULT = 'str'
     RETURN_TYPE_STRING = 'str'
@@ -27,9 +30,12 @@ class Statics:
     # other contants
     TEMP_FIELD_PREFIX = 'temp_'
     CONFIG_EXT = '.json'
-    SITE_CONFIG_DIR = 'configs'
     MAX_OTHER_FIELDS_LENGTH = 1000
+
+    # filepaths
+    PROJECT_DIR = 'gencrawl'
     RES_DIR = 'res'
+    SITE_CONFIG_DIR = 'configs'
 
     # selenium settings
     CHROME_SELENIUM_DRIVER = 'chrome'

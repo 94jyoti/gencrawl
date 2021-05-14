@@ -6,6 +6,7 @@ from gencrawl.util.utility import Utility
 
 class FinancialDetailSpider(BaseSpider):
     crawl_domain = Statics.DOMAIN_FINANCIAL
+    url_key = Statics.URL_KEY_FINANCIAL_DETAIL
     name = f'{crawl_domain}_{Statics.CRAWL_TYPE_DETAIL}'
 
     @classmethod

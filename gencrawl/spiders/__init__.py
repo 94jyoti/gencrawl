@@ -25,7 +25,6 @@ from collections import defaultdict
 from scrapy.http import HtmlResponse
 from collections.abc import Iterable
 from scrapy.selector import Selector
-# logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 
 class BaseSpider(Spider):
@@ -34,8 +33,7 @@ class BaseSpider(Spider):
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
         config_filename = config + Statics.CONFIG_EXT
-        config_fp = os.path.dirname(os.path.realpath(__file__)).split("spiders")[0]
-        config_fp = os.path.join(config_fp, Statics.SITE_CONFIG_DIR, config_filename)
+        config_fp = os.path.join(os.getcwd(), Statics.PROJECT_DIR, Statics.SITE_CONFIG_DIR, config_filename)
         config = json.loads(open(config_fp).read())
         crawl_method = config[cls.crawl_type].get("crawl_method") or config['crawl_method']
         settings_update = {}
@@ -57,11 +55,9 @@ class BaseSpider(Spider):
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.settings = get_project_settings()
-        urls = kwargs.get("urls")
-        if urls:
-            urls = urls.split(",")
-        self.input_urls = urls
-        self.input_file = None
+        self.urls = kwargs.get("urls")
+        self.input_file = kwargs.get("input_file")
+        self.input = self._get_start_urls(self.urls, self.input_file)
         self.job_id = uuid.uuid1().hex
         self.config = config
         self.specific_config = config[self.crawl_type]
@@ -72,8 +68,6 @@ class BaseSpider(Spider):
         self.wait_time = self.specific_config.get("wait_time") or config.get('wait_time')
         self.default_parsing_type = self.specific_config.get("parsing_type") or config.get('parsing_type')
         self.navigation = self.specific_config.get("navigation")
-        # TODO remove this check
-        self.navigation = {}
         self.pagination = self.specific_config.get("pagination")
         self.ext_codes = self.specific_config['ext_codes']
         self.default_return_type = Statics.RETURN_TYPE_DEFAULT
@@ -81,21 +75,25 @@ class BaseSpider(Spider):
         self.ignore_fields = ['download_timeout', 'dont_proxy', 'download_slot', 'download_latency', 'depth', 'driver',
                               'selector']
 
-    def _get_start_urls(self):
-        input_objs = []
-        if self.input_file:
-            for line in open(self.input_file):
-                url = re.search(r'.*?(http.*)', line)
-                if url:
-                    # obj = {self.url_key: line.strip()} if line.startswith("http") else json.loads(line)
-                    obj = {self.url_key: url.group(1).strip()}
-                    input_objs.append(obj)
-
-        if self.input_urls:
-            for url in self.input_urls:
-                input_objs.append({"url": url})
-        self.logger.info("Total urls to be crawled - {}".format(len(input_objs)))
-        return input_objs
+    def _get_start_urls(self, urls, input_file):
+        objs = list()
+        if urls:
+            for url in urls.split("|"):
+                objs.append({self.url_key: url})
+        elif input_file:
+            input_file = os.path.join(os.getcwd(), Statics.RES_DIR, input_file)
+            for line in open(input_file, encoding="utf-8"):
+                if line.startswith("{"):
+                    obj = json.loads(line)
+                else:
+                    url = re.search(r'.*?(http.*)', line)
+                    if url:
+                        obj = {self.url_key: url.group(1).strip()}
+                objs.append(obj)
+        else:
+            self.logger.error("Input not provided.")
+        self.logger.info("Total urls to be crawled - {}".format(len(objs)))
+        return objs
 
     def make_request(self, url, callback=None, method=Statics.CRAWL_METHOD_DEFAULT, headers={}, meta={}, body=None,
                      wait_time=Statics.WAIT_TIME_DEFAULT, wait_until=None, iframe=None, dont_filter=False):
@@ -113,8 +111,8 @@ class BaseSpider(Spider):
         return request
 
     def start_requests(self):
-        for obj in self._get_start_urls():
-            url = obj['url']
+        for obj in self.input:
+            url = obj[self.url_key]
             obj['selector'] = Statics.SELECTOR_ROOT
             yield self.make_request(url, callback=self.parse, method=self.crawl_method, meta=obj,
                                     wait_time=self.wait_time, wait_until=self.specific_config.get('wait_until'),

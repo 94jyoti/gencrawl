@@ -9,7 +9,6 @@ class PgimComDetail(FinancialDetailSpider):
     capital_gains_api = "https://www.pgim.com/pcom6/services/pcom/reportjson?pageid=8&fundname={}&fundid={}"
 
     def parse_navigation(self, response, items):
-        open("r.html", "w").write(response.text)
         fund_name = response.request.url.split("/")[-1]
         performance_api = self.performance_api.format(fund_name=fund_name)
         meta = response.meta
