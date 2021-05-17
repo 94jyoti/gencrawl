@@ -25,6 +25,7 @@ from collections import defaultdict
 from scrapy.http import HtmlResponse
 from collections.abc import Iterable
 from scrapy.selector import Selector
+from abc import ABC, abstractmethod
 
 
 class BaseSpider(Spider):
@@ -57,10 +58,10 @@ class BaseSpider(Spider):
         self.settings = get_project_settings()
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
-        self.input = self._get_start_urls(self.urls, self.input_file)
-        self.job_id = uuid.uuid1().hex
         self.config = config
         self.specific_config = config[self.crawl_type]
+        self.input = self._get_start_urls(self.urls, self.input_file)
+        self.job_id = uuid.uuid1().hex
         self.allowed_domains = config['allowed_domains']
         self.website = config['website']
         self.parsing_type = self.specific_config.get('parsing_type') or config['parsing_type']
@@ -72,8 +73,8 @@ class BaseSpider(Spider):
         self.ext_codes = self.specific_config['ext_codes']
         self.default_return_type = Statics.RETURN_TYPE_DEFAULT
         self.default_selector = Statics.SELECTOR_DEFAULT
-        self.ignore_fields = ['download_timeout', 'dont_proxy', 'download_slot', 'download_latency', 'depth', 'driver',
-                              'selector']
+        self.all_url_keys = [Statics.URL_KEY_FINANCIAL_LISTING, Statics.URL_KEY_FINANCIAL_DETAIL]
+        self.ignore_meta_fields = Statics.IGNORE_META_FIELDS
 
     def _get_start_urls(self, urls, input_file):
         objs = list()
@@ -85,12 +86,18 @@ class BaseSpider(Spider):
             for line in open(input_file, encoding="utf-8"):
                 if line.startswith("{"):
                     obj = json.loads(line)
+                    obj = {k: v for k, v in obj.items() if k not in Statics.IGNORE_INPUT_FIELDS}
                 else:
                     url = re.search(r'.*?(http.*)', line)
                     if url:
                         obj = {self.url_key: url.group(1).strip()}
                 objs.append(obj)
         else:
+            urls = self.specific_config.get("start_urls", [])
+            for url in urls:
+                objs.append({self.url_key: url})
+
+        if not objs:
             self.logger.error("Input not provided.")
         self.logger.info("Total urls to be crawled - {}".format(len(objs)))
         return objs
@@ -300,13 +307,35 @@ class BaseSpider(Spider):
         elif return_type == Statics.RETURN_TYPE_JOIN:
             return ' '.join(value)
         elif return_type in [Statics.RETURN_TYPE_JSON]:
-            return json.loads(value[0])
+            if isinstance(value[0], str):
+                value = json.loads(value[0])
+            else:
+                value = value[0]
+            return value
         elif return_type in [Statics.RETURN_TYPE_SELECTOR_JSON]:
-            return [json.loads(v) for v in value]
+            values = []
+            for v in value:
+                if isinstance(v, str):
+                    values.append(json.loads(v))
+                else:
+                    values.append(v)
+            return values
         else:
             self.logger.error(f'Unknown return type - {return_type}')
 
-    # dict to item_class depending on whether its an product item or index item
+    # prepare item dict from ext_codes from the config of website
+    @abstractmethod
+    def prepare_items(self, response, default_item={}):
+        pass
+
+    # callback to be called from parse method. It should return a list of
+    # items or requests or a combination of both
+    @abstractmethod
+    def get_items_or_req(self, response, default_item={}):
+        pass
+
+    # item dict to item_class depending on whether its an product item or listing item or any other type
+    # fields that are not defined in item class will be moved to temp_fields
     def generate_item(self, obj, item_class):
         item = item_class()
         temp_fields = dict()
@@ -314,10 +343,12 @@ class BaseSpider(Spider):
         for key, value in obj.items():
             if key in item_class.fields:
                 item[key] = obj.get(key)
-            elif key not in self.ignore_fields:
+            elif key not in self.ignore_meta_fields:
                 temp_fields[key] = str(value)[:Statics.MAX_OTHER_FIELDS_LENGTH] + "..."
         return item
 
+    # return field names from the ext_codes. The temp_ fields are assigned first in the queue and
+    # hence executed first
     def _get_ordered_ext_keys(self, ext_codes):
         keys = ext_codes.keys()
         ordered_keys = []
@@ -329,12 +360,3 @@ class BaseSpider(Spider):
                 ordered_keys.append(key)
         return ordered_keys
 
-    def url_joins(self, response, obj, keys):
-        for key in keys:
-            val = obj.get(key)
-            if val:
-                if isinstance(val, list):
-                    obj[key] = [response.urljoin(v) for v in val]
-                else:
-                    obj[key] = response.urljoin(val)
-        return obj

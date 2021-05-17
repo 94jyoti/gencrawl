@@ -22,9 +22,6 @@ class PgimComDetail(FinancialDetailSpider):
         fund_data = response_jsn.get("funddata")
         macros = fund_data['Macros']
         macros = {m['Name']: m['Value'].split("T")[0] for m in macros}
-        for item in items:
-            item['instrument_name'] = fund_data
-
         fund_navs = fund_data.get("fundNavs", [])
         for item in items:
             fund_nav = [f for f in fund_navs if f['ShareClass'] == item['share_class']]
@@ -52,7 +49,6 @@ class PgimComDetail(FinancialDetailSpider):
             if fund_profile:
                 fund_profile = fund_profile[0]['ReportFundClass']
                 item['share_inception_date'] = fund_profile.get("InceptionDate").split("T")[0]
-                item['instrument_name'] = fund_profile.get("Name")
 
         common_data = response_jsn.get("common", {}).get("CommonText")
         if common_data:
