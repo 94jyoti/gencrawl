@@ -9,6 +9,21 @@
   "parsing_type": "xpath",
   "country": "US",
   "language": "ENGLISH",
+  "listing": {
+    "crawl_method": "SCRAPY_GET",
+    "parsing_type": "jpath",
+    "start_urls": [
+      "https://www.pgim.com/pcom6/services/pcom/reportjson?pageid=3"
+    ],
+    "ext_codes": {
+      "temp_blocks": {
+        "paths": [
+          "[Funds'][*]"
+        ]
+      }
+    }
+
+  },
   "detail": {
     "crawl_method": "SELENIUM",
     "parsing_type": "xpath",
@@ -34,8 +49,6 @@
       "investment_objective": {
         "paths": [
           "(//div[contains(text(), 'Objective')])[last()]/following-sibling::p/text()"
-        ],
-        "cleanup_functions": [
         ],
         "selector": "root",
         "return_type": "str",
@@ -105,6 +118,8 @@
           "obj['duration_as_of_date'].replace(', if any.', '')"
         ]
       }
+    },
+    "navigation": {
     }
   }
 }
