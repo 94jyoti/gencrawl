@@ -17,7 +17,7 @@
     ]
   },
   "detail": {
-    "crawl_method": "SCRAPY_GET",
+    "crawl_method": "SELENIUM",
     "parsing_type": "xpath",
     "ext_codes": {
       "instrument_name": {
