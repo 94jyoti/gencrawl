@@ -4,16 +4,10 @@
 # will be generated from product detail pages
 
 from scrapy import Field
-from gencrawl.items import BaseItem
+from gencrawl.items.financial import FinancialItem
 
 
-class FinancialDetailItem(BaseItem):
-    fund_url = Field()
-    instrument_name = Field()
-    nasdaq_ticker = Field()
-    cusip = Field()
-    share_class = Field()
-    specific_fund_url = Field()
+class FinancialDetailItem(FinancialItem):
     total_net_assets = Field()
     turnover_rate = Field()
     total_net_assets_date = Field()

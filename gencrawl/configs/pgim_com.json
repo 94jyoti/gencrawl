@@ -18,8 +18,25 @@
     "ext_codes": {
       "temp_blocks": {
         "paths": [
-          "[Funds'][*]"
+          "['Funds'][*]"
+        ],
+        "child_return_strategy": "multiple_items",
+        "return_type": "selector-json"
+      },
+      "fund_url": {
+        "paths": [
+          "['HyphenatedFundName']"
+        ],
+        "selector": "temp_blocks",
+        "cleanup_functions": [
+          "'https://www.pgim.com/investments/mutual-funds/' + obj.get('fund_url')"
         ]
+      },
+      "instrument_name": {
+        "paths": [
+          "['FundName']"
+        ],
+        "selector": "temp_blocks"
       }
     }
 
@@ -30,12 +47,6 @@
     "wait_time": 8,
     "iframe": "//iframe[@title='pcomTitle']",
     "ext_codes": {
-      "instrument_name": {
-        "paths": [
-          "//div[@class='fusioncharts-smartlabel-container']//div[contains(text(), 'Class')]/text()"
-        ],
-        "cleanup_functions": ["obj.get('instrument_name').split('Class')[0]"]
-      },
       "portfolio_management_style": {
         "paths": [
           "//strong[contains(text(), 'Style:')]/following-sibling::text()[1]"
@@ -107,15 +118,6 @@
         ],
         "cleanup_functions": [
           "obj['duration_as_of_date'].replace('as of', '')"
-        ]
-      },
-      "dividend_frequency": {
-        "paths": [
-          "//a[contains(@href, '/investments/historical-distribution')]/parent::strong/parent::strong/parent::*//text()"
-        ],
-        "return_type": "list",
-        "cleanup_functions": [
-          "obj['duration_as_of_date'].replace(', if any.', '')"
         ]
       }
     },

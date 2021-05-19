@@ -6,6 +6,7 @@ class Statics:
 
     # url keys
     URL_KEY_FINANCIAL_DETAIL = "fund_url"
+    URL_KEY_FINANCIAL_LISTING = "url"
 
     # return types
     RETURN_TYPE_DEFAULT = 'str'
@@ -53,6 +54,11 @@ class Statics:
     RETURN_STRATEGY_MULTIPLE_OBJECTS = 'multiple_objects'
     RETURN_STRATEGY_SINGLE_ITEM = 'single_item'
     RETURN_STRATEGY_MULTIPLE_ITEMS = 'multiple_items'
+
+    # ignore list
+    IGNORE_META_FIELDS = ['download_timeout', 'dont_proxy', 'download_slot', 'download_latency', 'depth', 'driver',
+                          'selector']
+    IGNORE_INPUT_FIELDS = ['temp_fields', 'http_status', 'job_id', 'crawl_datetime']
 
 
 
