@@ -104,3 +104,5 @@ sec_yield_date_30_day,30-Day SEC Yield% Date
 distribution_yield_12_month,12-Month Distribution Yield
 capital_gains,Capital Gains List Temp fields
 dividends,Dividends List Temp field
+weighted_average_duration,Weighted average duration
+weighted_average_duration_as_of_date,Weighted average duration as of date

@@ -26,7 +26,7 @@ class RussellComDetail(FinancialDetailSpider):
                 item['cusip'] = i['Value']
             if "totalnetassets" in str(i['Title']).lower().replace(" ", ""):
                 item['portfolio_assets'] = i['Value']
-                item['date'] = i['AsOfDate']
+                item['portfolio_assets_date'] = i['AsOfDate']
             if ("expensesgross") in i['Name'].lower().replace(" ", ""):
                 item['total_expense_gross'] = i['Value']
             if ("expensesnet") in i['Name'].lower().replace(" ", ""):
@@ -35,14 +35,21 @@ class RussellComDetail(FinancialDetailSpider):
         stats_data = response_json['KeyFacts']['Statistics']
         for stats in stats_data:
             if "weightedaverageduration" in str(stats['Title']).lower().replace(" ", ""):
-                item['duration'] = stats['Value']
-                item['duration_as_of_date'] = stats['AsOfDate']
+                item['duration'] = ""
+                item['duration_as_of_date'] = ""
+                item['weighted_average_duration']=stats['Value']
+                item['weighted_average_duration_as_of_date']=stats['AsOfDate']
             if "weightedaveragematurity" in str(stats['Title']).lower().replace(" ", ""):
                 item['average_weighted_maturity'] = stats['Value']
                 item['average_weighted_maturity_as_of_date'] = stats['AsOfDate']
             if "12-monthdistributionyield" in str(stats['Title']).lower().replace(" ", ""):
                 item['distribution_yield_12_month'] = stats['Value']
-
+            if "30-daysecsubsidizedyield" in str(stats['Title']).lower().replace(" ", ""):
+                item['sec_yield_30_day'] = stats['Value']
+                item['sec_yield_date_30_day']=stats['AsOfDate']
+            if "30-daysecunsubsidiz" in str(stats['Title']).lower().replace(" ", ""):
+                item['sec_yield_without_waivers_30_day'] = stats['Value']
+                item['sec_yield_without_waivers_date_30_day']=stats['AsOfDate']
         end_date = datetime.datetime.today().strftime('%m/%d/%Y')
         start_date = datetime.datetime.now() - datetime.timedelta(days=365)
         start_date = start_date.strftime('%m/%d/%Y')
@@ -75,9 +82,10 @@ class RussellComDetail(FinancialDetailSpider):
                 request.append(r)
 
         item['share_inception_date'] = (info_json['FundDetail']['InceptionDate']).split("T")[0]
-        start_date = "05%2F12%2F2020"
-        endDate = "05%2F12%2F2021"
-        api_url = "https://russellinvestments.com/api/FundV2/GetDistributions?startDate=" + start_date + "&endDate=" + endDate + "&shareClass=" + share_class + "&itemId=" + item_id
+        end_date = datetime.datetime.today().strftime('%m/%d/%Y')
+        start_date = datetime.datetime.now() - datetime.timedelta(days=365)
+        start_date = start_date.strftime('%m/%d/%Y')
+        api_url = "https://russellinvestments.com/api/FundV2/GetDistributions?startDate=" + start_date + "&endDate=" + end_date + "&shareClass=" + share_class + "&itemId=" + item_id
         meta = response.meta
         meta['items'] = items
         cusip_data = info_json['KeyFacts']['Grid']
@@ -87,7 +95,7 @@ class RussellComDetail(FinancialDetailSpider):
                 item['cusip'] = i['Value']
             if "totalnetassets" in str(i['Title']).lower().replace(" ", ""):
                 item['portfolio_assets'] = i['Value']
-                item['date'] = i['AsOfDate']
+                item['portfolio_assets_date'] = i['AsOfDate']
             if ("expensesgross") in i['Name'].lower().replace(" ", ""):
                 item['total_expense_gross'] = i['Value']
             if ("expensesnet") in i['Name'].lower().replace(" ", ""):
@@ -96,14 +104,21 @@ class RussellComDetail(FinancialDetailSpider):
         stats_data = info_json['KeyFacts']['Statistics']
         for stats in stats_data:
             if "weightedaverageduration" in str(stats['Title']).lower().replace(" ", ""):
-                item['duration'] = stats['Value']
-                item['duration_as_of_date'] = stats['AsOfDate']
+                item['duration'] = ""
+                item['duration_as_of_date'] = ""
+                item['weighted_average_duration']=stats['Value']
+                item['weighted_average_duration_as_of_date']=stats['AsOfDate']
             if "weightedaveragematurity" in str(stats['Title']).lower().replace(" ", ""):
                 item['average_weighted_maturity'] = stats['Value']
                 item['average_weighted_maturity_as_of_date'] = stats['AsOfDate']
             if "12-monthdistributionyield" in str(stats['Title']).lower().replace(" ", ""):
                 item['distribution_yield_12_month'] = stats['Value']
-
+            if "30-daysecsubsidizedyield" in str(stats['Title']).lower().replace(" ", ""):
+                item['sec_yield_30_day'] = stats['Value']
+                item['sec_yield_date_30_day']=stats['AsOfDate']
+            if "30-daysecunsubsidiz" in str(stats['Title']).lower().replace(" ", ""):
+                item['sec_yield_without_waivers_30_day'] = stats['Value']
+                item['sec_yield_without_waivers_date_30_day']=stats['AsOfDate']
         r = self.make_request(api_url, callback=self.parse_performance_response, meta=meta)
         request.append(r)
         return request
@@ -119,16 +134,24 @@ class RussellComDetail(FinancialDetailSpider):
         capital_gains_list = []
         for i in historical_data:
             data_dict = {'long_term_per_share': "", 'ex_date': "", 'record_date': "", 'pay_date': "",
-                         'short_term_per_share': "", 'total_per_share': "", 'reinvestment_price': ""}
-
-            if i["LtCapGainRate"] != None:
-                data_dict['long_term_per_share'] = i['LtCapGainRate']
-                data_dict['ex_date'] = i['ExDate'].split("T")[0]
-                data_dict['record_date'] = None
-                data_dict['pay_date'] = None
-                data_dict['short_term_per_share'] = i['StCapGainRate']
-                data_dict['total_per_share'] = None
-                data_dict['reinvestment_price'] = None
-                capital_gains_list.append(data_dict)
+                         'short_term_per_share': "", 'total_per_share': "", 'reinvestment_price': "","ordinary_income":""}
+            data_dict['long_term_per_share'] = i['LtCapGainRate']
+            data_dict['ex_date'] = i['ExDate'].split("T")[0]
+            data_dict['record_date'] = None
+            data_dict['pay_date'] = None
+            data_dict['short_term_per_share'] = i['StCapGainRate']
+            data_dict['total_per_share'] = None
+            data_dict['reinvestment_price'] = None
+            data_dict['ordinary_income'] = i['DividendRate']
+            capital_gains_list.append(data_dict)
+            # if i["LtCapGainRate"] != None:
+                # data_dict['long_term_per_share'] = i['LtCapGainRate']
+                # data_dict['ex_date'] = i['ExDate'].split("T")[0]
+                # data_dict['record_date'] = None
+                # data_dict['pay_date'] = None
+                # data_dict['short_term_per_share'] = i['StCapGainRate']
+                # data_dict['total_per_share'] = None
+                # data_dict['reinvestment_price'] = None
+                # capital_gains_list.append(data_dict)
         items['capital_gains'] = capital_gains_list
         yield self.generate_item(items, FinancialDetailItem)
