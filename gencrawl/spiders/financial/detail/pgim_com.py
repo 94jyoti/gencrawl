@@ -55,7 +55,8 @@ class PgimComDetail(FinancialDetailSpider):
             fund_managers = []
             managers = [c for c in common_data if c.get("LocationName") == "Manager Tab -  Picture and Bio"]
             for m in managers:
-                fund_managers.append({"fund_manager": m.get("ShortName", "").split("-")[0].strip()})
+                fm = m.get("ShortName", "").split("-")[0].strip().split("_Revised")[0]
+                fund_managers.append({"fund_manager": fm})
             for item in items:
                 item['fund_managers'] = fund_managers
 

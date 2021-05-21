@@ -8,13 +8,13 @@ BOT_NAME = 'gencrawl'
 SPIDER_MODULES = ['gencrawl.spiders']
 
 NEWSPIDER_MODULE = 'gencrawl.spiders'
-USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36'
 
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-DOWNLOAD_DELAY = 0
-CONCURRENT_REQUESTS = 100
-CONCURRENT_REQUESTS_PER_DOMAIN = 100
+DOWNLOAD_DELAY = 3
+CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS_PER_DOMAIN = 4
 
 COOKIES_ENABLED = False
 AUTOTHROTTLE_ENABLED = False
