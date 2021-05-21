@@ -106,3 +106,5 @@ capital_gains,Capital Gains List Temp fields
 dividends,Dividends List Temp field
 weighted_average_duration,Weighted average duration
 weighted_average_duration_as_of_date,Weighted average duration as of date
+average_effective_duration,Average Effective Duration
+average_effective_duration_as_of_date,Average Effective Duration as of date

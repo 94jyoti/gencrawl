@@ -73,8 +73,10 @@ class FinancialDetailItem(FinancialItem):
     effective_duration_date = Field()
     
     #added below two fields by @Jyoti 
-    weighted_average_duration=Field()
-    weighted_average_duration_as_of_date=Field()
+    weighted_average_duration = Field()
+    weighted_average_duration_as_of_date = Field()
+    average_effective_duration = Field()
+    average_effective_duration_as_of_date = Field()
     # ["Benchmark 1", ""Benchmark 2"]
     benchmarks = Field()
 
