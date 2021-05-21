@@ -120,6 +120,19 @@
         "cleanup_functions": [
           "obj['duration_as_of_date'].replace('as of', '')"
         ]
+      },
+      "turnover_rate": {
+        "paths": [
+          "//*[contains(text(), 'Turnover Ratio')]/parent::span/following-sibling::span//text()"
+        ]
+      },
+      "turnover_rate_date": {
+        "paths": [
+          "//*[contains(text(), 'Fund Statistics')]/small/text()"
+        ],
+        "cleanup_functions": [
+          "obj['duration_as_of_date'].replace('as of', '')"
+        ]
       }
     },
     "navigation": {

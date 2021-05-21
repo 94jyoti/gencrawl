@@ -11,6 +11,19 @@ class NFNPipeline:
         field_mapping_file = "nfn_field_mapping.csv"
         field_mapping_file = os.path.join(os.getcwd(), Statics.RES_DIR, field_mapping_file)
         self.field_mapping = dict()
+        self.redundant_fields = {"duration": "duration_as_of_date", "total_net_assets": "total_net_assets_date",
+                                 "turnover_rate": "turnover_rate_date", "sector_allocation": "sector_allocation_date",
+                                 "country_diversification": "country_diversification_date", "portfolio_assets":
+                                 "portfolio_assets_date", "number_of_shareholders": "number_of_shareholders_date",
+                                 "total_shares_outstanding": "total_shares_outstanding_date",
+                                 "duration": "duration_as_of_date", "average_weighted_maturity": "average_weighted_maturity_as_of_date",
+                                 "average_weighted_effective_maturity": "average_weighted_effective_maturity_as_of_date",
+                                 "sec_yield": "sec_yield_date", "regional_diversification": "regional_diversification_date",
+                                 "effective_duration": "effective_duration_date", "weighted_average_duration":
+                                 "weighted_average_duration_as_of_date", "average_effective_duration":
+                                 "average_effective_duration_as_of_date", "sec_yield_7_day": "sec_yield_date_7_day",
+                                 "effective_yield_7_day": "current_yield_date_7_day", "sec_yield_without_waivers_30_day":
+                                 "sec_yield_without_waivers_date_30_day", "sec_yield_30_day": "sec_yield_date_30_day"}
         for row in Utility.read_csv(field_mapping_file):
             self.field_mapping[row['key']] = row['value']
 
@@ -40,7 +53,14 @@ class NFNPipeline:
                 parsed_item[self.field_mapping[key]] = self.parse_field(value)
         return parsed_item
 
+    def remove_redundant_fields(self, item):
+        for k, v in self.redundant_fields.items():
+            if not item.get(k):
+                item[v] = None
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, FinancialDetailItem):
+            item = self.remove_redundant_fields(item)
             item = self.parse_item(item)
         return item

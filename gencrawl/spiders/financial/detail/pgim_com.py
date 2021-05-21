@@ -7,6 +7,7 @@ class PgimComDetail(FinancialDetailSpider):
     name = 'financial_detail_pgim_com'
     performance_api = "https://www.pgim.com/pcom6/services/pcom/reportjson?&pageid=1&fundname={fund_name}&fundid=undefined"
     capital_gains_api = "https://www.pgim.com/pcom6/services/pcom/reportjson?pageid=8&fundname={}&fundid={}"
+    handle_httpstatus_list = [400]
 
     def parse_navigation(self, response, items):
         fund_name = response.request.url.split("/")[-1]
@@ -68,6 +69,11 @@ class PgimComDetail(FinancialDetailSpider):
 
     def parse_capital_gains(self, response):
         items = response.meta['items']
+        if response.status == 400:
+            for item in items:
+                yield item
+            return
+
         response_jsn = json.loads(response.text)
         if response_jsn.get("Benchmarks"):
             for item in items:
