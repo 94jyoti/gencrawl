@@ -1,109 +1,58 @@
 from gencrawl.spiders.financial.financial_detail_spider import FinancialDetailSpider
 from gencrawl.util.statics import Statics
 import json
+import scrapy
+from gencrawl.items.financial.financial_detail_item import FinancialDetailItem
+from datetime import datetime
+import datetime
+import urllib.parse
 
 
-class PgimComDetail(FinancialDetailSpider):
-    name = 'financial_detail_pgim_com'
-    performance_api = "https://www.pgim.com/pcom6/services/pcom/reportjson?&pageid=1&fundname={fund_name}&fundid=undefined"
-    capital_gains_api = "https://www.pgim.com/pcom6/services/pcom/reportjson?pageid=8&fundname={}&fundid={}"
-
-    def parse_navigation(self, response, items):
-        fund_name = response.request.url.split("/")[-1]
-        performance_api = self.performance_api.format(fund_name=fund_name)
+class NuveenComDetail(FinancialDetailSpider):
+    name = 'financial_detail_nuveen_com'
+    allowed_domains = ['api.nuveen.com','www.nuveen.com']
+    
+    def get_items_or_req(self, response, default_item={}):
+        
+        # request = []
+        items = self.prepare_items(response, default_item)
+        item=items[0]
+        #print("itemddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",items)
+        cusip_id=item['cusip']
         meta = response.meta
-        meta['items'] = items
-        meta['fund_name'] = fund_name
-        return self.make_request(performance_api, callback=self.parse_performance_response, meta=meta)
+        meta['items'] = item
+        api_url="https://api.nuveen.com/MF/ProductDetail/DistributionHistory/"+cusip_id
+        #api_url="https://www.nuveen.com/en-us/mutual-funds"
+        print(api_url)
+        r=self.make_request(api_url, callback=self.parse_performance_response, meta=meta)
+        return r
+        # request.append(r)
+        #return response
 
     def parse_performance_response(self, response):
+        print('wdwaaaaaaaaaaaddddddddddddddddddddddddd')
         items = response.meta['items']
-        response_jsn = json.loads(response.text)
-        fund_data = response_jsn.get("funddata")
-        macros = fund_data['Macros']
-        macros = {m['Name']: m['Value'].split("T")[0] for m in macros}
-        for item in items:
-            item['instrument_name'] = fund_data
-
-        fund_navs = fund_data.get("fundNavs", [])
-        for item in items:
-            fund_nav = [f for f in fund_navs if f['ShareClass'] == item['share_class']]
-            if fund_nav:
-                fund_nav = fund_nav[0]
-                item['total_net_assets'] = "${}".format(round(fund_nav.get("TotalNetAssets")))
-                item['total_net_assets_date'] = macros['NAVasOfDateD']
-                item['sec_yield_30_day'] = fund_nav['a30DaySECYieldPercentage']
-                item['sec_yield_date_30_day'] = macros['MonthlyYieldDate']
-                item['sec_yield_without_waivers_30_day'] = fund_nav['a30DayUnsbSECYieldPercentage']
-                item['sec_yield_without_waivers_date_30_day'] = macros['MonthlyYieldDate']
-
-        fund_expenses = fund_data.get("FundExpenses", [])
-        for item in items:
-            fund_expense = [f for f in fund_expenses if f['CUSIP'] == item['cusip']]
-            if fund_expense:
-                fund_expense = fund_expense[0]
-                item['maximum_sales_charge_full_load'] = fund_expense.get("SalesCharge")
-                item['total_expense_gross'] = fund_expense.get("GrossOperatingExpenses")
-                item['total_expense_net'] = fund_expense.get("NetOperatingExpenses")
-
-        fund_profiles = fund_data.get("FundProfile")
-        for item in items:
-            fund_profile = [f for f in fund_profiles if f.get("ReportFundClass", {}).get("CUSIP") == item['cusip']]
-            if fund_profile:
-                fund_profile = fund_profile[0]['ReportFundClass']
-                item['share_inception_date'] = fund_profile.get("InceptionDate").split("T")[0]
-                item['instrument_name'] = fund_profile.get("Name")
-
-        common_data = response_jsn.get("common", {}).get("CommonText")
-        if common_data:
-            fund_managers = []
-            managers = [c for c in common_data if c.get("LocationName") == "Manager Tab -  Picture and Bio"]
-            for m in managers:
-                fund_managers.append({"fund_manager": m.get("ShortName", "").split("-")[0].strip()})
-            for item in items:
-                item['fund_managers'] = fund_managers
-
-        fund_name = response.meta['fund_name']
-        dividend_url = self.capital_gains_api.format(fund_name, fund_name)
-        meta = response.meta
-        meta['items'] = items
-        yield self.make_request(dividend_url, callback=self.parse_capital_gains, meta=meta, dont_filter=True)
-
-    def parse_capital_gains(self, response):
-        items = response.meta['items']
-        response_jsn = json.loads(response.text)
-        if response_jsn.get("Benchmarks"):
-            for item in items:
-                item['benchmarks'] = response_jsn['Benchmarks']
-
-        fund_data = response_jsn['funddata']
-        dividends = fund_data['RegularDividends']
-        for item in items:
-            parsed_divs = []
-            divs = [d for d in dividends if d['ShareClassName'] == item['share_class']]
-            for div in divs:
-                pdiv = dict()
-                pdiv['record_date'] = div.get("RecordDate")
-                pdiv['pay_date'] = div.get("PayableDate")
-                pdiv['ordinary_income'] = round(div.get("DataValue"), 4)
-                pdiv['reinvestment_price'] = div["ReinvestNAV"] if (div.get(
-                    "ReinvestNAV") and div['ReinvestNAV'] >= 0) else None
-                parsed_divs.append(pdiv)
-            item['dividends'] = parsed_divs
-
-        for item in items:
-            capital_gains = []
-            for short_term, long_term in zip(fund_data['STCapitalGain'], fund_data['LTCapitalGain']):
-                if short_term['ShareClassName'] == item['share_class']:
-                    capital = dict()
-                    capital['ex_date'] = short_term['RecordDate']
-                    capital['pay_date'] = short_term['PayableDate']
-                    capital['short_term_per_share'] = short_term['DataValue']
-                    capital['long_term_per_share'] = long_term['DataValue']
-                    capital['reinvestment_price'] = short_term['ReinvestNAV'] if short_term['ReinvestNAV'] > 0 else None
-                    capital_gains.append(capital)
-            item['capital_gains'] = capital_gains
-            yield item
-
-
-
+        response_json = json.loads(response.text)
+        print("reso.....................................",response_json)
+        #historical_data = response_json['Distributions']
+        #try:
+        items = items[0]
+        #except:
+         #   print("done")
+        capital_gains_list = []
+        for i in response_json:
+            data_dict = {'long_term_per_share': "", 'ex_date': "", 'record_date': "", 'pay_date': "",
+                         'short_term_per_share': "", 'total_per_share': "", 'reinvestment_price': "","ordinary_income":""}
+            data_dict['long_term_per_share'] = None
+            data_dict['ex_date'] = i['exdivdt']
+            data_dict['record_date'] = i['rcrddt']
+            data_dict['pay_date'] = i['paydt']
+            data_dict['short_term_per_share'] = None
+            data_dict['total_per_share'] = None
+            data_dict['reinvestment_price'] = None
+            data_dict['ordinary_income'] = None
+            capital_gains_list.append(data_dict)
+ 
+        items['capital_gains'] = capital_gains_list
+        print("bvbvvvvvvvvvvvvvvvvvvvvvvv",items)
+        yield self.generate_item(items, FinancialDetailItem)
