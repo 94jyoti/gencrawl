@@ -75,13 +75,19 @@ class PgimComDetail(FinancialDetailSpider):
 
         fund_data = response_jsn['funddata']
         dividends = fund_data['RegularDividends']
+        special_dividends = fund_data['SpecialDividends']
         for item in items:
             parsed_divs = []
             divs = [d for d in dividends if d['ShareClassName'] == item['share_class']]
+            special_div = [d for d in special_dividends if d['ShareClassName'] == item['share_class']]
+            special_div = {f'{v["RecordDate"]}-{v["PayableDate"]}': v['DataValue'] for v in special_div}
             for div in divs:
                 pdiv = dict()
                 pdiv['record_date'] = div.get("RecordDate")
                 pdiv['pay_date'] = div.get("PayableDate") if div.get("PayableDate") != '01/01/1900' else None
+                key = f'{div["RecordDate"]}-{div["PayableDate"]}'
+                if special_div.get(key):
+                    pdiv['qualified_income'] = special_div[key]
                 pdiv['ordinary_income'] = round(div.get("DataValue"), 4)
                 pdiv['reinvestment_price'] = div["ReinvestNAV"] if (div.get(
                     "ReinvestNAV") and div['ReinvestNAV'] >= 0) else None
