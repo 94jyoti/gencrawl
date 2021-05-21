@@ -59,7 +59,8 @@
       },
       "investment_objective": {
         "paths": [
-          "(//div[contains(text(), 'Objective')])[last()]/following-sibling::p/text()"
+          "(//div[contains(text(), 'Objective')])[last()]/following-sibling::p/text()",
+          "(//div[contains(text(), 'Objective')])/following-sibling::p/text()"
         ],
         "selector": "root",
         "return_type": "str",

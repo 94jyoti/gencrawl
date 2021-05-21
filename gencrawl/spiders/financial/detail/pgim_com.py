@@ -81,7 +81,7 @@ class PgimComDetail(FinancialDetailSpider):
             for div in divs:
                 pdiv = dict()
                 pdiv['record_date'] = div.get("RecordDate")
-                pdiv['pay_date'] = div.get("PayableDate")
+                pdiv['pay_date'] = div.get("PayableDate") if div.get("PayableDate") != '01/01/1900' else None
                 pdiv['ordinary_income'] = round(div.get("DataValue"), 4)
                 pdiv['reinvestment_price'] = div["ReinvestNAV"] if (div.get(
                     "ReinvestNAV") and div['ReinvestNAV'] >= 0) else None
@@ -93,11 +93,11 @@ class PgimComDetail(FinancialDetailSpider):
             for short_term, long_term in zip(fund_data['STCapitalGain'], fund_data['LTCapitalGain']):
                 if short_term['ShareClassName'] == item['share_class']:
                     capital = dict()
-                    capital['ex_date'] = short_term['RecordDate']
-                    capital['pay_date'] = short_term['PayableDate']
+                    capital['cg_ex_date'] = short_term['RecordDate']
+                    capital['cg_pay_date'] = short_term['PayableDate'] if short_term.get("PayableDate") != '01/01/1900' else None
                     capital['short_term_per_share'] = short_term['DataValue']
                     capital['long_term_per_share'] = long_term['DataValue']
-                    capital['reinvestment_price'] = short_term['ReinvestNAV'] if short_term['ReinvestNAV'] > 0 else None
+                    capital['cg_reinvestment_price'] = short_term['ReinvestNAV'] if short_term['ReinvestNAV'] >= 0 else None
                     capital_gains.append(capital)
             item['capital_gains'] = capital_gains
             yield item

@@ -80,8 +80,8 @@ class FinancialDetailItem(FinancialItem):
     # ["Benchmark 1", ""Benchmark 2"]
     benchmarks = Field()
 
-    # [{"ex_date": "", "record_date": "", "pay_date": "", "short_term_per_share": "", "long_term_per_share": "",
-    # "total_per_share": "", "reinvestment_price": ""}]
+    # [{"cg_ex_date": "", "cg_record_date": "", "cg_pay_date": "", "short_term_per_share": "",
+    # "long_term_per_share": "", "total_per_share": "", "cg_reinvestment_price": ""}]
     capital_gains = Field()
 
     # [{"ex_date": "", "pay_date": "", "ordinary_income": "", "qualified_income": "", "record_date": "",
