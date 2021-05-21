@@ -4,7 +4,8 @@
   "domain": "financial",
   "crawl_method": "SCRAPY_GET",
   "allowed_domains": [
-    "www.nuveen.com"
+    "www.nuveen.com",
+    "api.nuveen.com"
   ],
   "parsing_type": "xpath",
   "country": "US",
