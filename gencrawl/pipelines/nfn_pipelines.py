@@ -11,7 +11,7 @@ class NFNPipeline:
         field_mapping_file = "nfn_field_mapping.csv"
         field_mapping_file = os.path.join(os.getcwd(), Statics.RES_DIR, field_mapping_file)
         self.field_mapping = dict()
-        self.redundant_fields = {"duration": "duration_as_of_date", "total_net_assets": "total_net_assets_date",
+        self.redundant_fields = {"total_net_assets": "total_net_assets_date",
                                  "turnover_rate": "turnover_rate_date", "sector_allocation": "sector_allocation_date",
                                  "country_diversification": "country_diversification_date", "portfolio_assets":
                                  "portfolio_assets_date", "number_of_shareholders": "number_of_shareholders_date",
