@@ -27,9 +27,9 @@ DEFAULT_REQUEST_HEADERS = {
    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 }
 DOWNLOADER_MIDDLEWARES = {}
-ITEM_PIPELINES = {
-       'gencrawl.pipelines.nfn_pipelines.NFNPipeline': 300,
-}
+#ITEM_PIPELINES = {
+ #      'gencrawl.pipelines.nfn_pipelines.NFNPipeline': 300,
+#}
 SELENIUM_PATH = os.path.join(os.getcwd(), "chromedriver")
 
 # encoding
