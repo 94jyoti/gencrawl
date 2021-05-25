@@ -204,8 +204,8 @@ class BaseSpider(Spider):
                 selectors[key] = obj[key]
         return obj, selectors
 
-    def get_mix_items(self, main_obj, selectors, selector_values, ext_codes):
-        items = []
+    def apply_return_strategy(self, main_obj, selectors, selector_values, ext_codes):
+        items = [main_obj]
         if selectors:
             for selector_name in selector_values:
                 p_values = list()
@@ -221,24 +221,30 @@ class BaseSpider(Spider):
                 return_strategy = ext_codes[selector_name].get(
                     "child_return_strategy") or Statics.RETURN_STRATEGY_DEFAULT
                 if return_strategy == Statics.RETURN_STRATEGY_SINGLE_ITEM:
-                    for value in values:
-                        main_obj.update(value)
-                    items.append(main_obj)
+                    # values getting updated to the main item
+                    for item in items:
+                        for value in values:
+                            item.update(value)
+                            break
                 elif return_strategy == Statics.RETURN_STRATEGY_SINGLE_OBJECT:
-                    main_obj[selector_name.replace(Statics.TEMP_FIELD_PREFIX, "")] = values[0] if values else None
-                    items.append(main_obj)
+                    key = selector_name.replace(Statics.TEMP_FIELD_PREFIX, "")
+                    for item in items:
+                        item[key] = values[0] if values else None
                 elif return_strategy == Statics.RETURN_STRATEGY_MULTIPLE_OBJECTS:
-                    main_obj[selector_name.replace(Statics.TEMP_FIELD_PREFIX, "")] = values
-                    items.append(main_obj)
+                    key = selector_name.replace(Statics.TEMP_FIELD_PREFIX, "")
+                    for item in items:
+                        item[key] = values
                 elif return_strategy == Statics.RETURN_STRATEGY_MULTIPLE_ITEMS:
-                    for value in values:
-                        item = deepcopy(main_obj)
-                        item.update(value)
-                        items.append(item)
+                    new_items = []
+                    for item in items:
+                        for value in values:
+                            n_item = deepcopy(item)
+                            n_item.update(value)
+                            new_items.append(n_item)
+                    items = new_items
                 else:
                     self.logger.error(f'Invalid return strategy - {return_strategy}')
-        else:
-            items.append(main_obj)
+
         return items
 
     # if else check that whether it is an xpath or jpath or regex
@@ -255,7 +261,7 @@ class BaseSpider(Spider):
                 obj, _ = self.iterate_exec_codes(selector_name, block, codes)
                 objs.append(obj)
             selector_values[selector_name] = objs
-        items = self.get_mix_items(main_obj, selectors, selector_values, ext_codes)
+        items = self.apply_return_strategy(main_obj, selectors, selector_values, ext_codes)
         return items
 
     def apply_cleanup_func(self, clean_ups, key, obj):

@@ -1,10 +1,4 @@
-scrapy
-pika
+scrapy==2.5
+unidecode
 selenium
 requests
-pillow
-python-dotenv
-sentry-sdk
-ipdb
-ipython
-python-slugify

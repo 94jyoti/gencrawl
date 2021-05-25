@@ -1,5 +1,6 @@
 key,value
 fund_url,Fund URL
+api_url,API URL
 instrument_name,Instrument Name
 nasdaq_ticker,Nasdaq Ticker
 cusip,CUSIP

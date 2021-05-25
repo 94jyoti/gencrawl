@@ -72,7 +72,7 @@ class FinancialDetailItem(FinancialItem):
     effective_duration = Field()
     effective_duration_date = Field()
     
-    #added below two fields by @Jyoti 
+    # added below two fields by @Jyoti
     weighted_average_duration = Field()
     weighted_average_duration_as_of_date = Field()
     average_effective_duration = Field()

@@ -32,43 +32,40 @@
         ],
       "return_type":"join"
       },
+      "temp_item_class": {
+        "paths": [
+          "//table[@id='grdSymbols']//tr[position()>1]"
+        ],
+        "return_type": "selector",
+        "child_return_strategy": "multiple_items"
+      },
+      "share_class": {
+        "paths": [
+          "./td[1]/text()"
+        ],
+        "selector": "temp_item_class"
+      },
+      "nasdaq_ticker": {
+        "paths": [
+          "./td[2]/text()"
+        ],
+        "selector": "temp_item_class"
+      },
       "temp_class_returns": {
         "paths": [
-          "//*[contains(text(), 'TOTAL RETURNS')]//following-sibling::table//tbody//tr[position()>1]"
+          "//*[contains(text(), 'TOTAL RETURNS')]//following-sibling::table//tr[position()>1]"
         ],
         "return_type": "selector",
         "child_return_strategy":"multiple_objects"
       },
       "trying":{
-        "paths":[".//td[1]"],
+        "paths":[".//td[1]/text()"],
         "selector":"temp_class_returns"
       },
       "inception_date":{
-        "paths":[".//td[2]"],
+        "paths":[".//td[2]/text()"],
         "selector":"temp_class_returns"
-      },
-      "temp_class_benchmarks":{
-        "paths":[
-          "//div[@id='divBenchmarks']"
-        ],
-        "return_type": "selector",
-        "child_return_strategy": "multiple_objects"
-      },
-      "temp_class_expense_ratios":{
-        "paths":[
-          "//*[contains(text(), 'Expense Ratios')]//following-sibling::div[1]//table"
-        ],
-        "return_type":"selector",
-        "child_return_strategy":"multiple_objects"
-       },
-       "temp_sec-30":{
-        "paths":[
-          "//*[contains(text(), 'SEC 30-Day')]//following-sibling::div//table"
-        ],
-        "return_type":"selector",
-        "child_return_strategy":"multiple_objects"
-       }
       }
-
+    }
       }
     }
