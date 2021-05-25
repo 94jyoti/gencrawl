@@ -56,6 +56,7 @@ class RussellComDetail(FinancialDetailSpider):
         api_url = "https://russellinvestments.com/api/FundV2/GetDistributions?startDate=" + urllib.parse.quote(
             start_date, safe='') + "&endDate=" + urllib.parse.quote(end_date, safe='') + "&shareClass=" + item[
                       'share_class'] + "&itemId=" + item_id
+        item['api_url']=api_url
         meta = response.meta
         meta['items'] = item
         r = self.make_request(api_url, callback=self.parse_performance_response, meta=meta)
@@ -78,14 +79,16 @@ class RussellComDetail(FinancialDetailSpider):
         for share_class in share_classes:
             if share_class != first_share_class:
                 url = "https://russellinvestments.com/api/FundV2/GetFund?itemId=" + item_id + "&shareClass=" + share_class
+                item['fund_url']=url
                 r = self.make_request(url, callback=self.parse_main_class, meta=response.meta, dont_filter=True)
                 request.append(r)
-
+        
         item['share_inception_date'] = (info_json['FundDetail']['InceptionDate']).split("T")[0]
         end_date = datetime.datetime.today().strftime('%m/%d/%Y')
         start_date = datetime.datetime.now() - datetime.timedelta(days=365)
         start_date = start_date.strftime('%m/%d/%Y')
         api_url = "https://russellinvestments.com/api/FundV2/GetDistributions?startDate=" + start_date + "&endDate=" + end_date + "&shareClass=" + share_class + "&itemId=" + item_id
+        item['api_url']=api_url
         meta = response.meta
         meta['items'] = items
         cusip_data = info_json['KeyFacts']['Grid']
@@ -133,15 +136,15 @@ class RussellComDetail(FinancialDetailSpider):
             print("done")
         capital_gains_list = []
         for i in historical_data:
-            data_dict = {'long_term_per_share': "", 'ex_date': "", 'record_date': "", 'pay_date': "",
-                         'short_term_per_share': "", 'total_per_share': "", 'reinvestment_price': "","ordinary_income":""}
+            data_dict = {'long_term_per_share': "", 'cg_ex_date': "", 'cg_record_date': "", 'cg_pay_date': "",
+                         'short_term_per_share': "", 'total_per_share': "", 'cg_reinvestment_price': "","ordinary_income":""}
             data_dict['long_term_per_share'] = i['LtCapGainRate']
-            data_dict['ex_date'] = i['ExDate'].split("T")[0]
-            data_dict['record_date'] = None
-            data_dict['pay_date'] = None
+            data_dict['cg_ex_date'] = i['ExDate'].split("T")[0]
+            data_dict['cg_record_date'] = None
+            data_dict['cg_pay_date'] = None
             data_dict['short_term_per_share'] = i['StCapGainRate']
             data_dict['total_per_share'] = None
-            data_dict['reinvestment_price'] = None
+            data_dict['cg_reinvestment_price'] = None
             data_dict['ordinary_income'] = i['DividendRate']
             capital_gains_list.append(data_dict)
             # if i["LtCapGainRate"] != None:
