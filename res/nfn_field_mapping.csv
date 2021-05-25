@@ -85,7 +85,7 @@ current_yield_date_7_day,7-Day Current Yield Date
 distribution_yield_12_month,12-Month Distribution Yield
 footnote_symbol,Footnote symbol
 footnote,Footnote
-benchmarks,Temp Benchmarks Field
+benchmarks,Benchmark
 capital_gains,Temp Capital Gains List fields
 cg_ex_date,CG Ex Date
 cg_record_date,CG Record Date

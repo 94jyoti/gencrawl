@@ -47,8 +47,8 @@ class NFNPipeline:
                         for k, v in val.items():
                             parsed_item[f'{self.field_mapping[k]} {index}'] = self.parse_field(v)
                 else:
-                    for val in enumerate(value, start=1):
-                        parsed_item[f'{self.field_mapping[k]} {index}'] = self.parse_field(val)
+                    for index, val in enumerate(value, start=1):
+                        parsed_item[f'{self.field_mapping[key]} {index}'] = self.parse_field(val)
             else:
                 parsed_item[self.field_mapping[key]] = self.parse_field(value)
         return parsed_item

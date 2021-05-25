@@ -51,7 +51,14 @@ class PgimComDetail(FinancialDetailSpider):
                 fund_profile = fund_profile[0]['ReportFundClass']
                 item['share_inception_date'] = fund_profile.get("InceptionDate").split("T")[0]
 
-        common_data = response_jsn.get("common", {}).get("CommonText")
+        common = response_jsn.get("common", {})
+        benchmarks = common.get("FSReturnsBenchmark")
+        if benchmarks:
+            benchmarks = [b['Label'] for b in benchmarks if 'index' in b.get("Label", '').lower()]
+            for item in items:
+                item['benchmarks'] = benchmarks
+                
+        common_data = common.get("CommonText")
         if common_data:
             fund_managers = []
             managers = [c for c in common_data if c.get("LocationName") == "Manager Tab -  Picture and Bio"]

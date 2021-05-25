@@ -36,7 +36,10 @@
         "paths": [
           "['FundName']"
         ],
-        "selector": "temp_blocks"
+        "selector": "temp_blocks",
+        "cleanup_functions": [
+          "'PGIM ' + obj.get('instrument_name').strip() + ' Fund'"
+        ]
       }
     }
 
@@ -60,10 +63,11 @@
       "investment_objective": {
         "paths": [
           "(//div[contains(text(), 'Objective')])[last()]/following-sibling::p/text()",
-          "(//div[contains(text(), 'Objective')])/following-sibling::p/text()"
+          "(//div[contains(text(), 'Objective')])/following-sibling::p/text()",
+          "//h3[contains(text(), 'Objective')]/parent::*/p[@ng-repeat][position()>1]"
         ],
         "selector": "root",
-        "return_type": "str",
+        "return_type": "join",
         "parsing_type": "xpath"
       },
       "date": {
