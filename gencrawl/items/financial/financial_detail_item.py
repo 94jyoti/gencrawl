@@ -77,6 +77,7 @@ class FinancialDetailItem(FinancialItem):
     weighted_average_duration_as_of_date = Field()
     average_effective_duration = Field()
     average_effective_duration_as_of_date = Field()
+    api_url = Field()
     # ["Benchmark 1", ""Benchmark 2"]
     benchmarks = Field()
 
