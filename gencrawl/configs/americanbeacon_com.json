@@ -1,0 +1,74 @@
+{
+  "website": "www.americanbeaconfunds.com",
+  "spider": "financial_detail",
+  "domain": "financial",
+  "crawl_method": "SCRAPY_GET",
+  "allowed_domains": [
+    "www.americanbeaconfunds.com"
+  ],
+  "parsing_type": "xpath",
+  "country": "US",
+  "language": "ENGLISH",
+  "listing": {
+    "crawl_method": "SCRAPY_GET",
+    "parsing_type": "xpath",
+    "start_urls": [
+      "https://www.americanbeaconfunds.com/mutual_funds/TwentyFourShortTerm.aspx"
+    ]
+  },
+  "detail": {
+    "crawl_method": "SCRAPY_GET",
+    "parsing_type": "xpath",
+    "ext_codes": {
+      "investment_objective": {
+        "paths": [
+          "//*[contains(text(), 'Investment Objective')]//following-sibling::p//text()"
+        ],
+        "return_type":"join"
+      },
+      "instrument_name": {
+        "paths": [
+          "//div[@id='main']//h2//text()"
+        ],
+      "return_type":"join"
+      },
+      "temp_class_returns": {
+        "paths": [
+          "//*[contains(text(), 'TOTAL RETURNS')]//following-sibling::table//tbody//tr[position()>1]"
+        ],
+        "return_type": "selector",
+        "child_return_strategy":"multiple_objects"
+      },
+      "trying":{
+        "paths":[".//td[1]"],
+        "selector":"temp_class_returns"
+      },
+      "inception_date":{
+        "paths":[".//td[2]"],
+        "selector":"temp_class_returns"
+      },
+      "temp_class_benchmarks":{
+        "paths":[
+          "//div[@id='divBenchmarks']"
+        ],
+        "return_type": "selector",
+        "child_return_strategy": "multiple_objects"
+      },
+      "temp_class_expense_ratios":{
+        "paths":[
+          "//*[contains(text(), 'Expense Ratios')]//following-sibling::div[1]//table"
+        ],
+        "return_type":"selector",
+        "child_return_strategy":"multiple_objects"
+       },
+       "temp_sec-30":{
+        "paths":[
+          "//*[contains(text(), 'SEC 30-Day')]//following-sibling::div//table"
+        ],
+        "return_type":"selector",
+        "child_return_strategy":"multiple_objects"
+       }
+      }
+
+      }
+    }
