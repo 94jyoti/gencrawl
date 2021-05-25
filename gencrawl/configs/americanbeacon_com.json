@@ -58,14 +58,67 @@
         "return_type": "selector",
         "child_return_strategy":"multiple_objects"
       },
-      "trying":{
+      "share_class_1":{
         "paths":[".//td[1]/text()"],
         "selector":"temp_class_returns"
       },
       "inception_date":{
         "paths":[".//td[2]/text()"],
         "selector":"temp_class_returns"
-      }
+      },
+      "cusip":{
+        "paths":[".//td[3]/text()"],
+        "selector":"temp_class_returns"
+      },
+      "temp_class_benchmarks":{
+        "paths":[
+          "//table[@id='grdBenchmarks']"
+        ],
+        "return_type": "selector",
+        "child_return_strategy": "multiple_objects"
+      },
+      "benchmarks":{
+        "paths":[".//tr[position() >1]//td[1]//text()"],
+        "selector":"temp_class_benchmarks"
+      },
+      "temp_class_expense_ratios":{
+        "paths":[
+          "//*[contains(text(), 'Expense Ratios')]//following-sibling::div[1]//table//tr[position()>1]"
+        ],
+        "return_type":"selector",
+        "child_return_strategy":"multiple_objects"
+       },
+       "expense_ratios_share_class":{
+        "paths":[".//td[1]//text()"],
+        "selector":"temp_class_expense_ratios"
+       },
+       "expense_ratios_gross":{
+        "paths":[".//td[2]//span//text()"],
+        "selector":"temp_class_expense_ratios"
+       },
+       "expense_ratios_net":{
+        "paths":[".//td[3]//span//text()"],
+        "selector":"temp_class_expense_ratios"
+       },
+       "temp_sec_30":{
+        "paths":[
+          "//*[contains(text(), 'SEC 30-Day')]//following-sibling::div//table//tr[position()>1]"
+        ],
+        "return_type":"selector",
+        "child_return_strategy":"multiple_objects"
+       },
+       "sec_30_share_class":{
+        "paths":[".//td[1]//text()"],
+        "selector":"temp_sec_30"
+       },
+       "sec_30_actual":{
+        "paths":[".//td[2]//span//text()"],
+        "selector":"temp_sec_30"
+       },
+       "sec_30_unsubsized":{
+        "paths":[".//td[3]//span//text()"],
+        "selector":"temp_sec_30"
+       }
     }
       }
     }
