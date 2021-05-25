@@ -301,7 +301,9 @@ class BaseSpider(Spider):
         if return_type == Statics.RETURN_TYPE_INT:
             return int(value[0])
         if return_type == Statics.RETURN_TYPE_STRING:
-            return value[0]
+            for val in value:
+                if val:
+                    return val
         elif return_type in [Statics.RETURN_TYPE_LIST, Statics.RETURN_TYPE_SELECTOR]:
             return [v for v in value if v]
         elif return_type == Statics.RETURN_TYPE_JOIN:

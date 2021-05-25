@@ -7,6 +7,7 @@ class PgimComDetail(FinancialDetailSpider):
     name = 'financial_detail_pgim_com'
     performance_api = "https://www.pgim.com/pcom6/services/pcom/reportjson?&pageid=1&fundname={fund_name}&fundid=undefined"
     capital_gains_api = "https://www.pgim.com/pcom6/services/pcom/reportjson?pageid=8&fundname={}&fundid={}"
+    handle_httpstatus_list = [400]
 
     def parse_navigation(self, response, items):
         fund_name = response.request.url.split("/")[-1]
@@ -68,6 +69,11 @@ class PgimComDetail(FinancialDetailSpider):
 
     def parse_capital_gains(self, response):
         items = response.meta['items']
+        if response.status == 400:
+            for item in items:
+                yield item
+            return
+
         response_jsn = json.loads(response.text)
         if response_jsn.get("Benchmarks"):
             for item in items:
@@ -75,13 +81,19 @@ class PgimComDetail(FinancialDetailSpider):
 
         fund_data = response_jsn['funddata']
         dividends = fund_data['RegularDividends']
+        special_dividends = fund_data['SpecialDividends']
         for item in items:
             parsed_divs = []
             divs = [d for d in dividends if d['ShareClassName'] == item['share_class']]
+            special_div = [d for d in special_dividends if d['ShareClassName'] == item['share_class']]
+            special_div = {f'{v["RecordDate"]}-{v["PayableDate"]}': v['DataValue'] for v in special_div}
             for div in divs:
                 pdiv = dict()
                 pdiv['record_date'] = div.get("RecordDate")
-                pdiv['pay_date'] = div.get("PayableDate")
+                pdiv['pay_date'] = div.get("PayableDate") if div.get("PayableDate") != '01/01/1900' else None
+                key = f'{div["RecordDate"]}-{div["PayableDate"]}'
+                if special_div.get(key):
+                    pdiv['qualified_income'] = special_div[key]
                 pdiv['ordinary_income'] = round(div.get("DataValue"), 4)
                 pdiv['reinvestment_price'] = div["ReinvestNAV"] if (div.get(
                     "ReinvestNAV") and div['ReinvestNAV'] >= 0) else None
@@ -93,11 +105,11 @@ class PgimComDetail(FinancialDetailSpider):
             for short_term, long_term in zip(fund_data['STCapitalGain'], fund_data['LTCapitalGain']):
                 if short_term['ShareClassName'] == item['share_class']:
                     capital = dict()
-                    capital['ex_date'] = short_term['RecordDate']
-                    capital['pay_date'] = short_term['PayableDate']
+                    capital['cg_ex_date'] = short_term['RecordDate']
+                    capital['cg_pay_date'] = short_term['PayableDate'] if short_term.get("PayableDate") != '01/01/1900' else None
                     capital['short_term_per_share'] = short_term['DataValue']
                     capital['long_term_per_share'] = long_term['DataValue']
-                    capital['reinvestment_price'] = short_term['ReinvestNAV'] if short_term['ReinvestNAV'] > 0 else None
+                    capital['cg_reinvestment_price'] = short_term['ReinvestNAV'] if short_term['ReinvestNAV'] >= 0 else None
                     capital_gains.append(capital)
             item['capital_gains'] = capital_gains
             yield item

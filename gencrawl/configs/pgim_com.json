@@ -59,7 +59,8 @@
       },
       "investment_objective": {
         "paths": [
-          "(//div[contains(text(), 'Objective')])[last()]/following-sibling::p/text()"
+          "(//div[contains(text(), 'Objective')])[last()]/following-sibling::p/text()",
+          "(//div[contains(text(), 'Objective')])/following-sibling::p/text()"
         ],
         "selector": "root",
         "return_type": "str",
@@ -113,6 +114,19 @@
         ]
       },
       "average_weighted_maturity_as_of_date": {
+        "paths": [
+          "//*[contains(text(), 'Fund Statistics')]/small/text()"
+        ],
+        "cleanup_functions": [
+          "obj['duration_as_of_date'].replace('as of', '')"
+        ]
+      },
+      "turnover_rate": {
+        "paths": [
+          "//*[contains(text(), 'Turnover Ratio')]/parent::span/following-sibling::span//text()"
+        ]
+      },
+      "turnover_rate_date": {
         "paths": [
           "//*[contains(text(), 'Fund Statistics')]/small/text()"
         ],
