@@ -17,9 +17,6 @@ class NuveenComDetail(FinancialDetailSpider):
         # request = []
         items = self.prepare_items(response, default_item)
         item=items[0]
-        #print("itemdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",item)
-        temp_class_benchmark=item['temp_benchmarks']
-        print("feffessfhhhhhhhhvjhbiiiiinvvvvvvvvvvvvvvvvvvvvvvvv....v....................................",temp_class_benchmark)
         '''
         bench_mark = []
         for benchmark in range(len(temp_class_benchmark)-1):

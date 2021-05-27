@@ -28,7 +28,6 @@ class FinancialDetailSpider(BaseSpider):
     def get_items_or_req(self, response, default_item={}):
         parsed_items = []
         for item in self.prepare_items(response, default_item):
-            print(item)
             parsed_items.append(self.generate_item(item, FinancialDetailItem))
         return parsed_items
 
