@@ -51,6 +51,10 @@
         ],
         "selector": "temp_item_class"
       },
+      "effective_duration_date":{
+        "paths":["//*[contains(text(), 'Portfolio info')]//span//text()"]
+
+      },
       "temp_class_returns": {
         "paths": [
           "//*[contains(text(), 'TOTAL RETURNS')]//following-sibling::table//tr[position()>1]"
@@ -118,7 +122,18 @@
        "sec_30_unsubsized":{
         "paths":[".//td[3]//span//text()"],
         "selector":"temp_sec_30"
+       },
+       "effective_duration":{
+        "paths":["//*[contains(text(), 'Effective Duration')]//following-sibling::td//text()"]
+       },
+       "average_weighted_maturity":{
+        "paths":["//*[contains(text(), 'Effective Maturity')]//following-sibling::td//text()"]
+       },
+       "temp_fund_managers":{
+       "paths":["//strong[contains(text(), 'Portfolio  Managers')]//parent::p//following-sibling::ul[position()=1]//li//text()"],
+       "return_type":"list"
        }
+       
     }
       }
     }

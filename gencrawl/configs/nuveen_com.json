@@ -39,7 +39,7 @@
       },
       "portfolio_assets": {
         "paths": [
-          "//*[contains(text(), 'Fund Net Assets')]//following-sibling::div//span//text()"
+          "//h3[contains(text(), 'Fund Net Assets')]//following-sibling::div//span//text()"
         ]
       },
       "portfolio_assets_date": {
@@ -79,21 +79,15 @@
       },
       "average_weighted_maturity_as_of_date": {
         "paths": [
-          "//*[@class='nuv-data-callout__date']//following-sibling::span//text()"
+          "//*[contains(text(), 'Average Effective Maturity')]//following-sibling::div//*[contains(text(), ' As of')]/span//text()"
         ]
       },
       "temp_fund_managers": {
         "paths": [
-          "//div[@class='nuv-article-author__profile']"
+          "//div[@id='article-author'][1]//h3//text()"
         ],
-        "return_type": "selector"
+        "return_type": "list"
       },
-	  "fund_manager":{
-	   "paths":[".//h3[1]//text()"
-	   ],
-	   "selector":"temp_fund_managers"
-	   
-	   },
 	  "temp_sec_yield_30":{
 	   "paths":[
 		  "//*[contains(text(), '30-Day SEC Yield (Sub)' )]//following-sibling::div"
@@ -127,6 +121,11 @@
 	    "paths":[".//div[@class='nuv-data-callout__item__date']//span//text()"
 	   ],
 		"selector":"temp_sec_yield_without_waivers_30_day"
+		},
+		"temp_benchmarks":{
+		 "paths":["//div[@class='nuv-product-detail-table-retail__table-wrapper']/table[1]"
+		],
+		"return_type":"selector"
 		}
 	   
 	   
