@@ -74,17 +74,12 @@
         "paths":[".//td[3]/text()"],
         "selector":"temp_class_returns"
       },
-      "temp_class_benchmarks":{
-        "paths":[
-          "//table[@id='grdBenchmarks']"
-        ],
-        "return_type": "selector",
-        "child_return_strategy": "multiple_objects"
-      },
       "benchmarks":{
-        "paths":[".//tr[position() >1]//td[1]//text()"],
-        "selector":"temp_class_benchmarks"
-      },
+        "paths":[
+          "//table[@id='grdBenchmarks']//tr//td[1]//text()"
+        ],
+        "return_type": "list"
+       },
       "temp_class_expense_ratios":{
         "paths":[
           "//*[contains(text(), 'Expense Ratios')]//following-sibling::div[1]//table//tr[position()>1]"
@@ -119,6 +114,10 @@
         "paths":[".//td[2]//span//text()"],
         "selector":"temp_sec_30"
        },
+       "distribution":{
+       "paths":[".//td[2]//text()"],
+       "selector":"temp_sec_30"
+       },
        "sec_30_unsubsized":{
         "paths":[".//td[3]//span//text()"],
         "selector":"temp_sec_30"
@@ -132,8 +131,19 @@
        "temp_fund_managers":{
        "paths":["//strong[contains(text(), 'Portfolio  Managers')]//parent::p//following-sibling::ul[position()=1]//li//text()"],
        "return_type":"list"
-       }
+       },
+       "portfolio_assets":{
+        "paths":["//h3[contains(text(),'Total Fund')]//parent::div//span//text()"
+        ]
+       },
+       "portfolio_assets_date":{
+        "paths":["//h6[contains(text(),'Portfolio information')]//span//text()"]
+       },
+       "sub_advisor":{
+        "paths":["//h3[contains(text(),'Sub-Advisor')]//parent::div//td[1]//text()"],
+        "return_type":"list"
        
+       }
     }
       }
     }

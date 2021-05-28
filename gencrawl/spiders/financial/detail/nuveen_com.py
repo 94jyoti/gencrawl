@@ -71,7 +71,7 @@ class NuveenComDetail(FinancialDetailSpider):
             data_dict1['reinvestment_price'] = None
             data_dict1['ordinary_income'] = i['ordinaryincome']
             dividend_history.append(data_dict1)
-            data_dict2['long_term_per_share'] = None
+            data_dict2['long_term_per_share'] = i['longgain']
             data_dict2['cg_ex_date'] = i['exdivdt']
             data_dict2['cg_record_date'] = i['rcrddt']
             data_dict2['cg_pay_date'] = i['paydt'].split("T")[0]
@@ -90,7 +90,7 @@ class NuveenComDetail(FinancialDetailSpider):
         for i in response_json:
             data_dict = {'long_term_per_share': "", 'cg_ex_date': "", 'cg_record_date': "", 'cg_pay_date': "",
                          'short_term_per_share': "", 'total_per_share': "", 'cg_reinvestment_price': "","ordinary_income":""}
-            data_dict['long_term_per_share'] = None
+            data_dict['long_term_per_share'] = 
             data_dict['cg_ex_date'] = i['exdivdt']
             data_dict['cg_record_date'] = i['rcrddt']
             data_dict['cg_pay_date'] = i['paydt']

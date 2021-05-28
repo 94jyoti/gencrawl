@@ -63,12 +63,12 @@
           "//*[contains(text(), 'Inception date')]//following-sibling::div//span//text()"
         ]
       },
-      "average_effective_duration": {
+      "effective_duration": {
         "paths": [
           "//*[contains(text(), 'Effective Duration')]//following-sibling::div//span//text()"
         ]
       },
-      "average_effective_duration_as_of_date": {
+      "effective_duration_date": {
         "paths": [
           "//*[@class='nuv-data-callout__date']//following-sibling::span//text()"
         ]
@@ -80,7 +80,8 @@
       },
       "average_weighted_maturity_as_of_date": {
         "paths": [
-          "//*[contains(text(), 'Average Effective Maturity')]//following-sibling::div//*[contains(text(), ' As of')]/span//text()"
+          "//*[contains(text(), 'Average Effective Maturity')]//following-sibling::div//*[contains(text(), ' As of')]/span//text()",
+          "//h2[starts-with(normalize-space(text()),'Fund characteristics')]//parent::div//span[contains(text(),' As of')]"
         ]
       },
       "temp_fund_managers": {
