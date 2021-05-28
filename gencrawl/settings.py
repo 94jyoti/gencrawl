@@ -26,7 +26,12 @@ RETRY_HTTP_CODES = [400, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429]
 DEFAULT_REQUEST_HEADERS = {
    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 }
-DOWNLOADER_MIDDLEWARES = {}
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy_crawlera.CrawleraMiddleware': 610
+}
+CRAWLERA_ENABLED = True
+CRAWLERA_APIKEY = 'd1d3dfa7dc4444a88a253a0263be5877'
+
 ITEM_PIPELINES = {
       'gencrawl.pipelines.nfn_pipelines.NFNPipeline': 300,
 }
