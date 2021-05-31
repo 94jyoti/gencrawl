@@ -74,6 +74,10 @@
         "paths":[".//td[3]/text()"],
         "selector":"temp_class_returns"
       },
+      "cusip_1":{
+       "paths":[".//td[4]//text()"],
+       "selector":"temp_class_returns"
+      },
       "benchmarks":{
         "paths":[
           "//table[@id='grdBenchmarks']//tr//td[1]//text()"
@@ -101,25 +105,21 @@
        },
        "temp_sec_30":{
         "paths":[
-          "//*[contains(text(), 'SEC 30-Day')]//following-sibling::div//table//tr[position()>1]"
+          "//*[contains(text(), 'SEC 30-Day')]//following-sibling::div//table//tr[position()>1]","//*[contains(text(), 'SEC 30-DAY')]//following-sibling::div//table//tr[position()>1]"
         ],
         "return_type":"selector",
         "child_return_strategy":"multiple_objects"
        },
        "sec_30_share_class":{
-        "paths":[".//td[1]//text()"],
+        "paths":[".//td[1]//text()",".//td[1]//b//text()"],
         "selector":"temp_sec_30"
        },
        "sec_30_actual":{
-        "paths":[".//td[2]//span//text()"],
+        "paths":[".//td[2]//span//text()",".//td[2]//b//text()"],
         "selector":"temp_sec_30"
        },
-       "distribution":{
-       "paths":[".//td[2]//text()"],
-       "selector":"temp_sec_30"
-       },
        "sec_30_unsubsized":{
-        "paths":[".//td[3]//span//text()"],
+        "paths":[".//td[3]//span//text()",".//td[3]//b//text()"],
         "selector":"temp_sec_30"
        },
        "effective_duration":{
@@ -129,7 +129,7 @@
         "paths":["//*[contains(text(), 'Effective Maturity')]//following-sibling::td//text()"]
        },
        "temp_fund_managers":{
-       "paths":["//strong[contains(text(), 'Portfolio  Managers')]//parent::p//following-sibling::ul[position()=1]//li//text()"],
+       "paths":["//strong[contains(text(), 'Portfolio  Managers')]//parent::p//following-sibling::ul[position()=1]//li//text()","//strong[contains(text(),'Portfolio  Manager')]//parent::p//following-sibling::ul[position()=1]//li//text()"],
        "return_type":"list"
        },
        "portfolio_assets":{
@@ -143,6 +143,12 @@
         "paths":["//h3[contains(text(),'Sub-Advisor')]//parent::div//td[1]//text()"],
         "return_type":"list"
        
+       },
+       "investment_strategy":{
+        "paths":["//h3[contains(text(), 'Investment Strategy')]//following::ul[1]/li//text()"],
+        "return_type":"list",
+        "cleanup_functions": [
+          "str(' '.join(obj.get('investment_strategy')))"]
        }
     }
       }

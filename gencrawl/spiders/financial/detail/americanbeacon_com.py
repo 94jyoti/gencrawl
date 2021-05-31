@@ -19,7 +19,12 @@ class AmericanbeaconDetail(FinancialDetailSpider):
 
         parsed_items = []
         items = self.prepare_items(response, default_item)
-
+        headers = response.xpath("//h3[contains(text(), 'TOTAL RETURNS')]/parent::div//tr[1]/th/text()").extract()
+        cusip_index = str(headers.index('CUSIP'))
+        #try:
+        #	distribution=response.xpath("//strong[contains(text(), 'Distribution')]//parent::td//following-sibling::td//span//text()").extract()[0]
+        #except:
+        #	print("distribuyionnnnnnnnn not foiund")
         # return_data=item['temp_class_returns'][0]
         # print("itemdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",items)
         for i in items:
@@ -27,19 +32,19 @@ class AmericanbeaconDetail(FinancialDetailSpider):
             i['sec_yield_without_waivers_date_30_day'] = i['effective_duration_date']
             i['sec_yield_date_30_day'] = i['effective_duration_date']
             temp_data_returns = i['class_returns']
-            print(temp_data_returns)
+            # print(temp_data_returns)
             temp_expense_ratio = i['class_expense_ratios']
             # temp_class_benchmark = i['class_benchmarks']
             temp_sec_30 = i['sec_30']
             temp_fund_manager_list = i['temp_fund_managers']
-            print(temp_sec_30)
+            # print(temp_sec_30)
             count = 1
             fund_managers_list = []
             for fund in temp_fund_manager_list:
-                print("fundddd", fund)
+                # print("fundddd", fund)
                 dict = {"fund_manager": "", "fund_manager_years_of_experience_in_industry": "", "fund_manager_firm": "",
                         "fund_manager_years_of_experience_with_fund": ""}
-                dict['fund_manager'] = str(fund.split(";")[0])
+                dict['fund_manager'] = str(fund.split(";")[0]).split(",")[0]
                 dict['fund_manager_years_of_experience_in_industry'] = "since " + str(fund.split(" ")[-1])
                 fund_managers_list.append(dict)
             i['fund_managers'] = fund_managers_list
@@ -47,14 +52,22 @@ class AmericanbeaconDetail(FinancialDetailSpider):
                 for j in data:
                     if (i['share_class'] == data['share_class_1'].split(" ")[0].strip()):
                         i['share_inception_date'] = data['inception_date']
-                        i['cusip'] = data['cusip']
-                        break
+                        if (cusip_index == "2"):
+                            i['cusip'] = str(data['cusip'])
+                        elif (cusip_index == "3"):
+                            i['cusip'] = str(data['cusip_1'])
+                        # print('cusipsppspspspspspspspspspspspsspspsppsppsppspsp',i['cusip'])
                 for expense in temp_expense_ratio:
                     for ex in expense:
                         if (i['share_class'] == expense['expense_ratios_share_class']):
                             i['total_expense_gross'] = expense['expense_ratios_gross']
                             i['total_expense_net'] = expense['expense_ratios_net']
 
+                # print("mqinqmqiqiqiiqiqiqqiiqiqiqqiqiqiqiiqiqiqi",i['investment_strategy'])
+                # for invest in i['investment_strategy']:
+                # investment=" ".join(i['investment_strategy'])
+                # print("inecsudtmentntttntntntnntntntnt",investment)
+                # i['investment_strategy']=investment
                 '''
                 bench_mark = []
 
@@ -62,15 +75,28 @@ class AmericanbeaconDetail(FinancialDetailSpider):
                     bench_mark.append(benchmark['benchmarks'])
                 i['benchmarks'] = bench_mark
                 '''
+                # print("secccccccccccfeferferfefef",i[temp_sec_30])
                 for sec in temp_sec_30:
                     for s in sec:
-                        print(sec)
+                        #print("sec;;;;;;;;;;;[[[[[[[[[[[[]]]]]]]]]]]]", sec)
                         if (i['share_class'] == sec['sec_30_share_class']):
                             i['sec_yield_30_day'] = sec['sec_30_actual']
                             i['sec_yield_without_waivers_30_day'] = sec['sec_30_unsubsized']
-                        if (sec['sec_30_share_class']=="Distribution Frequency"):
-                            print("inside")
-                            i['distribution_frequency'] = sec['distribution']
-                            print(i['distribution_frequency'])
+                        # print()
+                        if ("Distribution" in sec['sec_30_share_class']):
+                            print(type(sec['sec_30_actual']))
+                            print("insideeeeeeeeeeeeeeeeeee")
+                            if (len(sec['sec_30_actual']) != 0):
+                                i['distribution_frequency'] = sec['sec_30_actual']
+                                print(i['distribution_frequency'])
+                            elif(len(sec['sec_30_actual']) != 0):
+                                i['distribution_frequency'] = sec['sec_30_unsubsized']
+                                print(i['distribution_frequency'])
+                        else:
+                            try:
+                                i['distribution_frequency'] =response.xpath("//strong[contains(text(), 'Distribution')]//parent::td//following-sibling::td//span//text()").extract()[0]
+                                print("after second if    ")
+                            except:
+                                i['distribution_frequency']=""
             parsed_items.append(self.generate_item(i, FinancialDetailItem))
         return parsed_items

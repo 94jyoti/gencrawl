@@ -81,7 +81,8 @@
       "average_weighted_maturity_as_of_date": {
         "paths": [
           "//*[contains(text(), 'Average Effective Maturity')]//following-sibling::div//*[contains(text(), ' As of')]/span//text()",
-          "//h2[starts-with(normalize-space(text()),'Fund characteristics')]//parent::div//span[contains(text(),' As of')]"
+          "//h2[starts-with(normalize-space(text()),'Fund characteristics')]//parent::div//span[contains(text(),' As of')]",
+          "//h2[starts-with(normalize-space(text()),'Fund characteristics')]//parent::div//*[contains(text(),'As of')]//span//text()"
         ]
       },
       "temp_fund_managers": {

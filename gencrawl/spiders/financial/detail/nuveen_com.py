@@ -51,7 +51,17 @@ class NuveenComDetail(FinancialDetailSpider):
     def parse_performance_response(self, response):
         #print('wdwaaaaaaaaaaaddddddddddddddddddddddddd')
         items = response.meta['items']
-        response_json = json.loads(response.text)
+        
+        file=open("jsonnuveen.txt","w")
+        file.write(response.text)
+        file.close()
+        try:
+        	response_json = json.loads(response.text)
+        except Exception as e:
+        	print(e)
+        	file=open("jsonnuveen.txt","w")
+        	file.write(response.text)
+        	file.close()
         #print("reso.....................................",response_json)
         #historical_data = response_json['Distributions']
         #try:
