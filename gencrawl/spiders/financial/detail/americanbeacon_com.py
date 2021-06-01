@@ -39,14 +39,19 @@ class AmericanbeaconDetail(FinancialDetailSpider):
             temp_fund_manager_list = i['temp_fund_managers']
             # print(temp_sec_30)
             count = 1
+            #response_1=response.replace(body=response.body.replace(b'<br>', b' ').replace(b'\n',b' ').replace(b'"',b''))
+            fund_manager = response.xpath("//strong[contains(text(), 'Portfolio  Manager')]//parent::p//following-sibling::ul[position()=1]//li").extract()
+            print(fund_manager)
             fund_managers_list = []
-            for fund in temp_fund_manager_list:
-                # print("fundddd", fund)
+            for fund in fund_manager:
+                fund=fund.replace('<li>','').replace('<br>','').replace('</li>','')
+                print("fundddd", fund)
                 dict = {"fund_manager": "", "fund_manager_years_of_experience_in_industry": "", "fund_manager_firm": "",
                         "fund_manager_years_of_experience_with_fund": ""}
                 dict['fund_manager'] = str(fund.split(";")[0]).split(",")[0]
                 dict['fund_manager_years_of_experience_in_industry'] = "since " + str(fund.split(" ")[-1])
                 fund_managers_list.append(dict)
+            print(fund_managers_list)
             i['fund_managers'] = fund_managers_list
             for data in temp_data_returns:
                 for j in data:
@@ -78,7 +83,7 @@ class AmericanbeaconDetail(FinancialDetailSpider):
                 # print("secccccccccccfeferferfefef",i[temp_sec_30])
                 for sec in temp_sec_30:
                     for s in sec:
-                        #print("sec;;;;;;;;;;;[[[[[[[[[[[[]]]]]]]]]]]]", sec)
+                        print("sec;;;;;;;;;;;[[[[[[[[[[[[]]]]]]]]]]]]", sec)
                         if (i['share_class'] == sec['sec_30_share_class']):
                             i['sec_yield_30_day'] = sec['sec_30_actual']
                             i['sec_yield_without_waivers_30_day'] = sec['sec_30_unsubsized']
@@ -89,7 +94,7 @@ class AmericanbeaconDetail(FinancialDetailSpider):
                             if (len(sec['sec_30_actual']) != 0):
                                 i['distribution_frequency'] = sec['sec_30_actual']
                                 print(i['distribution_frequency'])
-                            elif(len(sec['sec_30_actual']) != 0):
+                            elif(len(sec['sec_30_unsubsized']) != 0):
                                 i['distribution_frequency'] = sec['sec_30_unsubsized']
                                 print(i['distribution_frequency'])
                         else:
