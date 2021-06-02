@@ -14,7 +14,6 @@ import sys
 import logging
 import time
 import uuid
-from gencrawl.settings import DOWNLOADER_MIDDLEWARES, SELENIUM_PATH
 from shutil import which
 from gencrawl.middlewares.selenium_request import GenSeleniumRequest
 from selenium import webdriver
@@ -36,20 +35,10 @@ class BaseSpider(Spider):
         config_filename = config + Statics.CONFIG_EXT
         config_fp = os.path.join(os.getcwd(), Statics.PROJECT_DIR, Statics.SITE_CONFIG_DIR, config_filename)
         config = json.loads(open(config_fp).read())
-        crawl_method = config[cls.crawl_type].get("crawl_method") or config['crawl_method']
-        settings_update = {}
-        if crawl_method == Statics.CRAWL_METHOD_SELENIUM:
-            settings_update['DOWNLOADER_MIDDLEWARES'] = {
-                **DOWNLOADER_MIDDLEWARES,
-                'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
-            }
-            # for chrome driver
-            settings_update['SELENIUM_DRIVER_NAME'] = Statics.CHROME_SELENIUM_DRIVER
-            settings_update['SELENIUM_DRIVER_EXECUTABLE_PATH'] = SELENIUM_PATH
-            settings_update['SELENIUM_DRIVER_ARGUMENTS'] = ['--headless'] #'--headless'
-        if settings_update:
+        custom_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
+        if custom_settings:
             crawler.settings.frozen = False
-            crawler.settings.update(settings_update)
+            crawler.settings.update(custom_settings)
             crawler.settings.freeze()
         return super().from_crawler(crawler, config, *args, **kwargs)
 
@@ -70,6 +59,7 @@ class BaseSpider(Spider):
         self.default_parsing_type = self.specific_config.get("parsing_type") or config.get('parsing_type')
         self.navigation = self.specific_config.get("navigation")
         self.pagination = self.specific_config.get("pagination")
+        self.retry_condition = self.specific_config.get("retry_condition")
         self.ext_codes = self.specific_config['ext_codes']
         self.default_return_type = Statics.RETURN_TYPE_DEFAULT
         self.default_selector = Statics.SELECTOR_DEFAULT

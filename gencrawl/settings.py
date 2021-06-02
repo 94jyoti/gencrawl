@@ -1,16 +1,17 @@
-import os
-
 # -*- coding: utf-8 -*-
+import os
+from gencrawl.util.statics import Statics
+
 ENVIRONMENT = 'PRODUCTION'
-
 BOT_NAME = 'gencrawl'
-
 SPIDER_MODULES = ['gencrawl.spiders']
-
 NEWSPIDER_MODULE = 'gencrawl.spiders'
+
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36'
-
-
+# Override the default request headers:
+DEFAULT_REQUEST_HEADERS = {
+   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+}
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 DOWNLOAD_DELAY = 3
 CONCURRENT_REQUESTS = 32
@@ -22,25 +23,29 @@ RETRY_ENABLED = True
 RETRY_TIMES = 3
 RETRY_HTTP_CODES = [400, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429]
 
-# Override the default request headers:
-DEFAULT_REQUEST_HEADERS = {
-   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-}
-DOWNLOADER_MIDDLEWARES = {
-    'scrapy_crawlera.CrawleraMiddleware': 610
-}
+# proxy settings
 CRAWLERA_ENABLED = True
 CRAWLERA_APIKEY = 'd1d3dfa7dc4444a88a253a0263be5877'
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
+    #'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 550,
+    'scrapy_crawlera.CrawleraMiddleware': 610,
+    'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 910
+}
+SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
+SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
+SELENIUM_DRIVER_ARGUMENTS = ['--headless']
 
 ITEM_PIPELINES = {
       'gencrawl.pipelines.nfn_pipelines.NFNPipeline': 300,
 }
-SELENIUM_PATH = os.path.join(os.getcwd(), "chromedriver")
 
 # encoding
 FEED_EXPORT_ENCODING = 'utf-8'
 LOG_LEVEL = 'DEBUG'
 
+# cache settings
 HTTPCACHE_ENABLED = False
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = 'httpcache'
