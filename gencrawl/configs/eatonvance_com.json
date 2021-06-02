@@ -27,7 +27,8 @@
       "share_class": {
         "paths": [
           "//div[@class='fund_title']//h1//span//text()"
-        ]
+        ],
+        "cleanup_functions": ["obj.get('share_class').replace(')','').replace('(','')"]
       },
       "nasdaq_ticker": {
         "paths": [
@@ -83,7 +84,7 @@
        },
        "temp_capital_gain":{
         "paths":["//table[@name='CAPITALGAINHISTORY']//tbody//tr//td//text()"],
-        "selector":"list"
+        "return_type":"list"
        },
        "distribution_frequency":{
         "paths":["//td[contains(text(),'Distribution Frequency')]//following-sibling::td//text()"]
