@@ -2,3 +2,4 @@ scrapy==2.5
 unidecode
 selenium
 requests
+scrapy-crawlera==1.5.0

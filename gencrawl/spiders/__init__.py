@@ -59,8 +59,8 @@ class BaseSpider(Spider):
         self.default_parsing_type = self.specific_config.get("parsing_type") or config.get('parsing_type')
         self.navigation = self.specific_config.get("navigation")
         self.pagination = self.specific_config.get("pagination")
-        self.retry_condition = self.specific_config.get("retry_condition")
         self.ext_codes = self.specific_config['ext_codes']
+        self.retry_condition = self.ext_codes.pop("retry_condition", None)
         self.default_return_type = Statics.RETURN_TYPE_DEFAULT
         self.default_selector = Statics.SELECTOR_DEFAULT
         self.all_url_keys = [Statics.URL_KEY_FINANCIAL_LISTING, Statics.URL_KEY_FINANCIAL_DETAIL]
@@ -241,7 +241,12 @@ class BaseSpider(Spider):
     def exec_codes(self, response, ext_codes={}):
         ext_codes = ext_codes or self.ext_codes
         selector_values = defaultdict(list)
-        selector_name = response.meta.get('selector') or self.default_selector
+        # try-except to handle those cases where response object is still not tied to a meta,
+        # like calling this function from a middleware
+        try:
+            selector_name = response.meta.get('selector') or self.default_selector
+        except AttributeError as _:
+            selector_name = self.default_selector
         codes = {c: v for c, v in ext_codes.items() if v.get("selector", self.default_selector) == selector_name}
         main_obj, selectors = self.iterate_exec_codes(selector_name, response, codes)
         for selector_name, blocks in selectors.items():

@@ -60,5 +60,7 @@ class Statics:
                           'selector']
     IGNORE_INPUT_FIELDS = ['temp_fields', 'http_status', 'job_id', 'crawl_datetime']
 
+    # messages
+    RETRY_CONDITION_MSG = "RETRY_CONDITION_MATCHED"
 
 

@@ -20,7 +20,7 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 4
 COOKIES_ENABLED = False
 AUTOTHROTTLE_ENABLED = False
 RETRY_ENABLED = True
-RETRY_TIMES = 3
+RETRY_TIMES = 5
 RETRY_HTTP_CODES = [400, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429]
 
 # proxy settings
@@ -28,10 +28,11 @@ CRAWLERA_ENABLED = True
 CRAWLERA_APIKEY = 'd1d3dfa7dc4444a88a253a0263be5877'
 
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
-    #'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 550,
+    # engine
+    'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
-    'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 910
+    'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
+    # website
 }
 SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
 SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
@@ -46,7 +47,7 @@ FEED_EXPORT_ENCODING = 'utf-8'
 LOG_LEVEL = 'DEBUG'
 
 # cache settings
-HTTPCACHE_ENABLED = False
+HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = 'httpcache'
 HTTPCACHE_IGNORE_HTTP_CODES = [503, 403, 404, 400]

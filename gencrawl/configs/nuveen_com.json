@@ -21,7 +21,15 @@
     "crawl_method": "SELENIUM",
     "wait_time": 8,
 	"parsing_type": "xpath",
+    "custom_settings": {
+      "HTTPCACHE_ENABLED": false
+    },
     "ext_codes": {
+      "retry_condition": {
+        "paths": [
+          "//title[contains(text(), 'Nuveen Site Unavailable')]"
+        ]
+      },
       "instrument_name": {
         "paths": [
           "//*[@class='nuv-product-detail-hero-retail__main-title no-outline']//text()"
