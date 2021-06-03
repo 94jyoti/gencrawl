@@ -1,5 +1,10 @@
 scrapy==2.5
-unidecode
-selenium
-requests
+unidecode==0.4.20
+selenium==3.141.0
+requests==2.22.0
 scrapy-crawlera==1.5.0
+jsonpath-ng==1.5.1
+scrapy-selenium==0.0.7
+beautifulsoup4==4.6.3
+pandas==1.2.2
+webdriver-manager==3.4.1

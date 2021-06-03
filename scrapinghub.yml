@@ -1,0 +1,9 @@
+projects:
+  nfn:
+    id: 529719
+ 
+requirements:
+  file: ./requirements.txt
+
+version: AUTO
+image: true
