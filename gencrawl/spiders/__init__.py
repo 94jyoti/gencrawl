@@ -33,7 +33,9 @@ class BaseSpider(Spider):
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
         config_filename = config + Statics.CONFIG_EXT
-        config_fp = os.path.join(os.getcwd(), Statics.PROJECT_DIR, Statics.SITE_CONFIG_DIR, config_filename)
+        cwd = os.path.dirname(os.path.realpath(__file__)).split("spiders")[0]
+        # config_fp = os.path.join(os.getcwd(), Statics.PROJECT_DIR, Statics.SITE_CONFIG_DIR, config_filename)
+        config_fp = os.path.join(cwd, Statics.SITE_CONFIG_DIR, config_filename)
         config = json.loads(open(config_fp).read())
         custom_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
         if custom_settings:

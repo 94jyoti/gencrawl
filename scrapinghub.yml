@@ -1,0 +1,7 @@
+projects:
+  nfn:
+    id: 529719
+requirements:
+  file: ./requirements.txt
+stack: scrapy:2.5
+version: AUTO

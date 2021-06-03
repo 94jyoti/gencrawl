@@ -35,7 +35,7 @@ DOWNLOADER_MIDDLEWARES = {
     # website
 }
 SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
-SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
+# SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
 SELENIUM_DRIVER_ARGUMENTS = ['--headless']
 
 ITEM_PIPELINES = {
