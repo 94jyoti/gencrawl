@@ -139,7 +139,7 @@
       },
       "benchmarks": {
         "paths": [
-          "//span[@class='nuv-display-style__default' and contains(text(), ' Index')]/text()"
+          "//h3[contains(text(),'Performance')]//ancestor::div//tbody//tr//td[1]//span[contains(text(),'Index')]//text()"
         ],
         "cleanup_functions": [
           "list(set(obj.get('benchmarks')))"

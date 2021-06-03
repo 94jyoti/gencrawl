@@ -17,6 +17,7 @@
     ]
   },
   "detail": {
+    
     "crawl_method": "SCRAPY_GET",
     "parsing_type": "xpath",
     "ext_codes": {
@@ -26,7 +27,7 @@
       } ,
       "share_class": {
         "paths": [
-          "//div[@class='fund_title']//h1//span//text()"
+          "//div[@class='shares']/a//span//text()"
         ],
         "cleanup_functions": ["obj.get('share_class').replace(')','').replace('(','')"]
       },
@@ -37,18 +38,17 @@
       },
       "cusip":{
         "paths":["//td[contains(text(),'CUSIP')]//following-sibling::td//text()"]
-
       },
-      "portfolio_assets": {
+      "temp_assets": {
         "paths": [
-          "//td[contains(text(),'Total Net Assets of ')]//following-sibling::td//text()"
-        ]
+          "///td[contains(text(),'Total Net Assets')]//following-sibling::td//text()"],
+          "return_type":"list"
       },
       "portfolio_assets_date":{
         "paths":["//span[contains(text(),'Fund Facts')]//following-sibling::span//text()"]
       },
       "total_expense_gross":{
-        "paths":["//span[contains(text(),'(Gross)')]//parent::td//following-sibling::td/text()"]
+        "paths":["//span[contains(text(),'(Gross)')]//parent::td//following-sibling::td/text()","//td[contains(text(),'Expense')]//following-sibling::td//text()"]
       },
       "total_expense_net":{
         "paths":["//span[contains(text(),'(Net)')]//parent::td//following-sibling::td/text()"]
@@ -77,13 +77,11 @@
        },
        "temp_fund_managers":{
         "paths":[
-          "//td[@class=' manager ']//a//text()"
-        ],
-        
+          "//td[@class=' manager ']//a//text()"],   
         "return_type":"list"
        },
        "temp_capital_gain":{
-        "paths":["//table[@name='CAPITALGAINHISTORY']//tbody//tr//td//text()"],
+        "paths":["//table[@name='CAPITALGAINHISTORY']//tbody//tr//td"],
         "return_type":"list"
        },
        "distribution_frequency":{
@@ -101,6 +99,11 @@
        "sec_yield_without_waivers_date_30_day":{
         "paths":["//span[contains(text(),'Yield Information')]//following-sibling::span//text()"
         ]
+       },
+       "benchmarks":{
+        "paths":["//span[contains(text(),'Calendar Year Returns')]//ancestor::table//tbody//tr[position()>1]//span[contains(text(),'Index')]//parent::td//text()"],
+        "return_type":"join",
+        "cleanup_functions": ["[obj.get('benchmarks')]"]
        }
     }
       }
