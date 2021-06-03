@@ -57,7 +57,7 @@ class Statics:
 
     # ignore list
     IGNORE_META_FIELDS = ['download_timeout', 'dont_proxy', 'download_slot', 'download_latency', 'depth', 'driver',
-                          'selector']
+                          'selector', 'proxy']
     IGNORE_INPUT_FIELDS = ['temp_fields', 'http_status', 'job_id', 'crawl_datetime']
 
     # messages
