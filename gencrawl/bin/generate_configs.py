@@ -19,7 +19,7 @@ def download_csv_file(url):
 def get_config_map(rows):
     configs = []
     rows = [r for r in rows if r['Field_Names']]
-    rows = [rows[i: i+4] for i in range(0, len(rows), 4)]
+    rows = [rows[i: i+5] for i in range(0, len(rows), 5)]
     for row in rows:
         if row[0].pop("create_fresh_configs") != "1":
             print(f"Skipping configs for {row[0]['website']}")
@@ -41,6 +41,7 @@ def create_configs(configs):
         cleanups = config.get("cleanups")
         return_types = config.get("return_type")
         selectors = config.get("selector")
+        comments = config.get("comments")
 
         parsed_config['website'] = xpaths.pop("website")
         parsed_config['spider'] = "financial_detail"
@@ -54,28 +55,30 @@ def create_configs(configs):
         parsed_config["detail"] = detail
         detail["crawl_method"] = xpaths.pop("crawl_method")
         detail["parsing_type"] = "xpath"
-        detail['start_urls'] = [xpaths.pop("fund_url").split("\r\n")]
+        detail['start_urls'] = xpaths.pop("fund_url").replace("\r\n", "\n").split("\n")
         ext_codes = dict()
         detail["ext_codes"] = ext_codes
         for field in xpaths:
             ext_code = dict()
             if xpaths.get(field):
                 ext_codes[field] = ext_code
-                ext_code["paths"] = xpaths[field].split("\r\n")
+                ext_code["paths"] = xpaths[field].replace("\r\n", "\n").split("\n")
             if cleanups.get(field):
-                ext_code["cleanup_functions"] = cleanups[field].split("\r\n")
+                ext_code["cleanup_functions"] = cleanups[field].replace("\r\n", "\n").split("\n")
 
             rt = return_types.get(field)
             s = selectors.get(field)
             if field == 'benchmarks':
                 rt = "list"
             elif field.startswith("temp_"):
-                rt = 'list'
+                rt = 'selector'
                 ext_code['child_return_strategy'] = s or 'multiple_objects'
-                s = 'selector'
 
             ext_code['return_type'] = rt or "str"
             ext_code['selector'] = s or 'root'
+            if comments.get(field):
+                ext_code['comment'] = comments.get(field)
+
         domain = parsed_config['allowed_domains'][0]
         file_name = domain.replace("www.", '').replace(".", "_").replace("-", "_") + ".json"
         parsed_config_list[file_name] = parsed_config
