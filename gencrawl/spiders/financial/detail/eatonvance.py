@@ -16,19 +16,21 @@ class EatonvanceComDetail(FinancialDetailSpider):
         items = self.prepare_items(response, default_item)
         item = items[0]
         # item['share_class'] = item['fund_url'].split("=")[-1]
-        file=open("eatonjson.html","w")
-        file.write(response.text)
-        file.close()
-        
+        #file=open("eatonjson.html","w")
+        #file.write(response.text)
+        #file.close()
         fund_managers_list = []
         fund_managers_temp = item['temp_fund_managers']
         data_dict = {"fund_manager": "", "fund_manager_years_of_experience_in_industry": "", "fund_manager_firm": "",
                      "fund_manager_years_of_experience_with_fund": ""}
         # print("dddddddd",item['benchmarks'])
         # item['benchmarks']=list(item['benchmarks'].split("@"))
-        print("benchmarks-------------------------------------",item['benchmarks'])
-        
-        
+        print("benchmarks-------------------------------------",item['temp_benchmark'])
+        benchmarks=[]
+        benchmark_temp=item['temp_benchmark']
+        for i in benchmark_temp:
+        	data=re.findall('<td style=.*?>(.*?)<span .*?>(.*?)<sup.*?</td>',i)
+        	print(data)
         
         portfolio=item['temp_assets']
         if(len(portfolio)==2):
@@ -36,7 +38,8 @@ class EatonvanceComDetail(FinancialDetailSpider):
         	item['portfolio_assets']=portfolio[1]
         elif(len(portfolio)==1):
         	item['total_net_assets']=portfolio[0]
-        
+        else:
+        	item['portfolio_assets']=response.xpath("//td[contains(text(),'Total Net ')]//following-sibling::td//text()").extract()[0]
         for i in range(len(fund_managers_temp)):
             if (i % 2 == 0):
                 data_dict['fund_manager'] = fund_managers_temp[i].strip()

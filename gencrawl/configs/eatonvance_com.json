@@ -20,6 +20,10 @@
     
     "crawl_method": "SCRAPY_GET",
     "parsing_type": "xpath",
+    "pagination":{
+     "paths":["//ul[@class='shares']/li[not(@class='active')]/a/@href"],
+     "return_type":"list"
+    },
     "ext_codes": {
       "instrument_name": {
         "paths": [
@@ -27,7 +31,7 @@
       } ,
       "share_class": {
         "paths": [
-          "//div[@class='shares']/a//span//text()"
+          "//div[@class='shares']/a//span//text()","//div[@class='fund_title']//h1//span//text()"
         ],
         "cleanup_functions": ["obj.get('share_class').replace(')','').replace('(','')"]
       },
@@ -41,7 +45,7 @@
       },
       "temp_assets": {
         "paths": [
-          "///td[contains(text(),'Total Net Assets')]//following-sibling::td//text()"],
+          "//td[contains(text(),'Total Net Assets')]//following-sibling::td//text()"],
           "return_type":"list"
       },
       "portfolio_assets_date":{
@@ -88,22 +92,21 @@
         "paths":["//td[contains(text(),'Distribution Frequency')]//following-sibling::td//text()"]
        },
        "sec_yield_30_day":{
-        "paths":["///td[contains(text(),'Subsidized SEC')]//following-sibling::td//text()"]
+        "paths":["//td[contains(text(),'Subsidized SEC')]//following-sibling::td//text()","//td[contains(text(),'SEC 30-day')]//following-sibling::td//text()"]
        },
        "sec_yield_date_30_day":{
         "paths":["//span[contains(text(),'Yield Information')]//following-sibling::span//text()"]
        },
        "sec_yield_without_waivers_30_day":{
-       "paths":["//td[contains(text(),'Unsubsidized SEC')]//following-sibling::td//text()"]
+       "paths":["//td[contains(text(),'Unsubsidized SEC')]//following-sibling::td//text()","//td[contains(text(),'Taxable-Equivalent SEC')]//following-sibling::td//text()"]
        },
        "sec_yield_without_waivers_date_30_day":{
         "paths":["//span[contains(text(),'Yield Information')]//following-sibling::span//text()"
         ]
        },
-       "benchmarks":{
-        "paths":["//span[contains(text(),'Calendar Year Returns')]//ancestor::table//tbody//tr[position()>1]//span[contains(text(),'Index')]//parent::td//text()"],
-        "return_type":"join",
-        "cleanup_functions": ["[obj.get('benchmarks')]"]
+       "temp_benchmark":{
+        "paths":["//span[contains(text(),'Calendar Year Returns')]//ancestor::table//tbody//tr[position()>1]//span[contains(text(),'Index')]//parent::td"],
+        "return_type":"list"
        }
     }
       }
