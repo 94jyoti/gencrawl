@@ -54,6 +54,8 @@ class TempConfig:
             detail = dict()
             parsed_config["detail"] = detail
             detail["crawl_method"] = xpaths.pop("crawl_method")
+            if detail['crawl_method'] == 'SELENIUM':
+                detail['wait_time'] = 5
             detail["parsing_type"] = "xpath"
             detail['start_urls'] = xpaths.pop("fund_url").replace("\r\n", "\n").split("\n")
             ext_codes = dict()
