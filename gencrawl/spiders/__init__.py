@@ -25,6 +25,8 @@ from scrapy.http import HtmlResponse
 from collections.abc import Iterable
 from scrapy.selector import Selector
 from abc import ABC, abstractmethod
+from gencrawl.settings import CONFIG_DIR, RES_DIR
+from gencrawl.util.temp_config_setup import TempConfig
 
 
 class BaseSpider(Spider):
@@ -33,9 +35,7 @@ class BaseSpider(Spider):
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
         config_filename = config + Statics.CONFIG_EXT
-        cwd = os.path.dirname(os.path.realpath(__file__)).split("spiders")[0]
-        # config_fp = os.path.join(os.getcwd(), Statics.PROJECT_DIR, Statics.SITE_CONFIG_DIR, config_filename)
-        config_fp = os.path.join(cwd, Statics.SITE_CONFIG_DIR, config_filename)
+        config_fp = os.path.join(CONFIG_DIR, config_filename)
         config = json.loads(open(config_fp).read())
         custom_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
         if custom_settings:
@@ -46,6 +46,8 @@ class BaseSpider(Spider):
 
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # temporary config set up from google sheet
+        TempConfig().main(CONFIG_DIR)
         self.settings = get_project_settings()
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")

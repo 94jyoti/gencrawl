@@ -3,13 +3,14 @@ from gencrawl.util.utility import Utility
 from gencrawl.util.statics import Statics
 import csv
 import os
+from gencrawl.settings import RES_DIR
 
 
 class NFNPipeline:
 
     def __init__(self):
         field_mapping_file = "nfn_field_mapping.csv"
-        field_mapping_file = os.path.join(os.getcwd(), Statics.RES_DIR, field_mapping_file)
+        field_mapping_file = os.path.join(RES_DIR, field_mapping_file)
         self.field_mapping = dict()
         self.redundant_fields = {"total_net_assets": "total_net_assets_date",
                                  "turnover_rate": "turnover_rate_date", "sector_allocation": "sector_allocation_date",
