@@ -34,6 +34,10 @@ class BaseSpider(Spider):
     @classmethod
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
+        # temporary config set up from google sheet
+        TempConfig().main(CONFIG_DIR)
+        config = config.replace("https://", '').replace('http://', '').replace("www.", '').replace(".", "_").replace(
+            "-", "_")
         config_filename = config + Statics.CONFIG_EXT
         config_fp = os.path.join(CONFIG_DIR, config_filename)
         config = json.loads(open(config_fp).read())
@@ -46,8 +50,6 @@ class BaseSpider(Spider):
 
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # temporary config set up from google sheet
-        TempConfig().main(CONFIG_DIR)
         self.settings = get_project_settings()
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
