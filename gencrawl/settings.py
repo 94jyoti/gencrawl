@@ -31,7 +31,7 @@ DOWNLOADER_MIDDLEWARES = {
     # engine
     'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
-    'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
+    # 'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
     # website
 }
 SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
@@ -53,3 +53,6 @@ HTTPCACHE_DIR = 'httpcache'
 HTTPCACHE_IGNORE_HTTP_CODES = [503, 403, 404, 400]
 HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+# directories
+CONFIG_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'configs')
+RES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'res')

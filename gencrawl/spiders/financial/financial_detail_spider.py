@@ -16,7 +16,7 @@ class FinancialDetailSpider(BaseSpider):
 
     def prepare_items(self, response, default_item={}):
         parsed_items = []
-        items = self.exec_codes(response)
+        items = self.exec_codes(response, default_obj=default_item)
         for item in items:
             item.update(default_item)
             for key, value in item.items():
