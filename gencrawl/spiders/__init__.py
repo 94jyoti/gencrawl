@@ -36,8 +36,8 @@ class BaseSpider(Spider):
         assert config
         # temporary config set up from google sheet
         TempConfig().main(CONFIG_DIR)
-        config = config.replace("https://", '').replace('http://', '').replace("www.", '').replace(".", "_").replace(
-            "-", "_")
+        config = config.strip(' /').replace("https://", '').replace('http://', '').replace(
+            "www.", '').replace(".", "_").replace("-", "_")
         config_filename = config + Statics.CONFIG_EXT
         config_fp = os.path.join(CONFIG_DIR, config_filename)
         config = json.loads(open(config_fp).read())
@@ -189,8 +189,7 @@ class BaseSpider(Spider):
         meta = {k: v for k, v in meta.items() if k not in self.ignore_meta_keys}
         return meta
 
-    def iterate_exec_codes(self, selector_name, selector, ext_codes):
-        obj = dict()
+    def iterate_exec_codes(self, selector_name, selector, ext_codes, obj={}):
         selectors = dict()
         codes = {c: v for c, v in ext_codes.items() if v.get("selector", self.default_selector) == selector_name}
         for key in self._get_ordered_ext_keys(codes):
@@ -259,7 +258,7 @@ class BaseSpider(Spider):
         return items
 
     # if else check that whether it is an xpath or jpath or regex
-    def exec_codes(self, response, ext_codes={}):
+    def exec_codes(self, response, ext_codes={}, default_obj={}):
         ext_codes = ext_codes or self.ext_codes
         selector_values = defaultdict(list)
         # try-except to handle those cases where response object is still not tied to a meta,
@@ -269,7 +268,7 @@ class BaseSpider(Spider):
         except AttributeError as _:
             selector_name = self.default_selector
         codes = {c: v for c, v in ext_codes.items() if v.get("selector", self.default_selector) == selector_name}
-        main_obj, selectors = self.iterate_exec_codes(selector_name, response, codes)
+        main_obj, selectors = self.iterate_exec_codes(selector_name, response, codes, obj=default_obj)
         for selector_name, blocks in selectors.items():
             objs = []
             codes = {c: v for c, v in ext_codes.items() if v.get("selector") == selector_name}

@@ -35,8 +35,8 @@ class TempConfig:
 
     def create_configs(self, configs):
         parsed_config_list = {}
-        parsed_config = dict()
         for config in configs:
+            parsed_config = dict()
             xpaths = config.get("xpaths")
             cleanups = config.get("cleanups")
             return_types = config.get("return_type")
@@ -75,6 +75,7 @@ class TempConfig:
                 elif field.startswith("temp_"):
                     rt = 'selector'
                     ext_code['child_return_strategy'] = s or 'multiple_objects'
+                    s = None
 
                 ext_code['return_type'] = rt or "str"
                 ext_code['selector'] = s or 'root'
@@ -82,7 +83,7 @@ class TempConfig:
                     ext_code['comment'] = comments.get(field)
 
             domain = parsed_config['allowed_domains'][0]
-            file_name = domain.replace("www.", '').replace(".", "_").replace("-", "_") + ".json"
+            file_name = domain.strip(' /').replace("www.", '').replace(".", "_").replace("-", "_") + ".json"
             parsed_config_list[file_name] = parsed_config
         return parsed_config_list
 
