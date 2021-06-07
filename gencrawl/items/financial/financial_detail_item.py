@@ -56,6 +56,7 @@ class FinancialDetailItem(FinancialItem):
     average_weighted_maturity_as_of_date = Field()
     average_weighted_effective_maturity = Field()
     average_weighted_effective_maturity_as_of_date = Field()
+    
     minimum_initial_investment = Field()
     minimum_additional_investment = Field()
     management_process = Field()
@@ -77,6 +78,8 @@ class FinancialDetailItem(FinancialItem):
     weighted_average_duration_as_of_date = Field()
     average_effective_duration = Field()
     average_effective_duration_as_of_date = Field()
+    average_effective_maturity = Field()
+    average_effective_maturity_as_of_date = Field()
     api_url = Field()
     # ["Benchmark 1", ""Benchmark 2"]
     benchmarks = Field()

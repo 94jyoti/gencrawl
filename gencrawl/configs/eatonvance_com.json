@@ -20,6 +20,9 @@
     
     "crawl_method": "SCRAPY_GET",
     "parsing_type": "xpath",
+    "custom_settings":{
+    "RETRY_HTTP_CODES":[400, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429,404]
+    },
     "pagination":{
      "paths":["//ul[@class='shares']/li[not(@class='active')]/a/@href"],
      "return_type":"list"
@@ -58,19 +61,32 @@
         "paths":["//span[contains(text(),'(Net)')]//parent::td//following-sibling::td/text()"]
       },
       "share_inception_date":{
-       "paths":["//td[contains(text(),'Class')]//following-sibling::td//text()"]
+       "paths":["//td[contains(text(),'Class')]//following-sibling::td//text()","//td[contains(text(),'Performance')]//following-sibling::td//text()"]
       },
-      "duration":{
+      "effective_duration":{
         "paths":[
           "//td[contains(text(),'Effective Duration')]//following-sibling::td//text()"
         ]
+       },
+       "duration":{
+        "paths":["//td[text()=('Duration')]//following-sibling::td//text()","//td[text()=('Average Duration')]//following-sibling::td//text()"]
+       },
+       "duration_as_of_date":{
+        "paths":["//span[contains(text(),'Portfolio Statistics')]//following-sibling::span//text()"]
        },
       "average_weighted_maturity":{
         "paths":[
           "//td[contains(text(),'Average Maturity')]//following-sibling::td//text()"
         ]
        },
-       "duration_as_of_date":{
+       "average_effective_maturity":{
+        "paths":["//td[contains(text(),'Average Effective Maturity')]//following-sibling::td//text()"]
+       },
+       "average_effective_maturity_as_of_date":{
+        "paths":["//span[contains(text(),'Portfolio Statistics')]//following-sibling::span//text()"]
+       },
+       
+       "effective_duration_date":{
         "paths":["//span[contains(text(),'Portfolio Statistics')]//following-sibling::span//text()"]
        },
        "average_weighted_maturity_as_of_date":{
@@ -80,9 +96,18 @@
         "paths":["//td[contains(text(),'Minimum Investment')]//following-sibling::td//text()"]
        },
        "temp_fund_managers":{
-        "paths":[
-          "//td[@class=' manager ']//a//text()"],   
-        "return_type":"list"
+        "paths":["//table[@name='PORTFOLIOMANAGEMENT']//tr"],   
+        "return_type":"selector",
+        "child_return_strategy": "multiple_objects"
+       },
+       "fund_manager":{
+        "paths":[".//td[position()=1]//text()"],
+        "selector":"temp_fund_managers"
+       },
+       "fund_manager_years_of_experience_with_fund":{
+        "paths":[".//td[last()]//text()"],
+        "selector":"temp_fund_managers"
+       
        },
        "temp_capital_gain":{
         "paths":["//table[@name='CAPITALGAINHISTORY']//tbody//tr//td"],
@@ -98,7 +123,7 @@
         "paths":["//span[contains(text(),'Yield Information')]//following-sibling::span//text()"]
        },
        "sec_yield_without_waivers_30_day":{
-       "paths":["//td[contains(text(),'Unsubsidized SEC')]//following-sibling::td//text()","//td[contains(text(),'Taxable-Equivalent SEC')]//following-sibling::td//text()"]
+       "paths":["//td[contains(text(),'Unsubsidized SEC')]//following-sibling::td//text()"]
        },
        "sec_yield_without_waivers_date_30_day":{
         "paths":["//span[contains(text(),'Yield Information')]//following-sibling::span//text()"

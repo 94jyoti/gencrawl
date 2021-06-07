@@ -54,6 +54,8 @@ average_weighted_maturity,Average Weighted Maturity
 average_weighted_maturity_as_of_date,Average Weighted Maturity As of Date
 average_weighted_effective_maturity,Average Weighted Effective Maturity
 average_weighted_effective_maturity_as_of_date,Average Weighted Effective Maturity As of Date
+average_effective_maturity,Average Effective Maturity
+average_effective_maturity_as_of_date,Average Effective Maturity as of date
 minimum_initial_investment,Minimum Initial Investment
 minimum_additional_investment,Minimum Additional Investment
 turnover_rate,Turnover Rate
