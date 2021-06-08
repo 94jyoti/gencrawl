@@ -78,7 +78,7 @@ class BaseSpider(Spider):
             for url in urls.split("|"):
                 objs.append({self.url_key: url})
         elif input_file:
-            input_file = os.path.join(os.getcwd(), Statics.RES_DIR, input_file)
+            input_file = os.path.join(RES_DIR, input_file)
             for line in open(input_file, encoding="utf-8"):
                 if line.startswith("{"):
                     obj = json.loads(line)
