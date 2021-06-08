@@ -15,12 +15,13 @@
         "start_urls": [
             "https://www.delawarefunds.com/products/"
         ],
-        "pagination":{
-     	 "paths":["//option[position()>1]//@value"],
-    	 "return_type":"list",
-    	 "cleanup_functions":["['https://www.delawarefunds.com/products/mutual-funds/fixed-income/delaware-corporate-bond-fund?FundClass='+i for i in obj['pagination']]"]
+        "pagination": {
+             "paths":["//option[position()>1]//@value"],
+             "return_type": "list",
+             "cleanup_functions": [
+                 "['https://www.delawarefunds.com/products/mutual-funds/fixed-income/delaware-corporate-bond-fund?FundClass='+i for i in obj['pagination']]"
+             ]
     	 },
-    	 
         "ext_codes": {
             "share_class": {
                 "paths": [
@@ -76,7 +77,7 @@
             },
             "temp_fund_managers": {
                 "paths": [
-                    "//section[@id='managers']"
+                    "//section[@id='managers']//div[contains(@class, 'manager')]"
                 ],
                 "return_type": "selector",
                 "child_return_strategy": "multiple_objects"
@@ -223,10 +224,10 @@
             }
             ,
             "temp_capital_gains":{
-              "paths":["//*[@id='distributionHistory']//div"],
+              "paths":["//*[@id='distributionHistory']/div"],
               "child_return_strategy": "multiple_objects",
               "return_type": "selector",
-              "selector": "root" 
+              "selector": "root"
             },
             "cg_ex_date":{
              "paths":[".//div[1]//text()"],
