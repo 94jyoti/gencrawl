@@ -189,7 +189,8 @@ class BaseSpider(Spider):
         meta = {k: v for k, v in meta.items() if k not in self.ignore_meta_keys}
         return meta
 
-    def iterate_exec_codes(self, selector_name, selector, ext_codes, obj={}):
+    def iterate_exec_codes(self, selector_name, selector, ext_codes, obj=None):
+        obj = obj or dict()
         selectors = dict()
         codes = {c: v for c, v in ext_codes.items() if v.get("selector", self.default_selector) == selector_name}
         for key in self._get_ordered_ext_keys(codes):
