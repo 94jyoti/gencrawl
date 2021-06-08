@@ -4,6 +4,7 @@ import os
 # adding path to env variable
 cdir = os.path.join(os.getcwd().split("gencrawl")[0], 'gencrawl')
 sys.path.append(cdir)
+from gencrawl.settings import RES_DIR
 from collections import OrderedDict
 from gencrawl.util.statics import Statics
 from gencrawl.util.utility import Utility
@@ -14,7 +15,7 @@ if __name__ == "__main__":
     input_file = sys.argv[1]
     file_name, format = input_file.rsplit(".", 1)
     assert format in ["jl"]
-    field_mapping_file = os.path.join(cdir, Statics.RES_DIR, field_mapping_file)
+    field_mapping_file = os.path.join(RES_DIR, field_mapping_file)
     field_mapping = []
     for row in Utility.read_csv(field_mapping_file):
         if row['value'].startswith('Temp '):
