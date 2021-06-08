@@ -12,6 +12,10 @@
     "detail": {
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
+         "custom_settings": {
+             "HTTPCACHE_ENABLED": false,
+             "CRAWLERA_PRESERVE_DELAY": true
+        },
         "start_urls": [
             "https://www.delawarefunds.com/products/"
         ],
@@ -22,6 +26,11 @@
     	 },
     	 
         "ext_codes": {
+            "retry_condition": {
+                "paths": [
+                    "//*[contains(text(), 'NaN million')]"
+                ]
+            },
             "share_class": {
                 "paths": [
                     "//option[@selected=\"selected\"]//text()"
@@ -61,9 +70,16 @@
                 "return_type": "str",
                 "selector": "root"
             },
-            "average_modified_duration": {
+            "weighted_average_duration": {
                 "paths": [
                     "//div[contains(text(),'Effective duration (weighted average)')]//following-sibling::div//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "weighted_average_duration_as_of_date": {
+                "paths": [
+                    "//h4[contains(text(),' Portfolio characteristics ')]//small//text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
