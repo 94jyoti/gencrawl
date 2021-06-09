@@ -130,9 +130,28 @@ class BaseSpider(Spider):
         default_item['crawl_datetime'] = datetime.now()
         return default_item
 
+    def get_pagination_urls(self, response, ext_codes=None):
+        if not self.pagination:
+            return
+        pagination_ext_codes = ext_codes or {"pagination": self.pagination}
+        pagination_urls = self.exec_codes(response, pagination_ext_codes)[0].get("pagination")
+        pagination_urls = [response.urljoin(url) for url in pagination_urls]
+        return pagination_urls
+
+    def get_pagination_requests(self, pagination_urls, pagination_fields):
+        if not pagination_urls:
+            return
+        if isinstance(pagination_urls, str):
+            pagination_urls = [pagination_urls]
+        for url in pagination_urls:
+            meta = pagination_fields
+            meta[self.url_key] = url
+            meta['selector'] = Statics.SELECTOR_ROOT
+            yield self.make_request(url, callback=self.parse, meta=meta)
+
     def parse(self, response):
-        input_fields = response.meta
-        input_fields = {k: v for k, v in input_fields.items() if k not in Statics.IGNORE_META_FIELDS}
+        pagination_fields = response.meta
+        pagination_fields = {k: v for k, v in pagination_fields.items() if k not in Statics.IGNORE_META_FIELDS}
         default_item = self.get_default_item(response)
         items_or_req = self.get_items_or_req(response, default_item=default_item)
         navigation = self.parse_navigation(response, items_or_req)
@@ -141,18 +160,8 @@ class BaseSpider(Spider):
         else:
             yield navigation
 
-        # if pagination is defined, iterate over urls
-        if self.pagination:
-            pagination_ext_codes = {"pagination": self.pagination}
-            pagination_urls = self.exec_codes(response, pagination_ext_codes)[0].get("pagination")
-            # if return type defined in pagination is `str`, then make it a list
-            if isinstance(pagination_urls, str):
-                pagination_urls = [pagination_urls]
-            for url in pagination_urls:
-                meta = input_fields
-                meta[self.url_key] = response.urljoin(url)
-                meta['selector'] = Statics.SELECTOR_ROOT
-                yield response.follow(url, callback=self.parse, meta=meta)
+        pagination_urls = self.get_pagination_urls(response)
+        yield from self.get_pagination_requests(pagination_urls, pagination_fields)
 
     def parse_navigation(self, response, items):
         navigation = self.navigation
