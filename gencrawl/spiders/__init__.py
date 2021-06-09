@@ -198,8 +198,7 @@ class BaseSpider(Spider):
         meta = {k: v for k, v in meta.items() if k not in self.ignore_meta_keys}
         return meta
 
-    def iterate_exec_codes(self, selector_name, selector, ext_codes, obj=None):
-        obj = obj or dict()
+    def iterate_exec_codes(self, selector_name, selector, ext_codes, obj={}):
         selectors = dict()
         codes = {c: v for c, v in ext_codes.items() if v.get("selector", self.default_selector) == selector_name}
         for key in self._get_ordered_ext_keys(codes):
@@ -283,8 +282,9 @@ class BaseSpider(Spider):
             objs = []
             codes = {c: v for c, v in ext_codes.items() if v.get("selector") == selector_name}
             for block in blocks:
-                obj, _ = self.iterate_exec_codes(selector_name, block, codes)
+                obj, _ = self.iterate_exec_codes(selector_name, block, codes, obj={})
                 objs.append(obj)
+
             selector_values[selector_name] = objs
         items = self.apply_return_strategy(main_obj, selectors, selector_values, ext_codes)
         return items
