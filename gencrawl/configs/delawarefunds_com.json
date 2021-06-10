@@ -19,12 +19,26 @@
         "start_urls": [
             "https://www.delawarefunds.com/products/"
         ],
-        "pagination":{
-     	 "paths":["//option[position()>1]//@value"],
-    	 "return_type":"list",
-    	 "cleanup_functions":["['https://www.delawarefunds.com/products/mutual-funds/fixed-income/delaware-corporate-bond-fund?FundClass='+i for i in obj['pagination']]"]
-    	 },
-    	 
+         "pagination":{
+            "temp_url": {
+                "paths": [
+                    "//form[@id='mainform']/@action"
+                ],
+                "cleanup_functions": [
+                    "[obj['temp_url'].split('FundClass=')[0] + 'FundClass=']"
+                ]
+            },
+            "pagination": {
+                "paths": [
+                    "//option[position()>1]//@value"
+                ],
+                "return_type": "list",
+                "cleanup_functions": [
+                    "[p + i for p, i in zip(obj['temp_url']*len(obj['pagination']), obj['pagination'])]"
+
+                ]
+            }
+        },
         "ext_codes": {
             "retry_condition": {
                 "paths": [
@@ -43,11 +57,12 @@
             },
             "nasdaq_ticker": {
                 "paths": [
-                    "//table[@id=\"fundIdentifier\"]//td[contains(text(),'NASDAQ')]//following-sibling::td//text()","//option[@selected='selected']//text()"
+                    "//table[@id=\"fundIdentifier\"]//td[contains(text(),'NASDAQ')]//following-sibling::td//text()",
+                    "//option[@selected='selected']//text()"
                 ],
                 "return_type": "str",
                 "selector": "root",
-                "cleanup_functions": ["obj['share_class'].split(\"(\")[-1]"]
+                "cleanup_functions": ["obj['nasdaq_ticker'].split(\"(\")[-1].replace(\")\",\"\")"]
             },
             "cusip": {
                 "paths": [
@@ -97,7 +112,6 @@
                 ],
                 "return_type": "selector",
                 "child_return_strategy": "multiple_objects"
-                
             },
             "fund_manager": {
                 "paths": [
@@ -247,7 +261,7 @@
               "paths":["//*[@id='distributionHistory']/div"],
               "child_return_strategy": "multiple_objects",
               "return_type": "selector",
-              "selector": "root" 
+              "selector": "root"
             },
             "cg_ex_date":{
              "paths":[".//div[1]//text()"],
@@ -259,7 +273,6 @@
              "return_type": "str",
              "selector": "temp_capital_gains"
             }
-            
         }
     }
 }

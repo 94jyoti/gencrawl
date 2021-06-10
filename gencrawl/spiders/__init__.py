@@ -98,8 +98,10 @@ class BaseSpider(Spider):
         self.logger.info("Total urls to be crawled - {}".format(len(objs)))
         return objs
 
-    def make_request(self, url, callback=None, method=Statics.CRAWL_METHOD_DEFAULT, headers={}, meta={}, body=None,
+    def make_request(self, url, callback=None, method=Statics.CRAWL_METHOD_DEFAULT, headers=None, meta=None, body=None,
                      wait_time=Statics.WAIT_TIME_DEFAULT, wait_until=None, iframe=None, dont_filter=False):
+        headers = headers or dict()
+        meta = meta or dict()
         if method == Statics.CRAWL_METHOD_SELENIUM:
             request = GenSeleniumRequest(url=url, callback=callback, meta=meta, wait_time=wait_time,
                                          wait_until=wait_until, iframe=iframe, dont_filter=dont_filter)
@@ -133,7 +135,7 @@ class BaseSpider(Spider):
     def get_pagination_urls(self, response, ext_codes=None):
         if not self.pagination:
             return
-        pagination_ext_codes = ext_codes or {"pagination": self.pagination}
+        pagination_ext_codes = ext_codes or self.pagination
         pagination_urls = self.exec_codes(response, pagination_ext_codes)[0].get("pagination")
         pagination_urls = [response.urljoin(url) for url in pagination_urls]
         return pagination_urls
@@ -198,7 +200,8 @@ class BaseSpider(Spider):
         meta = {k: v for k, v in meta.items() if k not in self.ignore_meta_keys}
         return meta
 
-    def iterate_exec_codes(self, selector_name, selector, ext_codes, obj={}):
+    def iterate_exec_codes(self, selector_name, selector, ext_codes, obj=None):
+        obj = obj or dict()
         selectors = dict()
         codes = {c: v for c, v in ext_codes.items() if v.get("selector", self.default_selector) == selector_name}
         for key in self._get_ordered_ext_keys(codes):
@@ -267,7 +270,8 @@ class BaseSpider(Spider):
         return items
 
     # if else check that whether it is an xpath or jpath or regex
-    def exec_codes(self, response, ext_codes={}, default_obj={}):
+    def exec_codes(self, response, ext_codes=None, default_obj=None):
+        default_obj = default_obj or dict()
         ext_codes = ext_codes or self.ext_codes
         selector_values = defaultdict(list)
         # try-except to handle those cases where response object is still not tied to a meta,
@@ -282,7 +286,7 @@ class BaseSpider(Spider):
             objs = []
             codes = {c: v for c, v in ext_codes.items() if v.get("selector") == selector_name}
             for block in blocks:
-                obj, _ = self.iterate_exec_codes(selector_name, block, codes, obj={})
+                obj, _ = self.iterate_exec_codes(selector_name, block, codes)
                 objs.append(obj)
 
             selector_values[selector_name] = objs
@@ -358,13 +362,13 @@ class BaseSpider(Spider):
 
     # prepare item dict from ext_codes from the config of website
     @abstractmethod
-    def prepare_items(self, response, default_item={}):
+    def prepare_items(self, response, default_item=None):
         pass
 
     # callback to be called from parse method. It should return a list of
     # items or requests or a combination of both
     @abstractmethod
-    def get_items_or_req(self, response, default_item={}):
+    def get_items_or_req(self, response, default_item=None):
         pass
 
     # item dict to item_class depending on whether its an product item or listing item or any other type
