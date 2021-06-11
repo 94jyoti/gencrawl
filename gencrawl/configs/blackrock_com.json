@@ -79,14 +79,16 @@
             },
             "total_expense_gross": {
                 "paths": [
-                    "//td[contains(text(),'Gross Expense Ratio')]//following-sibling::td//text()"
+                    "//td[contains(text(),'Gross Expense Ratio')]//following-sibling::td//text()",
+                    "//span[contains(text(),'Gross Expense Ratio')]//following-sibling::span[@class='data']/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "total_expense_net": {
                 "paths": [
-                    "//td[contains(text(),'Net Expense Ratio')]//following-sibling::td//text()"
+                    "//td[contains(text(),'Net Expense Ratio')]//following-sibling::td//text()",
+                    "//span[contains(text(),'Net Expense Ratio')]//following-sibling::span[@class='data']/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
