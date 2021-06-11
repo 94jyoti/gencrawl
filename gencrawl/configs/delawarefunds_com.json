@@ -10,7 +10,8 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "crawl_method": "SCRAPY_GET",
+        "crawl_method": "SELENIUM",
+        "wait_time": 8,
         "parsing_type": "xpath",
          "custom_settings": {
              "HTTPCACHE_ENABLED": false,
@@ -108,7 +109,7 @@
             },
             "temp_fund_managers": {
                 "paths": [
-                    "//section[@id='managers']"
+                    "//section[@id='managers']//div[contains(@class,'manager')]"
                 ],
                 "return_type": "selector",
                 "child_return_strategy": "multiple_objects"
@@ -139,17 +140,18 @@
                 "selector": "temp_fund_managers"
             },
             "temp_bench":{
-             "paths":["//div[@class='benchmark-peer-group-wrap']//p//strong"],
+             "paths":["//div[@class='benchmark-peer-group-wrap']//p"],
             "return_type": "selector",
             "child_return_strategy": "single_item"
             
             },
-            "benchmarks": {
-                "paths": [
-                    ".//text()"
-                ],
-                "return_type": "join",
-                "selector": "temp_bench"
+            "benchmarks":{
+    		 "paths":["//div[@class='benchmark-peer-group-wrap']//p//strong"],
+             "return_type": "selector",
+             "child_return_strategy": "single_item",
+             "cleanup_functions": [
+                "[''.join(o.xpath('.//text()').extract()) for o in obj['benchmarks']]"
+             ]
             },
             "total_expense_gross": {
                 "paths": [
