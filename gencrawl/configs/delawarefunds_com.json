@@ -85,14 +85,14 @@
                 "return_type": "str",
                 "selector": "root"
             },
-            "weighted_average_duration": {
+            "effective_duration": {
                 "paths": [
                     "//div[contains(text(),'Effective duration (weighted average)')]//following-sibling::div//text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
-            "weighted_average_duration_as_of_date": {
+            "effective_duration_date": {
                 "paths": [
                     "//h4[contains(text(),' Portfolio characteristics ')]//small//text()"
                 ],
@@ -117,6 +117,7 @@
                 "paths": [
                     ".//h4//text()"
                 ],
+                "cleanup_functions":["obj['fund_manager'].replace('&nbsp','').strip()"],
                 "selector": "temp_fund_managers"
             },
             "fund_manager_years_of_experience_in_industry": {
@@ -137,12 +138,18 @@
                 ],
                 "selector": "temp_fund_managers"
             },
+            "temp_bench":{
+             "paths":["//div[@class='benchmark-peer-group-wrap']//p//strong"],
+            "return_type": "selector",
+            "child_return_strategy": "single_item"
+            
+            },
             "benchmarks": {
                 "paths": [
-                    "//div[@class=\"benchmark-peer-group-wrap\"]//p//strong[contains(text(),'Index')]"
+                    ".//text()"
                 ],
-                "return_type": "list",
-                "selector": "root"
+                "return_type": "join",
+                "selector": "temp_bench"
             },
             "total_expense_gross": {
                 "paths": [
@@ -160,7 +167,7 @@
             },
             "share_inception_date": {
                 "paths": [
-                    "//td[text()=('Inception date')]//following-sibling::td//text()"
+                    "//td[contains(text(),'Inception date')]//following-sibling::td//text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -268,10 +275,24 @@
              "return_type": "str",
              "selector": "temp_capital_gains"
             },
+            "ordinary_income":{
+             "paths":[".//div[3]//text()"],
+             "return_type": "str",
+             "selector": "temp_capital_gains"
+            },
             "total_per_share":{
              "paths":[".//div[2]//text()"],
              "return_type": "str",
              "selector": "temp_capital_gains"
+            },
+            "turnover_rate":{
+             "paths":["//div[contains(text(),'turnover')]//following-sibling::div//text()"]
+            },
+            "turnover_rate_date":{
+             "paths":["//h4[contains(text(),' Portfolio characteristics ')]//small//text()"]
+            },
+            "contingent_deferred_sales_charge":{
+             "paths":["//td[@id='maxContingentDeferredSalesCharge']//following-sibling::td//text()"]
             }
         }
     }
