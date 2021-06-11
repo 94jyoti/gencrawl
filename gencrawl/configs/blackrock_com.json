@@ -114,14 +114,17 @@
             },
             "total_net_assets": {
                 "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Size of Class')]/following-sibling::span//text()"
+                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Size of Class')]/following-sibling::span//text()",
+                    "//div[contains(@class, 'totalNetAssets')]//span[@class='data']/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "total_net_assets_date": {
                 "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Size of  Class')]//following-sibling::span//text()"
+                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Size of  Class')]//following-sibling::span//text()",
+                    "//div[contains(@class, 'totalNetAssets')]//span[@class='as-of-date']/text()",
+                    "//div[contains(@class, 'totalSeriesSizeInMillions')]//span[@class='as-of-date']/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -129,6 +132,9 @@
             "sec_yield_30_day": {
                 "paths": [
                     "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'30 Day SEC Yield')]/following-sibling::span//text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_30_day'].replace('-', '').strip()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -158,12 +164,15 @@
                 "paths": [
                     "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'Effective Duration')]/following-sibling::span//text()"
                 ],
+                "cleanup_functions": [
+                    "obj['effective_duration'].replace('-', '').strip()"
+                ],
                 "return_type": "str",
                 "selector": "root"
             },
             "effective_duration_date": {
                 "paths": [
-                    "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'Effective Duration')]//following-sibling::span//text()"
+                    "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'Effective Duration')]/a/following-sibling::span[@class='as-of-date']/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
