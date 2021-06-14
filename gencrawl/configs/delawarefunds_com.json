@@ -138,11 +138,6 @@
                     "obj['fund_manager_years_of_experience_with_fund'].split(\":\")[-1].strip()"
                 ],
                 "selector": "temp_fund_managers"
-            },
-            "temp_bench":{
-             "paths":["//div[@class='benchmark-peer-group-wrap']//p"],
-            "return_type": "selector",
-            "child_return_strategy": "single_item"
             
             },
             "benchmarks":{
@@ -150,7 +145,8 @@
              "return_type": "selector",
              "child_return_strategy": "single_item",
              "cleanup_functions": [
-                "[''.join(o.xpath('.//text()').extract()) for o in obj['benchmarks']]"
+                "[''.join(o.xpath('.//text()').extract()) for o in obj['benchmarks']]",
+                "[i for i in obj['benchmarks'] if 'index' in i.lower()]"
              ]
             },
             "total_expense_gross": {
@@ -295,6 +291,19 @@
             },
             "contingent_deferred_sales_charge":{
              "paths":["//td[@id='maxContingentDeferredSalesCharge']//following-sibling::td//text()"]
+            },
+            "sub_advisor":{
+            	"paths":["//h4[contains(text(),'Sub-advisor')]//following-sibling::p//text()"]
+            	
+            },
+            "portfolio_consultant":{
+            "paths":["//h4[contains(text(),'Investment manager')]//following-sibling::p//text()"]
+            },
+            "minimum_initial_investment":{
+             "paths":["//td[contains(text(),'Initial investment')]//following-sibling::td//text()"]
+            },
+            "minimum_additional_investment":{
+             "paths":["//td[contains(text(),'Subsequent investment')]//following-sibling::td//text()"]
             }
         }
     }
