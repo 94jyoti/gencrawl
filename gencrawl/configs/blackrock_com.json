@@ -131,6 +131,11 @@
                 "return_type": "str",
                 "selector": "root"
             },
+            "average_modified_duration": {
+                "paths": [
+                    "//span[contains(text(), 'Modified Duration')]/following-sibling::span[@class='data']/text()"
+                ]
+            },
             "sec_yield_30_day": {
                 "paths": [
                     "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'30 Day SEC Yield')]/following-sibling::span//text()"
