@@ -83,5 +83,16 @@ class Utility:
                 line = {k: v.replace('\n', ' ') if v else v for k, v in line.items()}
                 csvwriter.writerow(line)
 
+    @staticmethod
+    def get_config_name(website):
+        config = website.replace("https:", '').replace('http:', '').strip(' /')
+        config = config.replace("www.", '').replace(".", "_").replace("-", "_")
+        return config
 
-
+    @staticmethod
+    def get_allowed_domains(websites):
+        allowed_domains = []
+        for website in websites:
+            domain = website.replace("https:", '').replace('http:', '').strip(' /').replace("www.", '')
+            allowed_domains.append(domain)
+        return allowed_domains

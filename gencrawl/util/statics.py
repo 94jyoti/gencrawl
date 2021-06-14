@@ -63,4 +63,8 @@ class Statics:
     # messages
     RETRY_CONDITION_MSG = "RETRY_CONDITION_MATCHED"
 
+    # config link
+    GOOGLE_LINK_V2 = "https://docs.google.com/spreadsheets/u/1/d/1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw/export?format=csv&id=1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw&gid=1108971848"
+
+
 

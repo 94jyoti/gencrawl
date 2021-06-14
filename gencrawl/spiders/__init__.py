@@ -26,7 +26,7 @@ from collections.abc import Iterable
 from scrapy.selector import Selector
 from abc import ABC, abstractmethod
 from gencrawl.settings import CONFIG_DIR, RES_DIR
-from gencrawl.util.temp_config_setup import TempConfig
+from gencrawl.util.google_sheet_config_setup_v2 import GoogleConfig
 
 
 class BaseSpider(Spider):
@@ -34,10 +34,11 @@ class BaseSpider(Spider):
     @classmethod
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
-        # temporary config set up from google sheet
-        TempConfig().main(CONFIG_DIR)
-        config = config.strip(' /').replace("https://", '').replace('http://', '').replace(
-            "www.", '').replace(".", "_").replace("-", "_")
+        # config set up from google sheet
+        google_config = GoogleConfig().main(config, CONFIG_DIR)
+        # config returned from google config, if None i.e. no config exists at google sheet, then take the value
+        # provided in arguements.
+        config = google_config or Utility.get_config_name(config)
         config_filename = config + Statics.CONFIG_EXT
         config_fp = os.path.join(CONFIG_DIR, config_filename)
         config = json.loads(open(config_fp).read())
