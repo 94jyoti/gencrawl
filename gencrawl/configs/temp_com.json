@@ -1,0 +1,44 @@
+{
+    "website": "http://www.eipfunds.com",
+    "spider": "financial_detail",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "start_urls": [
+            "http://www.eipfunds.com/products/mutual-funds/"
+        ],
+        "ext_codes": {
+            "temp_class_blocks": {
+              "paths": [
+                "//div[contains(@class, 'wpb_content_element')]//h2[contains(text(), ' Class') and not(contains(text(), 'Asset'))]"
+              ],
+              "return_type": "selector",
+              "child_return_strategy": "multiple_items"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//span[contains(text(), 'Ticker')]/parent::td/following-sibling::*//text()"
+                ],
+                "return_type": "list-map"
+            },
+            "cusip": {
+                "paths": [
+                    "//span[contains(text(), 'Ticker')]/parent::td/following-sibling::*//text()"
+                ],
+                "return_type": "list-map"
+            }
+        }
+    }
+}
