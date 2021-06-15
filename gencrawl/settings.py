@@ -56,3 +56,4 @@ HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 # directories
 CONFIG_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'configs')
 RES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'res')
+SPIDER_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'spiders')
