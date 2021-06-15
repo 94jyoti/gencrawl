@@ -6,4 +6,4 @@ requirements:
   file: ./requirements.txt
 
 version: AUTO
-stack: scrapy:2.5
+image: true
