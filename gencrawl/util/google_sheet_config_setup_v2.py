@@ -39,13 +39,16 @@ class GoogleConfig:
         df = df.set_index('field_names', drop=True).T
         df1 = df.copy()
         df = df.reset_index()
-        website_index = df[df['Config'] == website].index[0]
-        df = df1[website_index: website_index+4]
-        return df
+        website_df = df[df['Config'] == website]
+        if not website_df.empty:
+            website_index = website_df.index[0]
+            df = df1[website_index: website_index+4]
+            return df
 
     def create_configs(self, df):
         def split_g(elem):
             return elem.replace("\r\n", "\n").split("\n")
+
 
         parsed_config_list = dict()
         parsed_config = dict()
@@ -143,8 +146,8 @@ class GoogleConfig:
     def main(self, website, config_dir):
         df = self.download_csv_file(Statics.GOOGLE_LINK_V2)
         website_df = self.filter_website_in_config(df, website)
-        p_configs = self.create_configs(website_df)
-        if p_configs:
+        if website_df:
+            p_configs = self.create_configs(website_df)
             if self.spider.endswith("_custom_spider"):
                 self.create_custom_script(p_configs)
             self.save_configs(p_configs, config_dir)
