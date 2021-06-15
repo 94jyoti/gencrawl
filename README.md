@@ -19,3 +19,8 @@ For running detail spider taking input from file -
 
 Converting jl to csv
 `python bin/json_to_csv.py /home/sagar/Documents/forage/gencrawl/pgim.jl`
+
+Deploying project on Zyte server
+`shub image build nfn`
+`shub image push nfn`
+`shub image deploy nfn`
