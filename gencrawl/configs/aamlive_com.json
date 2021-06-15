@@ -50,11 +50,13 @@
                     "./td[2]/text()"
                 ],
                 "return_type": "str",
-                "selector": "temp_class_rows"
+                "selector": "temp_class_rows",
+                "cleanup_functions": [
+                    "obj['cusip'].split('/')[-1]"]
             },
             "instrument_name": {
                 "paths": [
-                    "//p[@class='title']/text()"
+                    "//div[contains(@class,'title banner')]//following-sibling::h1//text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
