@@ -15,6 +15,7 @@ class Statics:
     RETURN_TYPE_JSON = 'json'
     RETURN_TYPE_LIST = 'list'
     RETURN_TYPE_JOIN = 'join'
+    RETURN_TYPE_LIST_MAP = 'list-map'
     RETURN_TYPE_SELECTOR = 'selector'
     RETURN_TYPE_SELECTOR_JSON = 'selector-json'
 

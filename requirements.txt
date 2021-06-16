@@ -8,3 +8,4 @@ scrapy-selenium==0.0.7
 beautifulsoup4==4.6.3
 pandas==1.2.2
 webdriver-manager==3.4.1
+numpy==1.18.1

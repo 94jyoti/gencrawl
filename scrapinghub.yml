@@ -1,9 +1,9 @@
 projects:
   nfn:
-    id: 529719
+    id: 533749
  
 requirements:
   file: ./requirements.txt
 
 version: AUTO
-stack: scrapy:2.5
+image: true

@@ -340,7 +340,7 @@ class BaseSpider(Spider):
             for val in value:
                 if val:
                     return val
-        elif return_type in [Statics.RETURN_TYPE_LIST, Statics.RETURN_TYPE_SELECTOR]:
+        elif return_type in [Statics.RETURN_TYPE_LIST, Statics.RETURN_TYPE_SELECTOR, Statics.RETURN_TYPE_LIST_MAP]:
             return [v for v in value if v]
         elif return_type == Statics.RETURN_TYPE_JOIN:
             return ' '.join(value)
