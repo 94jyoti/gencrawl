@@ -152,5 +152,7 @@ class GoogleConfig:
             p_configs = self.create_configs(website_df)
             if self.spider.endswith("_custom_spider"):
                 self.create_custom_script(p_configs)
+            print(p_configs)
+            return p_configs[list(p_configs.keys())[0]]
             self.save_configs(p_configs, config_dir)
             return list(p_configs.keys())[0]

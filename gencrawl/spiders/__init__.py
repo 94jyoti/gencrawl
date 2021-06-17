@@ -38,10 +38,14 @@ class BaseSpider(Spider):
         google_config = GoogleConfig().main(config, CONFIG_DIR)
         # config returned from google config, if None i.e. no config exists at google sheet, then take the value
         # provided in arguements.
-        config = google_config or Utility.get_config_name(config)
-        config_filename = config + Statics.CONFIG_EXT
-        config_fp = os.path.join(CONFIG_DIR, config_filename)
-        config = json.loads(open(config_fp).read())
+        if google_config:
+            config = google_config
+        else:
+            config = Utility.get_config_name(config)
+            config_filename = config + Statics.CONFIG_EXT
+            config_fp = os.path.join(CONFIG_DIR, config_filename)
+            config = json.loads(open(config_fp).read())
+            
         custom_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
         if custom_settings:
             crawler.settings.frozen = False
