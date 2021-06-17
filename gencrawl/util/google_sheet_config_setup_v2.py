@@ -42,13 +42,12 @@ class GoogleConfig:
         website_df = df[df['Config'] == website]
         if not website_df.empty:
             website_index = website_df.index[0]
-            df = df1[website_index: website_index+4]
-            return df
+            website_df = df1[website_index: website_index+4]
+        return website_df
 
     def create_configs(self, df):
         def split_g(elem):
             return elem.replace("\r\n", "\n").split("\n")
-
 
         parsed_config_list = dict()
         parsed_config = dict()
@@ -74,6 +73,9 @@ class GoogleConfig:
         detail["crawl_method"] = df.pop("Crawl Method")[0]
         if detail['crawl_method'] == Statics.CRAWL_METHOD_SELENIUM:
             detail['wait_time'] = Statics.WAIT_TIME_DEFAULT
+            detail['custom_settings'] = {
+              "HTTPCACHE_ENABLED": False
+            }
         detail["parsing_type"] = Statics.PARSING_TYPE_XPATH
         detail['start_urls'] = split_g(df.pop("fund_urls")[0])
         ext_codes = dict()
@@ -99,7 +101,7 @@ class GoogleConfig:
             if xpaths.get(field):
                 ext_codes[field] = ext_code
                 ext_code["paths"] = split_g(xpaths[field])
-            if cleanups.get(field):
+            if cleanups.get(field) and np.nan is cleanups[field]:
                 ext_code["cleanup_functions"] = split_g(cleanups[field])
 
             rt = return_types.get(field)
@@ -146,7 +148,7 @@ class GoogleConfig:
     def main(self, website, config_dir):
         df = self.download_csv_file(Statics.GOOGLE_LINK_V2)
         website_df = self.filter_website_in_config(df, website)
-        if website_df:
+        if not website_df.empty:
             p_configs = self.create_configs(website_df)
             if self.spider.endswith("_custom_spider"):
                 self.create_custom_script(p_configs)

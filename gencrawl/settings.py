@@ -31,7 +31,7 @@ DOWNLOADER_MIDDLEWARES = {
     # engine
     'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
-    # 'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
+    'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
     # website
 }
 SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
