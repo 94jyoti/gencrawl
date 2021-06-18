@@ -35,9 +35,9 @@ class BaseSpider(Spider):
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
         # config set up from google sheet
-        google_config = GoogleConfig().main(config, CONFIG_DIR)
+        google_config = GoogleConfig().main(config, CONFIG_DIR, crawler.settings['ENVIRONMENT'])
         # config returned from google config, if None i.e. no config exists at google sheet, then take the value
-        # provided in arguements.
+        # provided in arguments
         if google_config:
             config = google_config
         else:

@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 from gencrawl.util.statics import Statics
 from gencrawl.util.utility import Utility
-from gencrawl.settings import SPIDER_DIR
+from gencrawl.settings import CONFIG_DIR
 SPIDER_TEMPLATE = '''from gencrawl.spiders.financial.financial_detail_spider import FinancialDetailSpider
 import scrapy
 
@@ -47,7 +47,9 @@ class GoogleConfig:
 
     def create_configs(self, df):
         def split_g(elem):
-            return elem.replace("\r\n", "\n").split("\n")
+            elems = elem.replace("\r\n", "\n").split("\n")
+            elems = [e for e in elems if e and e.strip()]
+            return elems
 
         parsed_config_list = dict()
         parsed_config = dict()
@@ -101,7 +103,7 @@ class GoogleConfig:
             if xpaths.get(field):
                 ext_codes[field] = ext_code
                 ext_code["paths"] = split_g(xpaths[field])
-            if cleanups.get(field) and np.nan is cleanups[field]:
+            if cleanups.get(field) and np.nan is not cleanups[field]:
                 ext_code["cleanup_functions"] = split_g(cleanups[field])
 
             rt = return_types.get(field)
@@ -145,14 +147,16 @@ class GoogleConfig:
             with open(fp, 'w') as w:
                 w.write(json.dumps(jsn, indent=4))
 
-    def main(self, website, config_dir):
+    def main(self, website, config_dir, env):
         df = self.download_csv_file(Statics.GOOGLE_LINK_V2)
         website_df = self.filter_website_in_config(df, website)
         if not website_df.empty:
             p_configs = self.create_configs(website_df)
-            if self.spider.endswith("_custom_spider"):
-                self.create_custom_script(p_configs)
-            print(p_configs)
+            # only write files in development env
+            if env == Statics.ENV_DEV:
+                if self.spider.endswith("_custom_spider"):
+                    self.create_custom_script(p_configs)
+
+                self.save_configs(p_configs, config_dir)
             return p_configs[list(p_configs.keys())[0]]
-            self.save_configs(p_configs, config_dir)
-            return list(p_configs.keys())[0]
+
