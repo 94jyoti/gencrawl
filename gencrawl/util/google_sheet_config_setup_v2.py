@@ -45,6 +45,11 @@ class GoogleConfig:
         if not website_df.empty:
             website_index = website_df.index[0]
             website_df = df1[website_index: website_index+4]
+            do_fresh_copy = website_df.pop('Refresh Copy')[0]
+            if do_fresh_copy != '1':
+                print("Refresh Copy set to 0, so exiting without saving configuration....")
+                return pd.DataFrame()
+
         return website_df
 
     def create_configs(self, df):
@@ -57,10 +62,6 @@ class GoogleConfig:
 
         parsed_config_list = dict()
         parsed_config = dict()
-        do_fresh_copy = df.pop('Refresh Copy')[0]
-        if do_fresh_copy != '1':
-            print("Refresh Copy set to 0, so exiting without saving configuration....")
-            return pd.DataFrame()
         website = df.pop('Config')[0]
         parsed_config['website'] = website
         self.spider = df.pop('Spider')[0]
@@ -156,8 +157,6 @@ class GoogleConfig:
         website_df = self.filter_website_in_config(df, website)
         if not website_df.empty:
             p_configs = self.create_configs(website_df)
-            if p_configs.empty:
-                return
             # only write files in development env
             if env == Statics.ENV_DEV:
                 if self.spider.endswith("_custom_spider"):
