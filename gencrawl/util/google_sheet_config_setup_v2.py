@@ -9,8 +9,9 @@ import pandas as pd
 import numpy as np
 from gencrawl.util.statics import Statics
 from gencrawl.util.utility import Utility
-from gencrawl.settings import CONFIG_DIR
+from gencrawl.settings import CONFIG_DIR, SPIDER_DIR
 SPIDER_TEMPLATE = '''from gencrawl.spiders.financial.financial_detail_spider import FinancialDetailSpider
+from gencrawl.spiders.financial.financial_detail_field_mapping import FinancialDetailFieldMapSpider
 import scrapy
 
 
@@ -28,7 +29,8 @@ class GoogleConfig:
     def __init__(self):
         self.spider = None
         self.config_name = None
-        self.spider_class_map = {"financial_detail": "FinancialDetailSpider"}
+        self.spider_class_map = {"financial_detail": "FinancialDetailSpider",
+                                 "financial_detail_field_map": "FinancialDetailFieldMapSpider"}
 
     def download_csv_file(self, url):
         response = requests.get(url)
