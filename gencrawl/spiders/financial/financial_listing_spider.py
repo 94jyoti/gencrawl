@@ -30,7 +30,6 @@ class FinancialListingSpider(BaseSpider):
         default_item = default_item or dict()
         parsed_items = []
         for item in self.prepare_items(response, default_item):
-            print(item)
             parsed_items.append(self.generate_item(item, FinancialListingItem))
         return parsed_items
 
