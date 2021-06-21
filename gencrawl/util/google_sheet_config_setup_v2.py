@@ -49,6 +49,8 @@ class GoogleConfig:
 
     def create_configs(self, df):
         def split_g(elem):
+            if isinstance(elem, float):
+                return []
             elems = elem.replace("\r\n", "\n").split("\n")
             elems = [e for e in elems if e and e.strip()]
             return elems
