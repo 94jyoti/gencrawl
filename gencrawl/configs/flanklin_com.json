@@ -1,10 +1,10 @@
 {
-    "website": "https://www.aamlive.com/",
+    "website": "https://www.franklintempleton.com",
     "spider": "financial_detail",
     "domain": "financial",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "https://www.franklintempleton.com/"
+        "www.franklintempleton.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -15,6 +15,17 @@
         "start_urls": [
             "https://www.franklintempleton.com/investor/investments-and-solutions/investment-options/mutual-funds/overview/656/franklin-arizona-tax-free-income-fund/FAZZX"
         ],
+        "pagination":{
+            "pagination": {
+                "paths": [
+                    "//button[@id='share-class']//following-sibling::ul//li//a//@href"
+                ],
+                "return_type": "list",
+                "cleanup_functions": 
+                    ["['https://www.franklintempleton.com'+i for i in obj['pagination']]"]
+            }
+        },
+        
         "ext_codes": {
             
             "share_class": {
@@ -22,14 +33,14 @@
                     "//button[@id='share-class']//text()"
                 ],
                 "return_type": "str",
-                "selector": "temp_class_rows"
+                "selector":"root"
             },
             "nasdaq_ticker": {
                 "paths": [
                     "//b[@class='symbol']//text()"
                 ],
                 "return_type": "str",
-                "selector": "temp_class_rows"
+                "selector": "root"
             },
             "cusip": {
                 "paths": [
@@ -94,7 +105,61 @@
                 "selector": "temp_fund_managers"
             },
             "dividend_frequency":{
-             "paths":["//th[contains(text(),'Distributions')]/following-sibling::td//b//text()"]	
+             "paths":["//th[contains(text(),'Distributions')]/following-sibling::td//b//text()"],
+              "return_type": "str",
+                "selector": "root"	
+            
+            },
+            "initial_sales_charge":{
+             "paths":["//th[contains(text(),'Max Initial Sales Charge')]//following-sibling::td//b//text()"],
+             "return_type": "str",
+                "selector": "root"	
+            
+            },
+            "contingent_deferred_sales_charge":{
+             "paths":["//th[contains(text(),'CDSC')]//following-sibling::td//b//text()"],
+              "return_type": "str",
+              "selector": "root"	 
+            },
+            "temp_investment_strategyyy":{
+             "paths":["//h3[contains(text(),'Strategy')]//following-sibling::ul//li","//h3[contains(text(),'Strategy')]//following-sibling::p//text()"],
+             "child_return_strategy": "single_item",
+                "return_type": "selector",
+                "selector": "root"
+            
+            },
+            "minimum_initial_investment":{
+             "paths":["//h3[contains(text(),'Minimum Investment')]//following-sibling::p//nobr//text()","//h3[contains(text(),'Minimum Investment')]//following-sibling::a//text()"],
+             "return_type": "str",
+             "selector": "root"	
+            
+            },
+            "sec_yield_date_30_day":{
+             "paths":["//th[contains(text(),'30-Day Standardized yield')]//small//text()"],
+             "return_type": "str",
+             "selector": "root"	,
+              "cleanup_functions": 
+                    [" obj['sec_yield_date_30_day'].replace('(updated monthly)','')"]
+             
+            },
+            "sec_yield_without_waivers_date_30_day":{
+             "paths":["//th[contains(text(),'30-Day Standardized yield')]//small//text()"],
+             "return_type": "str",
+             "selector": "root"	,
+             "cleanup_functions": 
+                    [" obj['sec_yield_without_waivers_date_30_day'].replace('(updated monthly)','')"]
+            },
+            "sec_yield_30_day":{
+             "paths":["//th[contains(text(),'30-Day Standardized yield')]//following-sibling::td//b//text()","//th[contains(text(),'30-Day Standardized yield')]//following::th[contains(text(),'w/ Waiver')]//following-sibling::td//b//text()"],
+             "return_type": "str",
+             "selector": "root"	
+             
+            
+            },
+            "sec_yield_without_waivers_30_day":{
+             "paths":["//th[contains(text(),'30-Day Standardized yield')]//following::th[contains(text(),'w/o Waiver')]//following-sibling::td//b//text()"],
+             "return_type": "str",
+             "selector": "root"	
             
             }
         }
