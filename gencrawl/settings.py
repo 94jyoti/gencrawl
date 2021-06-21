@@ -35,7 +35,7 @@ DOWNLOADER_MIDDLEWARES = {
 }
 SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
 # SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
-SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless', '--disable-dev-shm-usage']
+SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless']
 
 ITEM_PIPELINES = {
       'gencrawl.pipelines.nfn_pipelines.NFNPipeline': 300,
