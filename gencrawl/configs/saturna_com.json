@@ -1,0 +1,135 @@
+{
+    "website": "https://www.saturna.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "saturna.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.saturna.com/amana/income-fund",
+            "https://www.saturna.com/amana/growth-fund",
+            "https://www.saturna.com/amana/developing-world-fund",
+            "https://www.saturna.com/amana/participation-fund"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h2/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//h6[contains(text(),'Share Class')]/parent::span/following-sibling::span/label"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//h6[contains(text(),'Ticker')]/parent::span/following-sibling::span/label//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "annual_fund_operating_expenses_after_fee_waiver": {
+                "paths": [
+                    "//strong[contains(text(),'Total Annual Fund Operating Expenses')]/parent::td/following-sibling::td//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "fees_total_12b_1": {
+                "paths": [
+                    "//td[contains(text(),'12b-1')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "other_expenses": {
+                "paths": [
+                    "//td[contains(text(),'Other Expenses')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "management_fee": {
+                "paths": [
+                    "//td[contains(text(),'Management Fees')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h3[contains(text(),'Investment Objective')]/parent::div/p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//*[contains(text(), 'Principal Investment Strategies')]/following-sibling::p/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//strong[contains(text(),'Investment Minimum')]/parent::p/following-sibling::p/text()"
+                ],
+                "cleanup_functions": [
+                    "[re.search('(\\$[\\d,]+)', m) for m in obj['minimum_initial_investment']]",
+                    "[m.group(1) for m in obj['minimum_initial_investment'] if m]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h2[contains(text(),'Portfolio Managers')]/parent::div/div/div/div[2]"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./span/a//text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_with_fund": {
+                "paths": [
+                    "./span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['fund_manager_years_of_experience_with_fund'].split('since')[-1]"
+                ],
+                "return_type": "join",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

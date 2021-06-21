@@ -9,8 +9,9 @@ import pandas as pd
 import numpy as np
 from gencrawl.util.statics import Statics
 from gencrawl.util.utility import Utility
-from gencrawl.settings import SPIDER_DIR
+from gencrawl.settings import CONFIG_DIR, SPIDER_DIR
 SPIDER_TEMPLATE = '''from gencrawl.spiders.financial.financial_detail_spider import FinancialDetailSpider
+from gencrawl.spiders.financial.financial_detail_field_mapping import FinancialDetailFieldMapSpider
 import scrapy
 
 
@@ -28,7 +29,8 @@ class GoogleConfig:
     def __init__(self):
         self.spider = None
         self.config_name = None
-        self.spider_class_map = {"financial_detail": "FinancialDetailSpider"}
+        self.spider_class_map = {"financial_detail": "FinancialDetailSpider",
+                                 "financial_detail_field_map": "FinancialDetailFieldMapSpider"}
 
     def download_csv_file(self, url):
         response = requests.get(url)
@@ -42,13 +44,16 @@ class GoogleConfig:
         website_df = df[df['Config'] == website]
         if not website_df.empty:
             website_index = website_df.index[0]
-            df = df1[website_index: website_index+4]
-            return df
+            website_df = df1[website_index: website_index+4]
+        return website_df
 
     def create_configs(self, df):
         def split_g(elem):
-            return elem.replace("\r\n", "\n").split("\n")
-
+            if isinstance(elem, float):
+                return []
+            elems = elem.replace("\r\n", "\n").split("\n")
+            elems = [e for e in elems if e and e.strip()]
+            return elems
 
         parsed_config_list = dict()
         parsed_config = dict()
@@ -74,6 +79,9 @@ class GoogleConfig:
         detail["crawl_method"] = df.pop("Crawl Method")[0]
         if detail['crawl_method'] == Statics.CRAWL_METHOD_SELENIUM:
             detail['wait_time'] = Statics.WAIT_TIME_DEFAULT
+            detail['custom_settings'] = {
+              "HTTPCACHE_ENABLED": False
+            }
         detail["parsing_type"] = Statics.PARSING_TYPE_XPATH
         detail['start_urls'] = split_g(df.pop("fund_urls")[0])
         ext_codes = dict()
@@ -99,7 +107,7 @@ class GoogleConfig:
             if xpaths.get(field):
                 ext_codes[field] = ext_code
                 ext_code["paths"] = split_g(xpaths[field])
-            if cleanups.get(field):
+            if cleanups.get(field) and np.nan is not cleanups[field]:
                 ext_code["cleanup_functions"] = split_g(cleanups[field])
 
             rt = return_types.get(field)
@@ -143,12 +151,16 @@ class GoogleConfig:
             with open(fp, 'w') as w:
                 w.write(json.dumps(jsn, indent=4))
 
-    def main(self, website, config_dir):
+    def main(self, website, config_dir, env):
         df = self.download_csv_file(Statics.GOOGLE_LINK_V2)
         website_df = self.filter_website_in_config(df, website)
-        if website_df:
+        if not website_df.empty:
             p_configs = self.create_configs(website_df)
-            if self.spider.endswith("_custom_spider"):
-                self.create_custom_script(p_configs)
-            self.save_configs(p_configs, config_dir)
-            return list(p_configs.keys())[0]
+            # only write files in development env
+            if env == Statics.ENV_DEV:
+                if self.spider.endswith("_custom_spider"):
+                    self.create_custom_script(p_configs)
+
+                self.save_configs(p_configs, config_dir)
+            return p_configs[list(p_configs.keys())[0]]
+

@@ -2,7 +2,6 @@
 import os
 from gencrawl.util.statics import Statics
 
-ENVIRONMENT = 'PRODUCTION'
 BOT_NAME = 'gencrawl'
 SPIDER_MODULES = ['gencrawl.spiders']
 NEWSPIDER_MODULE = 'gencrawl.spiders'
@@ -31,12 +30,12 @@ DOWNLOADER_MIDDLEWARES = {
     # engine
     'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
-    # 'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
+    'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
     # website
 }
 SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
 # SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
-SELENIUM_DRIVER_ARGUMENTS = ['--headless']
+SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless', '--disable-dev-shm-usage']
 
 ITEM_PIPELINES = {
       'gencrawl.pipelines.nfn_pipelines.NFNPipeline': 300,
@@ -57,3 +56,10 @@ HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 CONFIG_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'configs')
 RES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'res')
 SPIDER_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'spiders')
+
+# environment
+# if job is running on zyte server
+if os.environ.get('SHUB_JOBKEY') or os.environ.get('ENVIRONMENT') == Statics.ENV_PROD:
+    ENVIRONMENT = Statics.ENV_PROD
+else:
+    ENVIRONMENT = Statics.ENV_DEV

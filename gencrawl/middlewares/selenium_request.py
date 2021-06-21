@@ -146,7 +146,7 @@ class GenSeleniumMiddleware(SeleniumMiddleware):
                 print(f"iframe not found - {request.iframe}")
         body = str.encode(self.driver.page_source)
         # Expose the driver via the "meta" attribute
-        request.meta.update({'driver': self.driver})
+        # request.meta.update({'driver': self.driver})
 
         return HtmlResponse(
             self.driver.current_url,

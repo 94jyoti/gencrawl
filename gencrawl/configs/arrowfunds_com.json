@@ -1,0 +1,111 @@
+{
+    "website": "https://arrowfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "arrowfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://arrowfunds.com/default.aspx?menuitemid=1617",
+            "https://arrowfunds.com/default.aspx?menuitemid=1727",
+            "https://arrowfunds.com/default.aspx?menuitemid=1619",
+            "https://arrowfunds.com/default.aspx?menuitemid=1620"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "(//*[contains(text(),' Fund') and starts-with(text(), 'Arrow')])[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//*[contains(text(), 'Operating ')]/parent::*/parent::td/parent::tr/following-sibling::tr"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./td[2]//text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "./td[3]//text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_class": {
+                "paths": [
+                    "./td[1]//text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "./td[4]//text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "./td[5]//text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "acquired_fund_fees_and_expenses": {
+                "paths": [
+                    "//font[contains(text(),'acquired')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['acquired_fund_fees_and_expenses'].split('of')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//b[contains(text(),'Investment Strategy')]/ancestor::font[2]/span/font/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//b[contains(text(),'Minimum Investment')]/ancestor::p/following-sibling::*//text()[not(contains(., 'subsequent investments'))]"
+                ],
+                "cleanup_functions": [
+                    "obj['minimum_initial_investment'].split(\"Fund\")[0]"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//b[contains(text(),'Minimum Investment')]/ancestor::p/following-sibling::*//text()[contains(., 'subsequent investments')]"
+                ],
+                "cleanup_functions": [
+                    "obj['minimum_additional_investment'].split(\"subsequent\")[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}
