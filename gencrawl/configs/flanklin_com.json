@@ -122,7 +122,7 @@
               "selector": "root"	 
             },
             "temp_investment_strategyyy":{
-             "paths":["//h3[contains(text(),'Strategy')]//following-sibling::ul//li","//h3[contains(text(),'Strategy')]//following-sibling::p//text()"],
+             "paths":["//h2[@class='header-product'][contains(text(),'Strategy, Benefits, Results')]/following-sibling::div[position()=1]/div[1]//text()"],
              "child_return_strategy": "single_item",
                 "return_type": "selector",
                 "selector": "root"

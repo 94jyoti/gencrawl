@@ -9,7 +9,7 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail_field_mapping",
+        "spider": "financial_detail_saturna_com",
         "crawl_method": "SELENIUM",
         "wait_time": 3,
         "custom_settings": {
@@ -104,6 +104,78 @@
                 ],
                 "return_type": "list-map",
                 "selector": "root"
+            },
+            "temp_capital_gains": {
+                "paths": [
+                    "//table[contains(@class, 'distributions-table')]/tbody/tr[not(@class) or @class!='subtitle']"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "cg_ex_date": {
+                "paths": [
+                    "./td[2]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "cg_record_date": {
+                "paths": [
+                    "./td[1]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "cg_pay_date": {
+                "paths": [
+                    "./td[2]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "short_term_per_share": {
+                "paths": [
+                    "./td[5]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "long_term_per_share": {
+                "paths": [
+                    "./td[6]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "total_per_share": {
+                "paths": [
+                    "./td[7]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "temp_dividends": {
+                "paths": [
+                    "//table[contains(@class, 'distributions-table')]/tbody/tr[not(@class) or @class!='subtitle']"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "ordinary_income": {
+                "paths": [
+                    "./td[3]"
+                ],
+                "return_type": "str",
+                "selector": "temp_dividends"
+            },
+            "qualified_income": {
+                "paths": [
+                    "./td[4]"
+                ],
+                "return_type": "str",
+                "selector": "temp_dividends"
             },
             "temp_fund_managers": {
                 "paths": [

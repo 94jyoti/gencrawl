@@ -56,7 +56,7 @@ class FinancialDetailItem(FinancialItem):
     average_weighted_maturity_as_of_date = Field()
     average_weighted_effective_maturity = Field()
     average_weighted_effective_maturity_as_of_date = Field()
-    
+
     minimum_initial_investment = Field()
     minimum_additional_investment = Field()
     management_process = Field()
@@ -72,7 +72,7 @@ class FinancialDetailItem(FinancialItem):
     footnote = Field()
     effective_duration = Field()
     effective_duration_date = Field()
-    
+
     # added below two fields by @Jyoti
     weighted_average_duration = Field()
     weighted_average_duration_as_of_date = Field()
@@ -109,6 +109,5 @@ class FinancialDetailItem(FinancialItem):
     sec_yield_30_day = Field()
     sec_yield_date_30_day = Field()
     distribution_yield_12_month = Field()
-
-
-
+    average_duration = Field()
+    average_duration_as_of_date = Field()
