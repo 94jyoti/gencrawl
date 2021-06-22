@@ -22,7 +22,8 @@ class AamliveDetail(FinancialDetailSpider):
         file = open('response.html', 'w')
         file.write(response.text)
         file.close()
-        url_1 = "https://www.aamlive.com/" + response.xpath("//a[contains(text(),'Fees & Expenses')]/@href").extract()[0]
+        url_1 = "https://www.aamlive.com/" + response.xpath("//a[contains(text(),'Fees & Expenses')]/@href").extract()[
+            0]
         print("urllllllll", url_1)
         meta = response.meta
         meta['items'] = items
@@ -34,10 +35,12 @@ class AamliveDetail(FinancialDetailSpider):
         file = open('response1.html', 'w')
         file.write(response.text)
         file.close()
-        share_holder_temp = response.xpath('//strong[contains(text(),"Shareholder Fees")]/following::table[1]').extract()[0]
+        share_holder_temp = \
+        response.xpath('//strong[contains(text(),"Shareholder Fees")]/following::table[1]').extract()[0]
         shareholder_table = pd.read_html(share_holder_temp)
         final_shareholder = shareholder_table[0].set_index('Unnamed: 0').to_dict('dict')
-        t = response.xpath('//strong[contains(text(),"Annual Fund Operating Expense")]/following::table[1]').extract()[0]
+        t = response.xpath('//strong[contains(text(),"Annual Fund Operating Expense")]/following::table[1]').extract()[
+            0]
         expenses = pd.read_html(t)
         print(final_shareholder)
 
@@ -64,18 +67,35 @@ class AamliveDetail(FinancialDetailSpider):
                     item['maximum_sales_charge_full_load'] = final_shareholder[key][
                         'Maximum sales charge (load) imposed on purchases']
 
-            url_2 = "https://www.aamlive.com/" +response.xpath("//a[contains(text(),'Distributions')]/@href").extract()[0]
+            url_2 = "https://www.aamlive.com/" + \
+                    response.xpath("//a[contains(text(),'Distributions')]/@href").extract()[0]
             meta = response.meta
             meta['items'] = items
-
             yield self.make_request(url_2, callback=self.distributions, meta=meta, dont_filter=True)
 
-        def distributions(self, response):
-            items = response.meta['items']
-            file = open('response2.html', 'w')
-            file.write(response.text)
-            file.close()
-            
+    def distributions(self, response):
+        print("fkklnflkfnlk")
+        items = response.meta['items']
+        distributions = response.xpath(
+            "//strong[contains(text(),'Most Recent Dividend Distribution')]/following::div[1]//tbody//tr")
+        # print(distributions)
+        distributions_list = []
+        for tr in distributions:
+            print(tr)
+            share_class = tr.xpath("./td[1]/text()").extract_first().split("(")[0].replace("Class","").strip() 
+            print(share_class)
+            for item in items:
+                print("dcfc",item['share_class'].strip().replace('/xa0', ''))
+                if (item['share_class'].strip().replace('/xa0', '') == share_class):
+                    data_dict1 = {"ex_date": "", "pay_date": "", "ordinary_income": "", "qualified_income": "",
+                                  "record_date": "", "per_share": "", "reinvestment_price": ""}
+                    data_dict1['ex_date'] = tr.xpath("./td[2]/text()").extract_first()
+                    data_dict1['per_share'] = tr.xpath("./td[3]/text()").extract_first()
+                    data_dict1['reinvestment_price'] = tr.xpath("./td[4]/text()").extract_first()
+                    distributions_list.append(data_dict1)
+
+            item['dividends'] = distributions_list
+            print(item['dividends'])
         '''
         share_holder_temp = \
         response.xpath('//strong[contains(text(),"Shareholder Fees")]/following::table[1]').extract()[0]
