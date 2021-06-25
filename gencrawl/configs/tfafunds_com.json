@@ -9,11 +9,15 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail_field_mapping",
+        "spider": "financial_detail_tfafunds_com",
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://tfafunds.com/conservative-fund/"
+            "https://tfafunds.com/conservative-fund/",
+            "https://tfafunds.com/moderate-fund/",
+            "https://tfafunds.com/growth-fund/",
+            "https://tfafunds.com/multidimensional-fund/",
+            "https://tfafunds.com/quantitative-fund/"
         ],
         "ext_codes": {
             "instrument_name": {
@@ -37,7 +41,8 @@
                 ],
                 "cleanup_functions": [
                     "obj['nasdaq_ticker'][0].split('|')",
-                    "[nt.split(':')[-1] for nt in obj['nasdaq_ticker']]"
+                    "[nt.split(':')[-1] for nt in obj['nasdaq_ticker']]",
+                    "[o for o in obj['nasdaq_ticker'] if 'N/A' not in o]"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
