@@ -9,6 +9,8 @@ class SaturnaComDetail(FinancialDetailFieldMapSpider):
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
         no_of_items=len(items)
+        if(items[0]['annual_fund_operating_expenses_after_fee_waiver']== None):
+        	items[0]['annual_fund_operating_expenses_after_fee_waiver']=response.xpath('//strong[text()="Total Annual Fund Operating Expenses after Fee Waiver and Expense Reimbursement"]/parent::td/following-sibling::td//strong//text()').extract()[0]
         no_of_cg=len(items[0]['capital_gains'])
         divide_capital_gains=int(no_of_cg/no_of_items)
         for i in range(len(items)):

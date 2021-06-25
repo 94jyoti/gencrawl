@@ -20,7 +20,13 @@
             "https://www.saturna.com/amana/income-fund",
             "https://www.saturna.com/amana/growth-fund",
             "https://www.saturna.com/amana/developing-world-fund",
-            "https://www.saturna.com/amana/participation-fund"
+            "https://www.saturna.com/amana/participation-fund",
+            "https://www.saturna.com/sextant/growth-fund",
+            "https://www.saturna.com/sextant/international-fund",
+            "https://www.saturna.com/sextant/core-fund",
+            "https://www.saturna.com/sextant/global-high-income-fund",
+            "https://www.saturna.com/sextant/short-term-bond-fund",
+            "https://www.saturna.com/sextant/bond-income-fund"
         ],
         "ext_codes": {
             "instrument_name": {
@@ -96,7 +102,7 @@
             },
             "minimum_initial_investment": {
                 "paths": [
-                    "//strong[contains(text(),'Investment Minimum')]/parent::p/following-sibling::p/text()"
+                    "//strong[contains(text(),'Investment Minimum')]/parent::p/following-sibling::p/text()","//strong[contains(text(),'Minimum Initial Investment')]/parent::p/following-sibling::p/text()"
                 ],
                 "cleanup_functions": [
                     "[re.search('(\\$[\\d,]+)', m) for m in obj['minimum_initial_investment']]",
@@ -201,6 +207,18 @@
                 ],
                 "return_type": "join",
                 "selector": "temp_fund_managers"
+            },
+            "sec_yield_30_day":{
+             "paths":["//h6[contains(text(),'30-Day Yield')]/parent::span/following-sibling::span/label//text()"],
+             "return_type": "list-map",
+            "selector": "root"
+            },
+            "sec_yield_date_30_day":{
+             "paths":["//div[@id='fund-facts-app']//div//p//text()"],
+             "return_type":"join",
+             "selector":"root"
+            
+            
             }
         }
     }
