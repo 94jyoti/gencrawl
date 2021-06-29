@@ -88,7 +88,20 @@
                 ],
                 "return_type": "str",
                 "selector": "root"
+            },
+             "temp_expense_gross": {
+                "paths": [
+                    "//div[contains(text(), 'Expense Ratio')]/parent::div/following-sibling::table//tr//td[2][contains(text(),'gross')]//text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_expense_net":{
+             "paths":["//div[contains(text(), 'Expense Ratio')]/parent::div/following-sibling::table//tr//td[2][contains(text(),'net')]//text()"],
+             "return_type": "list",
+             "selector": "root"
             }
+            
         }
     }
 }

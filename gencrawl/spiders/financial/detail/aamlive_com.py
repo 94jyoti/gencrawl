@@ -25,6 +25,16 @@ class AamliveDetail(FinancialDetailSpider):
         url_1 = "https://www.aamlive.com/" + response.xpath("//a[contains(text(),'Fees & Expenses')]/@href").extract()[
             0]
         print("urllllllll", url_1)
+        counter=0
+        #print(items)
+        for item in items:
+            print(item)
+            item['total_expense_net'] = item['temp_expense_net'][counter].replace('net','').strip()
+            item['total_expense_gross'] = item['temp_expense_gross'][counter].replace('gross','').strip()
+            counter = counter + 1
+        
+        
+        
         meta = response.meta
         meta['items'] = items
         return self.make_request(url_1, callback=self.feesandexpenses, meta=meta, dont_filter=True)
@@ -42,12 +52,12 @@ class AamliveDetail(FinancialDetailSpider):
         t = response.xpath('//strong[contains(text(),"Annual Fund Operating Expense")]/following::table[1]').extract()[
             0]
         expenses = pd.read_html(t)
-        print(final_shareholder)
-
+        #counter=0
         final_expenses = expenses[0].set_index('Unnamed: 0').to_dict('dict')
-        print(final_expenses)
+        print("final-------------------------------",final_expenses)
         for item in items:
             print(item['share_class'].strip())
+            #print("temppp groossososoos",item['temp_net_gross'])
             for key in final_expenses:
                 print("cndncdcn", key.replace('Share', ''))
                 # print("dcdcdkn",item['share_class'].strip().replace('\xa0','')==key.replace('Share','').strip() )
@@ -57,6 +67,17 @@ class AamliveDetail(FinancialDetailSpider):
                     item['fees_total_12b_1'] = final_expenses[key]['Distribution (Rule 12b-1) Fee']
                     item['other_expenses'] = final_expenses[key]['Other Expenses']
                     item['management_fee'] = final_expenses[key]['Management Fees']
+                    try:
+                    	item['acquired_fund_fees_and_expenses']=final_expenses[key]['Acquired Fund Fees and Expenses']
+                    except:
+                    	print("nothing")
+                    try:
+                    	item['expense_waivers']=final_expenses[key]['Fee waiver and/or Expense Reimbursements3']
+                    except:
+                    	try:
+                    		item['expense_waivers']=final_expenses[key]['Fee waiver and/or expense reimbursements3']
+                    	except:
+                    		print("nothing")
                     try:
                     	item['shareholder_service_fees'] = final_expenses[key]['Shareholder Service Fees']
                     except:

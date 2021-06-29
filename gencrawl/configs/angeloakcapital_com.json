@@ -14,11 +14,20 @@
         "wait_time": 5,
         "parsing_type": "xpath",
         "start_urls": [
-            "https://angeloakcapital.com/investments/anfix/",
-            "https://angeloakcapital.com/investments/anflx/",
-            "https://angeloakcapital.com/investments/aflcx/",
-            "https://angeloakcapital.com/investments/anhix/",
-            "https://angeloakcapital.com/investments/anhax/"
+        "https://angeloakcapital.com/investments/anfix/",
+		"https://angeloakcapital.com/investments/anflx/",
+		"https://angeloakcapital.com/investments/aflcx/",
+		"https://angeloakcapital.com/investments/anhix/",
+		"https://angeloakcapital.com/investments/anhax/",
+		"https://angeloakcapital.com/investments/angix/",
+		"https://angeloakcapital.com/investments/anglx/",
+		"https://angeloakcapital.com/investments/angcx/",
+		"https://angeloakcapital.com/investments/aouix/",
+		"https://angeloakcapital.com/investments/aouax/",
+		"https://angeloakcapital.com/investments/ascix/",
+		"https://angeloakcapital.com/investments/anomuia/",
+		"https://angeloakcapital.com/investments/dyfn/",
+		"https://angeloakcapital.com/investments/fins/"
         ],
         "ext_codes": {
             "share_class": {
