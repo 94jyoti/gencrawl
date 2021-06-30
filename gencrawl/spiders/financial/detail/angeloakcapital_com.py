@@ -35,6 +35,7 @@ class SaturnaComDetail(FinancialDetailFieldMapSpider):
         data = list(csv.DictReader(decoder(buffer, errors='strict')))
         capital_gains_list = []
         dividend_history = []
+        for d in data:
             data_dict1 = {"ex_date": "", "pay_date": "", "ordinary_income": "", "qualified_income": "",
                           "record_date": "", "per_share": "", "reinvestment_price": ""}
             data_dict2 = {'long_term_per_share': "", 'cg_ex_date': "", 'cg_record_date': "", 'cg_pay_date': "",
@@ -42,10 +43,12 @@ class SaturnaComDetail(FinancialDetailFieldMapSpider):
             if(d['Record Date']):
             	data_dict1['record_date'] = d['Record Date']
             	data_dict2['cg_record_date'] = d['Record Date']
+            	print("record ate")
             if(d['Payable Date']):
             
             	data_dict1['pay_date'] = d['Payable Date']
             	data_dict2['cg_pay_date'] = d['Payable Date']
+            	print("pay date")
             try:
             
             	data_dict1['reinvestment_price'] = d['Reinvestment Price ($/share)']
@@ -60,11 +63,11 @@ class SaturnaComDetail(FinancialDetailFieldMapSpider):
             
             	data_dict2['long_term_per_share'] = d['LT Cap Gains ($/share)']
             except:
-            	print("nothing")
+            	print("cd")
             try:
             	data_dict2['short_term_per_share'] = d['ST Cap Gains ($/share)']
             except:
-            	print("nothing")
+            	print("dc")
             dividend_history.append(data_dict1)
             capital_gains_list.append(data_dict2)
         item['capital_gains'] = capital_gains_list
