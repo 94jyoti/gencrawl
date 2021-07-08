@@ -11,7 +11,7 @@ class FinancialDetailFieldMapSpider(FinancialDetailSpider):
     url_key = Statics.URL_KEY_FINANCIAL_DETAIL
     name = f'{crawl_domain}_{Statics.CRAWL_TYPE_DETAIL}_field_mapping'
 
-    def map_fields(self, index, total_len, item, fields_to_map):
+    def map_fields(self, index, total_len, item, fields_to_map, response=None):
         for field in fields_to_map:
             val_list = item.get(field)
             if val_list:
@@ -24,7 +24,7 @@ class FinancialDetailFieldMapSpider(FinancialDetailSpider):
         # the fields that has return-type as `list-map`
         fields_to_map = ext_codes.keys()
         for index, item in enumerate(items):
-            parsed_mapped_items.append(self.map_fields(index, len(items), item, fields_to_map))
+            parsed_mapped_items.append(self.map_fields(index, len(items), item, fields_to_map, response=response))
         return parsed_mapped_items
 
     def get_items_or_req(self, response, default_item=None):
