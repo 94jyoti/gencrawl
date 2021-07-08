@@ -60,8 +60,16 @@ class NFNPipeline:
                 item[v] = None
         return item
 
+    def replace_none_with_blank_string(self, item):
+        for k in item.keys():
+            v = item[k]
+            if v is None:
+                item[k] = ''
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, FinancialDetailItem):
             item = self.remove_redundant_fields(item)
             item = self.parse_item(item)
+            item = self.replace_none_with_blank_string(item)
         return item
