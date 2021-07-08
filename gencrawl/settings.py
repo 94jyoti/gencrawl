@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from gencrawl.util.statics import Statics
-#testing branches
+
 BOT_NAME = 'gencrawl'
 SPIDER_MODULES = ['gencrawl.spiders']
 NEWSPIDER_MODULE = 'gencrawl.spiders'
