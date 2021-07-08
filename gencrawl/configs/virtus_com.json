@@ -10,15 +10,14 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
+        "custom_settings":{
+          "DUPEFILTER_CLASS" : "scrapy.dupefilters.BaseDupeFilter"
+        },
         "crawl_method": "SELENIUM",
         "wait_time": 5,
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.virtus.com/products/allianzgi-convertible#shareclass.INST/period.daily",
-            "https://www.virtus.com/products/allianzgi-core-plus-bond#shareclass.INST/period.daily",
-            "https://www.virtus.com/products/allianzgi-emerging-markets-consumer#shareclass.INST/period.daily",
-            "https://www.virtus.com/products/allianzgi-emerging-markets-opportunities#shareclass.INST/period.daily",
-            "https://www.virtus.com/products/allianzgi-focused-growth#shareclass.INST/period.daily"
+            "https://www.virtus.com/products/allianzgi-convertible#shareclass.INST/period.daily"
         ],
         "ext_codes": {
             "share_class": {

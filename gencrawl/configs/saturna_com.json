@@ -20,7 +20,16 @@
             "https://www.saturna.com/amana/income-fund",
             "https://www.saturna.com/amana/growth-fund",
             "https://www.saturna.com/amana/developing-world-fund",
-            "https://www.saturna.com/amana/participation-fund"
+            "https://www.saturna.com/amana/participation-fund",
+            "https://www.saturna.com/sextant/growth-fund",
+            "https://www.saturna.com/sextant/international-fund",
+            "https://www.saturna.com/sextant/core-fund",
+            "https://www.saturna.com/sextant/global-high-income-fund",
+            "https://www.saturna.com/sextant/short-term-bond-fund",
+            "https://www.saturna.com/sextant/bond-income-fund",
+            "https://www.saturna.com/sustainable/equity-fund",
+            "https://www.saturna.com/sustainable/bond-fund",
+            "https://www.saturna.com/idaho"
         ],
         "ext_codes": {
             "instrument_name": {
@@ -45,6 +54,18 @@
                 "return_type": "list-map",
                 "selector": "root"
             },
+            "total_net_assets":
+            {
+             "paths":["//h6[contains(text(),'AUM')]/parent::span/following-sibling::span/label//text()"],
+             "return_type": "list-map",
+             "selector": "root"
+            },
+            "total_net_assets_date":{
+            "paths":["//div[@id='fund-facts-app']/div//p//text()"],
+            "return_type":"str",
+            "selector":"root"
+            },
+            
             "share_class": {
                 "paths": [
                     "./text()"
@@ -92,17 +113,6 @@
                     "//*[contains(text(), 'Principal Investment Strategies')]/following-sibling::p/text()"
                 ],
                 "return_type": "join",
-                "selector": "root"
-            },
-            "minimum_initial_investment": {
-                "paths": [
-                    "//strong[contains(text(),'Investment Minimum')]/parent::p/following-sibling::p/text()"
-                ],
-                "cleanup_functions": [
-                    "[re.search('(\\$[\\d,]+)', m) for m in obj['minimum_initial_investment']]",
-                    "[m.group(1) for m in obj['minimum_initial_investment'] if m]"
-                ],
-                "return_type": "list-map",
                 "selector": "root"
             },
             "temp_capital_gains": {
@@ -197,10 +207,49 @@
                     "./span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['fund_manager_years_of_experience_with_fund'].split('since')[-1]"
+                    "'since'+obj['fund_manager_years_of_experience_with_fund'].split('since')[-1]"
                 ],
                 "return_type": "join",
                 "selector": "temp_fund_managers"
+            },
+            "sec_yield_30_day":{
+             "paths":["//h6[contains(text(),'30-Day Yield')]/parent::span/following-sibling::span/label//text()"],
+             "return_type": "list-map",
+            "selector": "root"
+            },
+            "sec_yield_date_30_day":{
+             "paths":["//div[@id='fund-facts-app']//div//p//text()"],
+             "return_type":"join",
+             "selector":"root"
+            
+            
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//strong[normalize-space(text())='Total Annual Fund Operating Expenses']/parent::td/following-sibling::td//strong//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net":{
+            "paths": [
+                    "//strong[contains(text(),'Total Annual Fund Operating Expenses after Fee Waiver and Expense Reimbursement')]/parent::td/following-sibling::td//strong//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            
+            },
+            "benchmarks":{
+             "paths":["//div[@class='short-term table-responsive']//tbody//tr//td[2][string-length() = 0] //preceding-sibling::td//text()"],
+             "return_type":"list",
+            "selector":"root"
+            
+            },
+            "shareholder_service_fees":{
+             "paths":["//strong[contains(text(),'Shareowner Fees')]/parent::p/following-sibling::p[1]//text()"],
+             "return_type":"str",
+            "selector":"root"
+            
             }
         }
     }
