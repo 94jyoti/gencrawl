@@ -12,6 +12,9 @@ __pycache__/
 # csv
 ./*.csv
 *.csv#
+*.html
+*.jl
+*.csv
 
 # Distribution / packaging
 .Python

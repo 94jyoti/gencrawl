@@ -1,0 +1,109 @@
+{
+    "website": "https://www.brandes.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "brandes.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.brandes.com/us/funds/mutual-funds/brandes-core-plus-fixed-income-fund/BCPIX/Overview"
+        ],
+        "pagination":{
+            "temp_url": {
+                "paths": [
+                    "//*[@id='ddlFunds']/option[1]/@value"
+                ],
+                "return_type":"str",
+                "cleanup_functions":["'https://www.brandes.com/us/funds/mutual-funds/'+obj['temp_url']"]
+            },
+            "pagination": {
+                "paths": [
+                    "//*[@id='ddlClasses']/option[position()>1]/@value"
+                ],
+                "return_type": "list",
+                "cleanup_functions": [
+                    "[p+'/'+i+'/Overview' for p,i in zip([obj['temp_url']]*len(obj['pagination']), obj['pagination'])]"
+                ]
+            }
+        },
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1[@class=\"adjust\"]/text()"
+                ],
+                "cleanup_functions": [],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//span[contains(text(),'Ticker Symbol')]/following-sibling::em/text()"
+                ],
+                "cleanup_functions": [],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_class":{
+             "paths":["//*[@id='ddlClasses']/option[position()=1]/text()"],
+             "return_type": "str",
+                "selector": "root"
+             
+             },
+            "cusip": {
+                "paths": [
+                    "//span[contains(text(),'Cusip')]/following-sibling::em/text()"
+                ],
+                "cleanup_functions": [],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//span[contains(text(),'Total Net Assets')]/following-sibling::em/text()"
+                ],
+                "cleanup_functions": [],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Information')]/span/text()"
+                ],
+                "cleanup_functions": [],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//span[contains(text(),'Fund Inception Date')]/following-sibling::em/text()"
+                ],
+                "cleanup_functions": [],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "duration": {
+                "paths": [
+                    "//*[contains(text(),'Average Duration (years)')]/following::td[1]/text()"
+                ],
+                "cleanup_functions": [],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "average_weighted_maturity": {
+                "paths": [
+                    "//*[contains(text(),'Average Maturity (years)')]/following::td[1]/text()"
+                ],
+                "cleanup_functions": [],
+                "return_type": "join",
+                "selector": "root"
+            }
+        }
+    }
+}

@@ -18,6 +18,7 @@
         "parsing_type": "xpath",
         "start_urls": [
             "https://www.virtus.com/products/allianzgi-convertible#shareclass.INST/period.daily"
+            
         ],
         "ext_codes": {
             "share_class": {
@@ -30,6 +31,12 @@
                 "return_type": "str",
                 "selector": "root"
             },
+            "instrument_name":{
+             "paths":["//div[@class = 'product-name']/h1/text()"],
+             "return_type": "str",
+             "selector":"root"
+            },
+            
             "nasdaq_ticker": {
                 "paths": [
                     "//span[@class = 'symbol']/text()"
@@ -94,6 +101,14 @@
                 ],
                 "return_type": "str",
                 "selector": "root"
+            
+            },
+            "sub_advisor":{
+             "paths":["//h3[contains(text(),'Investment Partner')]/parent::div/following-sibling::div//h4//text()"],
+             "return_type": "list",
+            "selector": "root"
+            
+            
             },
             "portfolio_assets": {
                 "paths": [
@@ -111,7 +126,7 @@
             },
             "total_net_assets": {
                 "paths": [
-                    "//span[@class = 'assets-by-class']"
+                    "//span[@class = 'assets-by-class']//text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -150,6 +165,12 @@
                 ],
                 "return_type": "str",
                 "selector": "root"
+            },
+            "asset_class":{
+             "paths":["//span[@class = 'product-type-name']/following-sibling::span[1]//text()"],
+             "return_type": "str",
+                "selector": "root"
+            
             }
         }
     }

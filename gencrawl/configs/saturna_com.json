@@ -29,7 +29,8 @@
             "https://www.saturna.com/sextant/bond-income-fund",
             "https://www.saturna.com/sustainable/equity-fund",
             "https://www.saturna.com/sustainable/bond-fund",
-            "https://www.saturna.com/idaho"
+            "https://www.saturna.com/idaho",
+            "https://www.saturna.com/sustainable/bond-fund"
         ],
         "ext_codes": {
             "instrument_name": {

@@ -117,10 +117,7 @@
             },
             "total_expense_net": {
                 "paths": [
-                    "//div[@class='scrollTable']//strong[not (contains(text(),'Total Annual Fund Operating Expenses After Fee Waiver and/or Expense Reimbursement**'))]/text()"
-                ],
-                "cleanup_functions": [
-                    "[i for i in obj['total_expense_net'] if 'Total' not in i]"
+                    "//strong[contains(text(),'Total Annual Fund Operating Expenses After Fee Waiver and/or Expense Reimbursement**')]/parent::td/following-sibling::td//text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"

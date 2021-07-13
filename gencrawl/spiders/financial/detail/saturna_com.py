@@ -10,18 +10,22 @@ class SaturnaComDetail(FinancialDetailFieldMapSpider):
         items = super().get_items_or_req(response, default_item)
         #print("tetstttacfascvscvsdhcc",items[0]['minimum_initial_investment'])
         no_of_items=len(items)
+        print(no_of_items)
         if(items[0]['annual_fund_operating_expenses_after_fee_waiver']== None):
         	items[0]['annual_fund_operating_expenses_after_fee_waiver']=response.xpath('//strong[contains(text(),"Total Annual Fund Operating Expenses after Fee Waiver and Expense Reimbursement")]/parent::td/following-sibling::td//strong//text()').extract()[0]
         no_of_cg=len(items[0]['capital_gains'])
         divide_capital_gains=int(no_of_cg/no_of_items)
-        print("ferververvevev[[[[[[[[[[[[[[[]]]]]]]]]]]",items)
+        #print("ferververvevev[[[[[[[[[[[[[[[]]]]]]]]]]]",items)
         for i in range(len(items)):
         	minimum_initial_investment=response.xpath("//p[contains(text(),'minimum initial')]//text()").extract()[0]
         	print("vsdvsdvdsvdsvd",minimum_initial_investment)
         	items[i]['minimum_initial_investment']=([re.search('(\\$[\\d,]+)', minimum_initial_investment)][0]).group(0)
         	print(items[i]['minimum_initial_investment'])
-        	if(len(items[i]['total_expense_gross'])==0):
-        		items[i]['total_expense_gross']=response.xpath('//*[@id="seefx-fees-inner"]/table/tbody/tr[4]/td[2]/strong//text()').extract()[0]
+        	try:
+        		if(len(items[i]['total_expense_gross'])==0):
+        			items[i]['total_expense_gross']=response.xpath('//*[@id="seefx-fees-inner"]/table/tbody/tr[4]/td[2]/strong//text()').extract()[0]
+        	except:
+        		print("dksknvk")
         	if(items[i]['share_class'].strip()=="Shares"):
         		try:
         			items[i]['share_class']=response.xpath("//strong[contains(text(),'Annual Fund Operating Expenses')]/ancestor::tbody//tr[2]//td[2]//strong//text()").extract()[0].replace("Shares","").strip()

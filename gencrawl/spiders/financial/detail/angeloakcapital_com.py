@@ -9,7 +9,7 @@ from io import BytesIO
 from gencrawl.items.financial.financial_detail_item import FinancialDetailItem
 
 
-class SaturnaComDetail(FinancialDetailFieldMapSpider):
+class AngeloakcapitalComDetail(FinancialDetailFieldMapSpider):
     name = 'financial_detail_angleoakcapital_com'
 
     def get_items_or_req(self, response, default_item=None):
