@@ -1,0 +1,139 @@
+{
+    "website": "https://www.gafunds.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "gafunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_gafunds_com",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.gafunds.com/our-funds/alternative-energy-fund/#fund_overview",
+            "https://www.gafunds.com/our-funds/asia-focus-fund/",
+            "https://www.gafunds.com/our-funds/china-hong-kong-fund/",
+            "https://www.gafunds.com/our-funds/global-energy-fund/",
+            "https://www.gafunds.com/our-funds/global-innovators-fund/#fund_overview",
+            "https://www.gafunds.com/our-funds/renminbi-yuan-bond-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1['Fund']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//td[contains(text(),'Symbol')]/following-sibling::td"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "//td[contains(text(),'CUSIP')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//td[contains(text(),'Class')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "//td[contains(text(),'Redemption Fee')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    "//td[contains(text(),'Load')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//td[contains(text(),'Expense Ratio')]/following-sibling::td/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'].split(') ')",
+                    "[o for o in obj['total_expense_gross'] if 'net' not in o]",
+                    "obj['total_expense_gross'][0].split('(')[0] if obj['total_expense_gross'] else None"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//td[contains(text(),'Expense Ratio')]/following-sibling::td/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].split(') ')",
+                    "[o for o in obj['total_expense_net'] if 'net' in o]",
+                    "obj['total_expense_net'][0].split('(')[0] if obj['total_expense_net'] else None"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//td[contains(text(),'Minimum Investment')]/following-sibling::td/text()[not(contains(., 'IRA'))][not(contains(., 'Subsequent'))]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//td[contains(text(),'Minimum Investment')]/following-sibling::td/text()[contains(., 'Subsequent')]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//td[contains(text(),'Benchmark')]/following-sibling::td/text()"
+                ],
+                "cleanup_functions": [
+                    "list(set(obj['benchmarks']))"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//div[@class = 'featured_manager_name']/div[1]"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}

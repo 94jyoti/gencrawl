@@ -1,0 +1,118 @@
+{
+    "website": "https://www.axonicfunds.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "axonicfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.axonicfunds.com/the-fund",
+            "https://www.axonicfunds.com/the-daily-fund"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//p[contains(text(),'FUND')]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//h3[contains(text(),'TICKER')]/following-sibling::p[contains(text(), ' / ')]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['nasdaq_ticker'].split('-')[-1]",
+                    "obj['nasdaq_ticker'].split('/')[0]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['cusip'].split('-')[0]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['share_class'].split('-')[0] if '-' in obj['share_class'] else None"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "portfolio_consultant": {
+                "paths": [
+                    "//h3[contains(text(),'Adviser')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//h3[contains(text(),'FUND INCEPTION')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h3[contains(text(),'INVESTMENT OBJECTIVE')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h3[contains(text(),'STRATEGY AND HIGHLIGHTS')]/following-sibling::p/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//h3[contains(text(),'MINIMUM INVESTMENT')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h3[contains(text(),'MANAGEMENT TEAM')]/ancestor::div/following-sibling::div[1]"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./div/div/div/div/figure/figcaption/div/p[1]"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}
