@@ -1,0 +1,142 @@
+{
+    "website": "http://www.crmfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "crmfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "http://www.crmfunds.com/funds/crm-long-short-opportunities-2/",
+            "http://www.crmfunds.com/funds/crm-small-cap-value-2/",
+            "http://www.crmfunds.com/funds/crm-small-mid-cap-value-2/",
+            "http://www.crmfunds.com/funds/crm-mid-cap-value/",
+            "http://www.crmfunds.com/funds/crm-all-cap-value/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//th[contains(text(),'Ticker')]/ancestor::thead/following-sibling::tbody/tr"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./td[2]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "./td[4]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_class": {
+                "paths": [
+                    "./td[1]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "./td[7]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "./td[6]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "./td[5]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "./td[3]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "./td[8]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//td[contains(text(),'Index')]"
+                ],
+                "cleanup_functions": [
+                    "list(set(obj['benchmarks']))"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//div[@class=\"manager\"]"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./h4/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_in_industry": {
+                "paths": [
+                    "./p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_firm": {
+                "paths": [
+                    "./p[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_with_fund": {
+                "paths": [
+                    "./p[3]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

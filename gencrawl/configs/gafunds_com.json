@@ -61,6 +61,9 @@
                 "paths": [
                     "//td[contains(text(),'Redemption Fee')]/following-sibling::td/text()"
                 ],
+                "cleanup_functions": [
+                    "[r.split(' for')[0] for r in obj['redemption_fee']]"
+                ],
                 "return_type": "list-map",
                 "selector": "root"
             },
@@ -95,6 +98,13 @@
                 "return_type": "join",
                 "selector": "root"
             },
+            "share_inception_date": {
+                "paths": [
+                    "//td[contains(text(),'Inception Date')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
             "minimum_initial_investment": {
                 "paths": [
                     "//td[contains(text(),'Minimum Investment')]/following-sibling::td/text()[not(contains(., 'IRA'))][not(contains(., 'Subsequent'))]"
@@ -105,6 +115,9 @@
             "minimum_additional_investment": {
                 "paths": [
                     "//td[contains(text(),'Minimum Investment')]/following-sibling::td/text()[contains(., 'Subsequent')]"
+                ],
+                "cleanup_functions": [
+                    "[s.replace('Subsequent','') for s in obj['minimum_additional_investment']]"
                 ],
                 "return_type": "list-map",
                 "selector": "root"

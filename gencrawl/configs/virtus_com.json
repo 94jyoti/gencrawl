@@ -1,6 +1,5 @@
 {
     "website": "https://www.virtus.com",
-    "spider": "financial_detail",
     "domain": "financial",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
@@ -10,6 +9,7 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
+        "spider": "financial_detail_virtus_com",
         "custom_settings":{
           "DUPEFILTER_CLASS" : "scrapy.dupefilters.BaseDupeFilter"
         },

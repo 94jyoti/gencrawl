@@ -1,0 +1,32 @@
+{
+    "website": "https://www.diamond-hill.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "diamond-hill.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.diamond-hill.com//mutual-funds/long-only-equities/small-cap-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/long-only-equities/small-mid-cap-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/long-only-equities/mid-cap-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/long-only-equities/large-cap-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/long-only-equities/large-cap-concentrated-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/long-only-equities/all-cap-select-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/long-only-equities/global-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/long-only-equities/international-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/alternatives/long-short-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/fixed-income/short-duration-securitized-bond-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/fixed-income/core-bond-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/fixed-income/corporate-credit-fund/default.fs",
+            "https://www.diamond-hill.com//mutual-funds/fixed-income/high-yield-fund/default.fs"
+        ],
+        "ext_codes": {}
+    }
+}

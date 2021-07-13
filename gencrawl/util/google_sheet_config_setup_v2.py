@@ -109,7 +109,8 @@ class GoogleConfig:
                 ext_codes[field] = ext_code
                 ext_code["paths"] = split_g(xpaths[field])
             if cleanups.get(field) and np.nan is not cleanups[field]:
-                ext_code["cleanup_functions"] = split_g(cleanups[field])
+                if split_g(cleanups[field]):
+                    ext_code["cleanup_functions"] = split_g(cleanups[field])
 
             rt = return_types.get(field)
             s = selectors.get(field)

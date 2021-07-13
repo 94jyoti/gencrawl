@@ -1,0 +1,148 @@
+{
+    "website": "https://www.profunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "profunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.profunds.com//funds/access_flex_bear_high_yield.html",
+            "https://www.profunds.com//funds/access_flex_high_yield.html",
+            "https://www.profunds.com//funds/banks.html",
+            "https://www.profunds.com//funds/basic_materials.html",
+            "https://www.profunds.com//funds/bear.html",
+            "https://www.profunds.com//funds/biotechnology.html",
+            "https://www.profunds.com//funds/bull.html",
+            "https://www.profunds.com//funds/communication_services.html",
+            "https://www.profunds.com//funds/consumer_goods.html",
+            "https://www.profunds.com//funds/consumer_services.html",
+            "https://www.profunds.com//funds/europe_30.html",
+            "https://www.profunds.com//funds/falling_us_dollar.html",
+            "https://www.profunds.com//funds/financials.html",
+            "https://www.profunds.com//funds/government_money_market.html",
+            "https://www.profunds.com//funds/health_care.html",
+            "https://www.profunds.com//funds/industrials.html",
+            "https://www.profunds.com//funds/internet.html",
+            "https://www.profunds.com//funds/large_cap_growth.html",
+            "https://www.profunds.com//funds/large_cap_value.html",
+            "https://www.profunds.com//funds/mid_cap.html",
+            "https://www.profunds.com//funds/mid_cap_growth.html",
+            "https://www.profunds.com//funds/mid_cap_value.html",
+            "https://www.profunds.com//funds/nasdaq_100.html",
+            "https://www.profunds.com//funds/oil_equipment_and_services.html",
+            "https://www.profunds.com//funds/oil_and_gas.html",
+            "https://www.profunds.com//funds/pharmaceuticals.html",
+            "https://www.profunds.com//funds/precious_metals.html",
+            "https://www.profunds.com//funds/real_estate.html",
+            "https://www.profunds.com//funds/rising_rates_opportunity.html",
+            "https://www.profunds.com//funds/rising_rates_opportunity_10.html",
+            "https://www.profunds.com//funds/rising_us_dollar.html",
+            "https://www.profunds.com//funds/semiconductor.html",
+            "https://www.profunds.com//funds/short_nasdaq_100.html",
+            "https://www.profunds.com//funds/short_oil_and_gas.html",
+            "https://www.profunds.com//funds/short_precious_metals.html",
+            "https://www.profunds.com//funds/short_real_estate.html",
+            "https://www.profunds.com//funds/short_small_cap.html",
+            "https://www.profunds.com//funds/small_cap.html",
+            "https://www.profunds.com//funds/small_cap_growth.html",
+            "https://www.profunds.com//funds/small_cap_value.html",
+            "https://www.profunds.com//funds/technology.html",
+            "https://www.profunds.com//funds/telecommunications.html",
+            "https://www.profunds.com//funds/us_government_plus.html",
+            "https://www.profunds.com//funds/ultrabear.html",
+            "https://www.profunds.com//funds/ultrabull.html",
+            "https://www.profunds.com//funds/ultrachina.html",
+            "https://www.profunds.com//funds/ultradow_30.html",
+            "https://www.profunds.com//funds/ultraemerging_markets.html",
+            "https://www.profunds.com//funds/ultrainternational.html",
+            "https://www.profunds.com//funds/ultrajapan.html",
+            "https://www.profunds.com//funds/ultralatin_america.html",
+            "https://www.profunds.com//funds/ultramid_cap.html",
+            "https://www.profunds.com//funds/ultranasdaq_100.html",
+            "https://www.profunds.com//funds/ultrashort_china.html",
+            "https://www.profunds.com//funds/ultrashort_dow_30.html",
+            "https://www.profunds.com//funds/ultrashort_emerging_markets.html",
+            "https://www.profunds.com//funds/ultrashort_international.html",
+            "https://www.profunds.com//funds/ultrashort_japan.html",
+            "https://www.profunds.com//funds/ultrashort_latin_america.html",
+            "https://www.profunds.com//funds/ultrashort_mid_cap.html",
+            "https://www.profunds.com//funds/ultrashort_nasdaq_100.html",
+            "https://www.profunds.com//funds/ultrashort_small_cap.html",
+            "https://www.profunds.com//funds/ultrasmall_cap.html",
+            "https://www.profunds.com//funds/utilities.html"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//table[@class=\"table-2 add-table\"]//*[contains(text(),\" Class\")]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//*[contains(text(),\"Fund Snapshot\")]//following::td[contains(text(),\"Ticker\")]//following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//*[contains(text(),\"Fund Snapshot\")]//following::td[contains(text(),\"CUSIP\")]//following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//*[contains(text(),\"Gross Expense Ratio\")]//following::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//*[contains(text(),\"Net Expense Ratio \")]//following::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//*[contains(text(),\"Fund Snapshot\")]//following::td[contains(text(),\"Inception Date\")]//following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//*[contains(text(),\"Fund Statistics\")]//following::strong[contains(text(),\"Minimum Investment\")]//following::td[contains(text(),\"Individual Investor\")]//following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}

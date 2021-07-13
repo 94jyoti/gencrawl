@@ -1,0 +1,80 @@
+{
+    "website": "https://www.highlandfunds.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "highlandfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.highlandfunds.com/longshort-healthcare-fund/",
+            "https://www.highlandfunds.com/small-cap-equity-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//div[@class = 'vc_column-inner']/div/h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//th[contains(text(),'Class')]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//td[contains(text(),'Symbol')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//td[contains(text(),'Inception')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//strong[contains(text(),'Investment Objective')]/parent::h6/following-sibling::ul/li/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//div[@class = 'wpb_wrapper']/h2/span"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

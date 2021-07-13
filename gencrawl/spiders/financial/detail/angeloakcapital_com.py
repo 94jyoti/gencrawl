@@ -40,34 +40,31 @@ class AngeloakcapitalComDetail(FinancialDetailFieldMapSpider):
                           "record_date": "", "per_share": "", "reinvestment_price": ""}
             data_dict2 = {'long_term_per_share': "", 'cg_ex_date': "", 'cg_record_date': "", 'cg_pay_date': "",
                           'short_term_per_share': "", 'total_per_share': "", 'cg_reinvestment_price': ""}
-            if(d['Record Date']):
-            	data_dict1['record_date'] = d['Record Date']
-            	data_dict2['cg_record_date'] = d['Record Date']
-            	print("record ate")
-            if(d['Payable Date']):
-            
-            	data_dict1['pay_date'] = d['Payable Date']
-            	data_dict2['cg_pay_date'] = d['Payable Date']
-            	print("pay date")
+            if (d['Record Date']):
+                data_dict1['record_date'] = d['Record Date']
+                data_dict2['cg_record_date'] = d['Record Date']
+            if (d['Payable Date']):
+                data_dict1['pay_date'] = d['Payable Date']
+                data_dict2['cg_pay_date'] = d['Payable Date']
             try:
-            
-            	data_dict1['reinvestment_price'] = d['Reinvestment Price ($/share)']
-            	data_dict2['cg_reinvestment_price'] = d['Reinvestment Price ($/share)']
+
+                data_dict1['reinvestment_price'] = d['Reinvestment Price ($/share)']
+                data_dict2['cg_reinvestment_price'] = d['Reinvestment Price ($/share)']
             except:
-            	print("nothing")
+                pass
             try:
-            	data_dict1['ordinary_income'] = d['Ordinary Income ($/share)']
+                data_dict1['ordinary_income'] = d['Ordinary Income ($/share)']
             except:
-            	print("nothing")
+                pass
             try:
-            
-            	data_dict2['long_term_per_share'] = d['LT Cap Gains ($/share)']
+
+                data_dict2['long_term_per_share'] = d['LT Cap Gains ($/share)']
             except:
-            	print("cd")
+                pass
             try:
-            	data_dict2['short_term_per_share'] = d['ST Cap Gains ($/share)']
+                data_dict2['short_term_per_share'] = d['ST Cap Gains ($/share)']
             except:
-            	print("dc")
+                pass
             dividend_history.append(data_dict1)
             capital_gains_list.append(data_dict2)
         item['capital_gains'] = capital_gains_list

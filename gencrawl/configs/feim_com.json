@@ -105,11 +105,68 @@
                 "return_type": "str",
                 "selector": "root"
             },
+            "expense_waivers": {
+                "paths": [
+                    "(//td[contains(text(),'Fee Waiver')])[1]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//td[contains(text(),'Total Annual Fund Operating Expenses')]/following-sibling::td",
+                    "(//td[contains(text(),'Total Annual Operating Expenses')])[1]/following-sibling::td/text()[not(contains(.,'after fee waiver'))]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//td[contains(text(),'Total Annual Operating Expenses after Fee Waiver')]/following-sibling::td/text()",
+                    "(//td[contains(text(),'Total Annual Operating Expenses After Fee Waiver and/or Expense Reimbursement')])/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
             "share_inception_date": {
                 "paths": [
                     "//th[text()='Inception Date' or text()=' Inception Date']//following::tbody//tr//td[4][contains(text(),'/')][string-length(text()) >= 1]//text()"
                 ],
                 "return_type": "list-map",
+                "selector": "root"
+            },
+            "weighted_average_duration": {
+                "paths": [
+                    "//td[contains(text(),'Weighted Average Effective Duration (Yrs.)')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "weighted_average_duration_as_of_date": {
+                "paths": [
+                    "//caption[contains(text(),'Portfolio Characteristics ')]/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['weighted_average_duration_as_of_date'].replace('as of ', '')\""
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "average_weighted_maturity": {
+                "paths": [
+                    "//td[contains(text(),'Weighted Average Maturity')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "average_weighted_maturity_as_of_date": {
+                "paths": [
+                    "//caption[contains(text(),'Portfolio Characteristics ')]/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['average_weighted_maturity_as_of_date'].replace('as of ', '')\""
+                ],
+                "return_type": "str",
                 "selector": "root"
             },
             "minimum_initial_investment": {
@@ -146,6 +203,40 @@
             "dividend_frequency": {
                 "paths": [
                     "//td[contains(text(),'Dividend Distributions')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "//td[contains(text(),'30-day SEC Yield (w/ Waiver)')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "//caption[contains(text(),'Portfolio Characteristics ')]/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_date_30_day'].replace('as of ', '')\""
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_30_day": {
+                "paths": [
+                    "//td[contains(text(),'30-day SEC Yield (w/out Waiver)')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_date_30_day": {
+                "paths": [
+                    "//caption[contains(text(),'Portfolio Characteristics ')]/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_without_waivers_date_30_day'].replace('as of ', '')\""
                 ],
                 "return_type": "str",
                 "selector": "root"

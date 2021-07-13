@@ -1,9 +1,9 @@
 {
-    "website": "https://ancora.net",
+    "website": "https://funds.leutholdgroup.com/",
     "domain": "financial",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "ancora.net"
+        "funds.leutholdgroup.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -13,26 +13,22 @@
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://ancora.net/products/ancora-income-fund/",
-            "https://ancora.net/products/ancora-dividend-value-equity-fund/",
-            "https://ancora.net/products/ancora-thelen-small-mid-cap-fund/",
-            "https://ancora.net/products/ancora-microcap-fund/"
+            "https://funds.leutholdgroup.com/funds/48-leuthold-core-investment-fund",
+            "https://funds.leutholdgroup.com/funds/49-leuthold-select-industries-fund",
+            "https://funds.leutholdgroup.com/funds/47-grizzly-short-fund",
+            "https://funds.leutholdgroup.com/funds/1-leuthold-global-fund"
         ],
         "ext_codes": {
             "instrument_name": {
                 "paths": [
-                    "//h1[@itemprop = 'name']/text()"
+                    "(//h1)[2]/text()"
                 ],
                 "return_type": "str",
-                "selector": "root"
+                "selector": "temp_class_blocks"
             },
             "temp_class_blocks": {
                 "paths": [
-                    "//select/option",
-                    "//td[contains(text(),'Ancora')]"
-                ],
-                "cleanup_functions": [
-                    "obj['temp_class_blocks'][:2]"
+                    "(//table)[1]//tr//td[1]"
                 ],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
@@ -43,64 +39,58 @@
                     "./text()"
                 ],
                 "cleanup_functions": [
-                    "obj['nasdaq_ticker'].split('(')[-1]",
-                    "obj['nasdaq_ticker'].split(')')[0]"
+                    "obj['nasdaq_ticker'].split('(')[-1] .replace(')', '')"
                 ],
                 "return_type": "str",
                 "selector": "temp_class_blocks"
             },
+            "cusip": {
+                "paths": [
+                    "//*[contains(text(),'CUSIP')]/following-sibling::td/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['cusip'][0].split('/')"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
             "share_class": {
                 "paths": [
-                    "//td[contains(text(),'Share Class')]/following-sibling::td/text()"
+                    "./text()"
                 ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
-            "maximum_sales_charge_full_load": {
-                "paths": [
-                    "//td[contains(text(),'Max. Sales Charge')]/following-sibling::td/text()"
-                ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
-            "total_expense_gross": {
-                "paths": [
-                    "//td[contains(text(),'Gross Expense Ratio')]/following-sibling::td/text()"
-                ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
-            "total_expense_net": {
-                "paths": [
-                    "//td[contains(text(),'Net Expense Ratio')]/following-sibling::td/text()"
-                ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
-            "investment_objective": {
-                "paths": [
-                    "//div[@id = 'objective-region']/div/p/text()"
+                "cleanup_functions": [
+                    "obj['share_class'].split('(')[0] "
                 ],
                 "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "(//table)[1]//td[4]/text()"
+                ],
+                "return_type": "list-map",
                 "selector": "root"
             },
             "minimum_initial_investment": {
                 "paths": [
-                    "//td[contains(text(),'Minimum')]/following-sibling::td/text()"
+                    "//*[contains(text(),'Regular (non-IRA) Accoun')]/following-sibling::td/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['minimum_initial_investment'][0].split('/')"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
             "benchmarks": {
                 "paths": [
-                    "//td[contains(text(),'Index')]/text()"
+                    "//table[@class=\"performance-table table table-striped\"]//th/text()[contains(.,' ')]"
                 ],
                 "return_type": "list",
                 "selector": "root"
             },
             "temp_fund_managers": {
                 "paths": [
-                    "//div[@role = 'region']/div/h3/a"
+                    "//a[contains(text(),'CFA')]"
                 ],
                 "child_return_strategy": "multiple_objects",
                 "return_type": "selector",

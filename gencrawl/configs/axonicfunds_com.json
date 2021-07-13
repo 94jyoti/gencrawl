@@ -48,7 +48,7 @@
                     "./text()"
                 ],
                 "cleanup_functions": [
-                    "obj['cusip'].split('-')[0]"
+                    "obj['cusip'].split('/')[-1]"
                 ],
                 "return_type": "str",
                 "selector": "temp_class_blocks"
@@ -72,9 +72,12 @@
             },
             "share_inception_date": {
                 "paths": [
-                    "//h3[contains(text(),'FUND INCEPTION')]/following-sibling::p[1]/text()"
+                    "//h3[contains(text(),'FUND INCEPTION')]/following-sibling::p[contains(text(), ', 20')]/text()"
                 ],
-                "return_type": "str",
+                "cleanup_functions": [
+                    "[i.split('-')[-1] for i in obj['share_inception_date']]"
+                ],
+                "return_type": "list-map",
                 "selector": "root"
             },
             "investment_objective": {
@@ -95,12 +98,12 @@
                 "paths": [
                     "//h3[contains(text(),'MINIMUM INVESTMENT')]/following-sibling::p[1]/text()"
                 ],
-                "return_type": "list-map",
+                "return_type": "str",
                 "selector": "root"
             },
             "temp_fund_managers": {
                 "paths": [
-                    "//h3[contains(text(),'MANAGEMENT TEAM')]/ancestor::div/following-sibling::div[1]"
+                    "//h3[contains(text(),'MANAGEMENT TEAM')]/ancestor::div/following-sibling::div[1]/div/div/div/div/figure/figcaption/div/p[1]"
                 ],
                 "child_return_strategy": "multiple_objects",
                 "return_type": "selector",
@@ -108,7 +111,7 @@
             },
             "fund_manager": {
                 "paths": [
-                    "./div/div/div/div/figure/figcaption/div/p[1]"
+                    "./text()"
                 ],
                 "return_type": "str",
                 "selector": "temp_fund_managers"

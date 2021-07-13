@@ -13,7 +13,8 @@
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://buffalofunds.com/discovery/,https://buffalofunds.com/early-stage-growth/",
+            "https://buffalofunds.com/discovery/",
+            "https://buffalofunds.com/early-stage-growth/",
             "https://buffalofunds.com/growth/",
             "https://buffalofunds.com/international/",
             "https://buffalofunds.com/large-cap/",
@@ -53,6 +54,13 @@
                 "return_type": "str",
                 "selector": "temp_class_blocks"
             },
+            "portfolio_management_style": {
+                "paths": [
+                    "//b[contains(text(),'Category')]/parent::td/following-sibling::td//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
             "portfolio_assets": {
                 "paths": [
                     "//b[contains(text(),'Total Net Asset')]/parent::td/following-sibling::td/text()"
@@ -86,7 +94,8 @@
             },
             "investment_objective": {
                 "paths": [
-                    "//h5[contains(text(),'Fund Objective')]/parent::div/parent::div/following-sibling::div/div/p//text()"
+                    "(//*[contains(text(), 'Fund Objective')]/parent::div/parent::div/following-sibling::div)[1]//text()",
+                    "//h5[contains(text(),'FUND OBJECTIVE & INVESTMENT PROCESS')]/parent::div/parent::div/following-sibling::div/div/p//text()"
                 ],
                 "return_type": "join",
                 "selector": "root"
@@ -158,14 +167,6 @@
                     "//b[contains(text(),'Benchmark')]/parent::td/following-sibling::td/span/text()"
                 ],
                 "return_type": "list",
-                "selector": "root"
-            },
-            "temp_capital_gains": {
-                "paths": [
-                    "//table[@id='tablepress-207']"
-                ],
-                "child_return_strategy": "multiple_objects",
-                "return_type": "selector",
                 "selector": "root"
             },
             "temp_fund_managers": {

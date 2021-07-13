@@ -20,7 +20,6 @@
                 "paths": [
                     "//h2[@class='dropdown-toggle']/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -28,7 +27,6 @@
                 "paths": [
                     "(//h3[contains(text(),'Ticker')]/following-sibling::p)[1]/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -36,7 +34,6 @@
                 "paths": [
                     "(//h3[contains(text(),'CUSIP')]/following-sibling::p)[1]/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -44,7 +41,6 @@
                 "paths": [
                     "//a[@class='dropdown-toggle']/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -52,7 +48,9 @@
                 "paths": [
                     "(//td[contains(text(),'Gross')]/following-sibling::td)[1]/text()"
                 ],
-                "cleanup_functions": [],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'].replace('*', '')"
+                ],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -60,7 +58,9 @@
                 "paths": [
                     "(//td[contains(text(),'Net')]/following-sibling::td)[1]/text()"
                 ],
-                "cleanup_functions": [],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].replace('*', '')"
+                ],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -68,7 +68,6 @@
                 "paths": [
                     "(//h3[contains(text(),'Inception Date')]/following-sibling::p)[1]/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -76,15 +75,14 @@
                 "paths": [
                     "(//h3[contains(text(),'Investment Objective')]/following-sibling::p)[1]/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             },
             "investment_strategy": {
                 "paths": [
-                    "(//h3[contains(text(),'Investment Strategy')]/following-sibling::p)[1]/text()"
+                    "(//h3[contains(text(),'Investment Strategy')]/following-sibling::p)[1]/text()",
+                    "//h3[contains(text(),'Investment Strategy')]/following-sibling::p/span/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -92,7 +90,6 @@
                 "paths": [
                     "(//h3[contains(text(),'Investment Minimum')]/following-sibling::p)[1]/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             }

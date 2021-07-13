@@ -9,7 +9,7 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail",
+        "spider": "financial_detail_field_mapping",
         "crawl_method": "SELENIUM",
         "wait_time": 3,
         "custom_settings": {
@@ -17,25 +17,25 @@
         },
         "parsing_type": "xpath",
         "start_urls": [
-            "http://www.1290funds.com/1290-gamco-small-mid-cap-value-fund.php",
-            "http://www.1290funds.com/1290-smartbeta-equity-fund.php",
-            "http://www.1290funds.com/1290-high-yield-bond-fund.php",
-            "http://www.1290funds.com/1290-diversified-bond-fund.php",
-            "http://www.1290funds.com/1290-multi-alternative-strategies-fund.php",
-            "http://www.1290funds.com/1290-doubleline-dynamic-allocation-fund.php",
-            "http://www.1290funds.com/1290-retirement-funds.php"
+            "http://www.1290funds.com/1290-diversified-bond-fund",
+            "http://www.1290funds.com/1290-high-yield-bond-fund",
+            "http://www.1290funds.com/1290-retirement-funds",
+            "http://www.1290funds.com/1290-smartbeta-equity-fund",
+            "http://www.1290funds.com/1290-doubleline-dynamic-allocation-fund",
+            "http://www.1290funds.com/1290-multi-alternative-strategies-fund",
+            "http://www.1290funds.com/1290-gamco-small-mid-cap-value-fund"
         ],
         "ext_codes": {
             "instrument_name": {
                 "paths": [
-                    "//div[@id = 'banner']/div[2]/div/div/h1/text()"
+                    "//div[@class = 'heading-wrapper']/h1/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "temp_class_blocks": {
                 "paths": [
-                    "//table[@class='fund-details']/child::tbody/child::tr/child::th/text()"
+                    "//td[contains(text(),'Ticker')]/following-sibling::td"
                 ],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
@@ -43,123 +43,89 @@
             },
             "nasdaq_ticker": {
                 "paths": [
-                    "//strong[contains(text(),'Ticker')]/parent::td/following-sibling::td/text()"
+                    "./text()"
                 ],
-                "return_type": "list-map",
-                "selector": "root"
+                "return_type": "str",
+                "selector": "temp_class_blocks"
             },
             "cusip": {
                 "paths": [
-                    "//strong[contains(text(),'CUSIP')]/parent::td/following-sibling::td/text()"
+                    "//td[contains(text(),'CUSIP')]/following-sibling::td/text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
             "share_class": {
                 "paths": [
-                    "//table[@class='fund-details']/child::tbody/child::tr/child::th/text()"
+                    "//div[@id='fundDetailesWrapper']/table/tbody/tr[1]/th/text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
             "isin": {
                 "paths": [
-                    "//strong[contains(text(),'ISIN')]/parent::td/following-sibling::td/text()"
+                    "//td[contains(text(),'ISIN')]/following-sibling::td/text()"
                 ],
                 "return_type": "list-map",
+                "selector": "root"
+            },
+            "portfolio_management_style": {
+                "paths": [
+                    "//div[@class = 'heading-wrapper']/h2/text()"
+                ],
+                "return_type": "str",
                 "selector": "root"
             },
             "total_expense_gross": {
                 "paths": [
-                    "//th[contains(text(),'Gross Expense Ratio')]/ancestor::table/tbody/tr/td[2]/audit/text()"
+                    "//th[contains(text(),'Gross expense ratio')]/ancestor::table/tbody/tr/td[2]/text()"
                 ],
-                "return_type": "list-map",
+                "return_type": "str",
                 "selector": "root"
             },
             "total_expense_net": {
                 "paths": [
-                    "//th[contains(text(),'Net Expense Ratio')]/ancestor::table/tbody/tr/td[3]/audit/text()"
+                    "//th[contains(text(),'Net expense ratio')]/ancestor::table/tbody/tr/td[3]/text()"
                 ],
-                "return_type": "list-map",
+                "return_type": "str",
                 "selector": "root"
             },
             "share_inception_date": {
                 "paths": [
-                    "//p[contains(text(),'Fund inception')]/text()"
-                ],
-                "cleanup_functions": [
-                    "obj['share_inception_date'].split('of')"
+                    "//p[@class='disclosure'][4]/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "investment_objective": {
                 "paths": [
-                    "//h2[contains(text(),'Fund Objective')]/parent::div/child::p[1]/text()"
-                ],
-                "return_type": "join",
-                "selector": "root"
-            },
-            "minimum_initial_investment": {
-                "paths": [
-                    "//strong[contains(text(),'Investment Minimum')]/parent::td/following-sibling::td//text()"
+                    "//h4[contains(text(),'Fund objective')]/following-sibling::p[1]/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
-            "temp_capital_gains": {
+            "minimum_initial_investment": {
                 "paths": [
-                    "//h2[contains(text(),'Distributions ')]/parent::div"
+                    "//td[contains(text(),'Investment minimum')]/following-sibling::td/text()"
+                ],
+                "cleanup_functions": [
+                    "[o.strip() for o in obj['minimum_initial_investment'] if o.strip()]",
+                    "[o.split(' ')[0] if '$' in o else o for o in obj['minimum_initial_investment']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h3[contains(text(),'Portfolio manager')]/parent::div/div/div/pmname"
                 ],
                 "child_return_strategy": "multiple_objects",
                 "return_type": "selector",
                 "selector": "root"
             },
-            "cg_ex_date": {
-                "paths": [
-                    "./div/table/tbody/tr/td[2]"
-                ],
-                "return_type": "str",
-                "selector": "temp_capital_gains"
-            },
-            "cg_record_date": {
-                "paths": [
-                    "./div/table/tbody/tr/td[1]"
-                ],
-                "return_type": "str",
-                "selector": "temp_capital_gains"
-            },
-            "cg_pay_date": {
-                "paths": [
-                    "./div/table/tbody/tr/td[3]"
-                ],
-                "return_type": "str",
-                "selector": "temp_capital_gains"
-            },
-            "short_term_per_share": {
-                "paths": [
-                    "./div/table/tbody/tr/td[5]"
-                ],
-                "return_type": "str",
-                "selector": "temp_capital_gains"
-            },
-            "long_term_per_share": {
-                "paths": [
-                    "./div/table/tbody/tr/td[6]"
-                ],
-                "return_type": "str",
-                "selector": "temp_capital_gains"
-            },
-            "ordinary_income": {
-                "paths": [
-                    "./div/table/tbody/tr/td[4]"
-                ],
-                "return_type": "str",
-                "selector": "temp_capital_gains"
-            },
             "fund_manager": {
                 "paths": [
-                    "//h2[contains(text(),'Portfolio Manager')]/parent::div/child::h4"
+                    "./text()"
                 ],
                 "return_type": "str",
                 "selector": "temp_fund_managers"

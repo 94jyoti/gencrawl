@@ -1,0 +1,140 @@
+{
+    "website": "https://www.conestogafunds.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "conestogafunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.conestogafunds.com/conestoga-small-cap-fund/",
+            "https://www.conestogafunds.com/conestoga-mid-cap-fund-2",
+            "https://www.conestogafunds.com/conestoga-smid-cap-fund"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1[@class = 'c-custom-pages-heading']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//strong[contains(text(),'Ticker')]/ancestor::tr/following-sibling::tr"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./td[2]/p/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "//strong[contains(text(),'Ticker')]/ancestor::tr/following-sibling::tr/td[3]/p/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./td[1]/p/strong/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "portfolio_consultant": {
+                "paths": [
+                    "//em[contains(text(),'Adviser')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_consultant'].split('(')[0].split('.')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "./td[4]/p/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_net_assets_date": {
+                "paths": [
+                    "//strong[contains(text(),'Net Assets')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets_date'].split('(')[-1]",
+                    "obj['total_net_assets_date'].split(')')[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "./td[7]/p/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "./td[8]/p/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "./td[5]/p/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//strong[contains(text(),'Investment Objective')]/parent::p/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['investment_objective'].split('.')[-2]"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "./td[6]/p/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//td[contains(text(),'Inception')]/parent::tr/following-sibling::tr[position() = 3 or position() = 4]/td[1]/span/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//strong[contains(text(),'Investment Objective')]/parent::p"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    }
+}
