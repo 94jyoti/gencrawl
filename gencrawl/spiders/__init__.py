@@ -55,7 +55,6 @@ class BaseSpider(Spider):
 
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print("testttttttt")
         self.settings = get_project_settings()
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
@@ -303,16 +302,23 @@ class BaseSpider(Spider):
         for clean_up in clean_ups:
             if not obj[key]:
                 break
-            obj[key] = eval(clean_up)
+            try:
+                obj[key] = eval(clean_up)
+            except Exception as e:
+                self.logger.error(
+                    f"Error in applying cleanup for field -> {key}\ncleanup -> {clean_up}\nReason -> {e}")
         return obj[key]
 
     def apply_xpath(self, selector, paths, return_type=Statics.RETURN_TYPE_DEFAULT):
         values = []
         for path in paths:
-            value = selector.xpath(path)
-            if return_type != Statics.RETURN_TYPE_SELECTOR:
-                value = value.extract()
-            values.extend(value)
+            try:
+                value = selector.xpath(path)
+                if return_type != Statics.RETURN_TYPE_SELECTOR:
+                    value = value.extract()
+                values.extend(value)
+            except:
+                self.logger.error(f"Incorrect xpath written -> {path}")
         return values
 
     def apply_jpath(self, selector, paths):
@@ -322,8 +328,11 @@ class BaseSpider(Spider):
             selector = json.loads(selector.text)
         value = []
         for path in paths:
-            jsonpath_expr = parse(path)
-            value.extend([match.value for match in jsonpath_expr.find(selector)])
+            try:
+                jsonpath_expr = parse(path)
+                value.extend([match.value for match in jsonpath_expr.find(selector)])
+            except:
+                self.logger.error(f"Incorrect jpath written -> {path}")
         return value
 
     def apply_regex(self, selector, paths):
@@ -333,7 +342,10 @@ class BaseSpider(Spider):
             selector = selector.text
         value = []
         for path in paths:
-            value.extend(re.findall(path, selector, re.S))
+            try:
+                value.extend(re.findall(path, selector, re.S))
+            except:
+                self.logger.error(f"Incorrect regex written -> {path}")
         return value
 
     def return_value(self, value, return_type):
@@ -343,7 +355,7 @@ class BaseSpider(Spider):
             return int(value[0])
         if return_type == Statics.RETURN_TYPE_STRING:
             for val in value:
-                if val:
+                if Utility.is_not_empty(val):
                     return val
         elif return_type in [Statics.RETURN_TYPE_LIST, Statics.RETURN_TYPE_SELECTOR, Statics.RETURN_TYPE_LIST_MAP]:
             return [v for v in value if v]

@@ -56,7 +56,7 @@ class GoogleConfig:
         def split_g(elem):
             if isinstance(elem, float):
                 return []
-            elems = elem.replace("\r\n", "\n").split("\n")
+            elems = elem.replace("\r\n", "\n").replace("\r", "\n").split("\n")
             elems = [e for e in elems if e and e.strip()]
             return elems
 
@@ -121,6 +121,13 @@ class GoogleConfig:
 
             ext_code['return_type'] = rt or Statics.RETURN_TYPE_DEFAULT
             ext_code['selector'] = s or Statics.SELECTOR_ROOT
+
+        crawl_type_config = parsed_config.get(crawl_type)
+        if crawl_type_config:
+            codes = crawl_type_config.get("ext_codes") or {}
+            pagination = codes.pop("pagination", None)
+            if pagination:
+                crawl_type_config['pagination'] = {"pagination": pagination}
 
         file_name = Utility.get_config_name(website)
         parsed_config_list[file_name] = parsed_config
