@@ -1,0 +1,169 @@
+{
+    "website": "http://www.1290funds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "1290funds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "http://www.1290funds.com/1290-gamco-small-mid-cap-value-fund.php",
+            "http://www.1290funds.com/1290-smartbeta-equity-fund.php",
+            "http://www.1290funds.com/1290-high-yield-bond-fund.php",
+            "http://www.1290funds.com/1290-diversified-bond-fund.php",
+            "http://www.1290funds.com/1290-multi-alternative-strategies-fund.php",
+            "http://www.1290funds.com/1290-doubleline-dynamic-allocation-fund.php",
+            "http://www.1290funds.com/1290-retirement-funds.php"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//div[@id = 'banner']/div[2]/div/div/h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//table[@class='fund-details']/child::tbody/child::tr/child::th/text()"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//strong[contains(text(),'Ticker')]/parent::td/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//strong[contains(text(),'CUSIP')]/parent::td/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//table[@class='fund-details']/child::tbody/child::tr/child::th/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "isin": {
+                "paths": [
+                    "//strong[contains(text(),'ISIN')]/parent::td/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//th[contains(text(),'Gross Expense Ratio')]/ancestor::table/tbody/tr/td[2]/audit/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//th[contains(text(),'Net Expense Ratio')]/ancestor::table/tbody/tr/td[3]/audit/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//p[contains(text(),'Fund inception')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['share_inception_date'].split('of')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Objective')]/parent::div/child::p[1]/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//strong[contains(text(),'Investment Minimum')]/parent::td/following-sibling::td//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_capital_gains": {
+                "paths": [
+                    "//h2[contains(text(),'Distributions ')]/parent::div"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "cg_ex_date": {
+                "paths": [
+                    "./div/table/tbody/tr/td[2]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "cg_record_date": {
+                "paths": [
+                    "./div/table/tbody/tr/td[1]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "cg_pay_date": {
+                "paths": [
+                    "./div/table/tbody/tr/td[3]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "short_term_per_share": {
+                "paths": [
+                    "./div/table/tbody/tr/td[5]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "long_term_per_share": {
+                "paths": [
+                    "./div/table/tbody/tr/td[6]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "ordinary_income": {
+                "paths": [
+                    "./div/table/tbody/tr/td[4]"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "fund_manager": {
+                "paths": [
+                    "//h2[contains(text(),'Portfolio Manager')]/parent::div/child::h4"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}
