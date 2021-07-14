@@ -13,7 +13,10 @@ class IntegrityvikingfundsComDetail(FinancialDetailSpider):
         for item in self.prepare_items(response, default_item):
             managers = item.get("temp_fund_managers")
             if managers:
-                managers = managers[0].split(";")
+                if ';' in managers[0]:
+                    managers = managers[0].split(";")
+                else:
+                    managers = managers[0].split(",")
                 managers = [m.split(",")[0].strip() for m in managers]
                 item['fund_managers'] = [{"fund_manager": i} for i in managers]
             parsed_items.append(self.generate_item(item, FinancialDetailItem))
