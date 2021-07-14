@@ -70,7 +70,7 @@
                 "paths": [
                     "//p[contains(text(),'Inception dates')]/text()"
                 ],
-                "return_type": "str",
+                "return_type": "join",
                 "selector": "root"
             },
             "investment_objective": {

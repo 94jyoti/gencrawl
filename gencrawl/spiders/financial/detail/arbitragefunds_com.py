@@ -12,7 +12,7 @@ class ArbitragefundsComDetail(FinancialDetailFieldMapSpider):
         for item in items:
             inception_date = item.pop("share_inception_date", None)
             if inception_date:
-                inception_date = inception_date.split(".")[0].replace("Inception dates: ", "").split(";")
+                inception_date = inception_date.split(";")
                 ticker = item['nasdaq_ticker']
                 for i in inception_date:
                     if ticker in i:
