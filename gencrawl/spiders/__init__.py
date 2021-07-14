@@ -303,7 +303,7 @@ class BaseSpider(Spider):
             if not obj[key]:
                 break
             try:
-                obj[key] = eval(clean_up)
+                obj[key] = eval(clean_up, locals())
             except Exception as e:
                 self.logger.error(
                     f"Error in applying cleanup for field -> {key}\ncleanup -> {clean_up}\nReason -> {e}")
