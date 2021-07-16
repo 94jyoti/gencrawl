@@ -269,7 +269,8 @@ class BaseSpider(Spider):
                             n_item = deepcopy(item)
                             n_item.update(value)
                             new_items.append(n_item)
-                    items = new_items
+                    if new_items:
+                        items = new_items
                 else:
                     self.logger.error(f'Invalid return strategy - {return_strategy}')
 
