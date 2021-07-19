@@ -137,11 +137,11 @@ class BaseSpider(Spider):
         default_item['crawl_datetime'] = datetime.now()
         return default_item
 
-    def get_pagination_urls(self, response, ext_codes=None):
+    def get_pagination_urls(self, response, ext_codes=None, default_obj=None):
         if not self.pagination:
             return
         pagination_ext_codes = ext_codes or self.pagination
-        pagination_urls = self.exec_codes(response, pagination_ext_codes)[0].get("pagination")
+        pagination_urls = self.exec_codes(response, pagination_ext_codes, default_obj=default_obj)[0].get("pagination")
         pagination_urls = [response.urljoin(url) for url in pagination_urls]
         return pagination_urls
 
@@ -167,7 +167,8 @@ class BaseSpider(Spider):
         else:
             yield navigation
 
-        pagination_urls = self.get_pagination_urls(response)
+        default_paginated_obj = {self.url_key: response.meta.get(self.url_key)}
+        pagination_urls = self.get_pagination_urls(response, default_obj=default_paginated_obj)
         yield from self.get_pagination_requests(pagination_urls, pagination_fields)
 
     def parse_navigation(self, response, items):
@@ -268,7 +269,8 @@ class BaseSpider(Spider):
                             n_item = deepcopy(item)
                             n_item.update(value)
                             new_items.append(n_item)
-                    items = new_items
+                    if new_items:
+                        items = new_items
                 else:
                     self.logger.error(f'Invalid return strategy - {return_strategy}')
 
@@ -303,7 +305,7 @@ class BaseSpider(Spider):
             if not obj[key]:
                 break
             try:
-                obj[key] = eval(clean_up)
+                obj[key] = eval(clean_up, locals())
             except Exception as e:
                 self.logger.error(
                     f"Error in applying cleanup for field -> {key}\ncleanup -> {clean_up}\nReason -> {e}")

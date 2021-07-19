@@ -9,7 +9,7 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail_field_mapping",
+        "spider": "financial_detail_arbitragefunds_com",
         "crawl_method": "SELENIUM",
         "wait_time": 3,
         "custom_settings": {
@@ -17,9 +17,19 @@
         },
         "parsing_type": "xpath",
         "start_urls": [
-            "https://arbitragefunds.com/water-island-credit-opportunities"
+            "https://arbitragefunds.com/water-island-credit-opportunities",
+            "https://arbitragefunds.com/arbitrage",
+            "https://arbitragefunds.com/water-island-event-driven",
+            "https://arbitragefunds.com/water-island-long-short"
         ],
         "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//main[@id='page']/div/div/div/div/div/div/h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
             "temp_class_blocks": {
                 "paths": [
                     "//div[@class='sqs-block-content']//button"
@@ -41,6 +51,41 @@
                 ],
                 "return_type": "str",
                 "selector": "temp_class_blocks"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//td[text()='Gross Expenses']/following-sibling::*/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//td[text()='Net Expenses']/following-sibling::*/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//p[contains(text(),'Inception dates')]/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h3[contains(text(),'Strategy')]/following-sibling::p/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//td[text()='Min. Investment']/following-sibling::*/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
             }
         }
     }
