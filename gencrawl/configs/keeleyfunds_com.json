@@ -100,7 +100,7 @@
                 ],
                 "return_type": "str",
                 "selector": "root"
-            }
+			}
         }
     }
 }

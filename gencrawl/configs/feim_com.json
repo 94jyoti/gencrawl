@@ -52,14 +52,14 @@
             },
             "cusip": {
                 "paths": [
-                    "//th[text()=' Class' or text()='Class']//ancestor::thead//following-sibling::tbody//tr//td[3][string-length(text()) >= 1]"
+                    "//th[text()=' Class' or text()='Class']//ancestor::thead//following-sibling::tbody//tr//td[3][string-length(text()) >= 1]//text()"
                 ],
                 "return_type": "list-map",
                 "selector": "temp_class_blocks"
             },
             "share_class": {
                 "paths": [
-                    "//th[text()=' Class' or text()='Class']//ancestor::thead//following-sibling::tbody//tr//td[1][string-length(text()) >= 1]"
+                    "//th[text()=' Class' or text()='Class']//ancestor::thead//following-sibling::tbody//tr//td[1][string-length(text()) >= 1]//text()"
                 ],
                 "return_type": "list-map",
                 "selector": "temp_class_blocks"
@@ -86,7 +86,7 @@
             },
             "fees_total_12b_1": {
                 "paths": [
-                    "//td[contains(text(),'Distribution and Service (12b-1) Fees')]/following-sibling::td/text()"
+                    "//td[contains(text(),'Distribution and Service (12b-1) Fees')]/following-sibling::td/text()","//td[contains(text(),'Distribution (12b-1) Fees')]/following-sibling::td/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -114,7 +114,7 @@
             },
             "total_expense_gross": {
                 "paths": [
-                    "//td[contains(text(),'Total Annual Fund Operating Expenses')]/following-sibling::td",
+                    "//td[contains(text(),'Total Annual Fund Operating Expenses')]/following-sibling::td//text()",
                     "(//td[contains(text(),'Total Annual Operating Expenses')])[1]/following-sibling::td/text()[not(contains(.,'after fee waiver'))]"
                 ],
                 "return_type": "str",
@@ -130,7 +130,7 @@
             },
             "share_inception_date": {
                 "paths": [
-                    "//th[text()='Inception Date' or text()=' Inception Date']//following::tbody//tr//td[4][contains(text(),'/')][string-length(text()) >= 1]//text()"
+                    "//th[text()='Inception Date' or text()=' Inception Date']//following::tbody[1]//tr//td[4][contains(text(),'/')][string-length(text()) >= 1]//text()","//th[text()='Inception Date' or text()=' Inception Date']//following::tbody[1]//tr//td[8][contains(text(),'/')][string-length(text()) >= 1]//text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
@@ -147,7 +147,7 @@
                     "//caption[contains(text(),'Portfolio Characteristics ')]/span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['weighted_average_duration_as_of_date'].replace('as of ', '')\""
+                    "obj['weighted_average_duration_as_of_date'].replace('as of', '')"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -164,21 +164,21 @@
                     "//caption[contains(text(),'Portfolio Characteristics ')]/span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['average_weighted_maturity_as_of_date'].replace('as of ', '')\""
+                    "obj['average_weighted_maturity_as_of_date'].replace('as of ', '')"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "minimum_initial_investment": {
                 "paths": [
-                    "//td[contains(text(),'Minimum Investment')]/following-sibling::td/text()"
+                    "//td[text()='Minimum Investment']/following-sibling::td/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "minimum_additional_investment": {
                 "paths": [
-                    "//td[contains(text(),'Subsequent Investment')]/following-sibling::td/text()"
+                    "//td[text()='Subsequent Investment']/following-sibling::td/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -219,7 +219,7 @@
                     "//caption[contains(text(),'Portfolio Characteristics ')]/span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['sec_yield_date_30_day'].replace('as of ', '')\""
+                    "obj['sec_yield_date_30_day'].replace('as of ', '')"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -236,7 +236,7 @@
                     "//caption[contains(text(),'Portfolio Characteristics ')]/span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['sec_yield_without_waivers_date_30_day'].replace('as of ', '')\""
+                    "obj['sec_yield_without_waivers_date_30_day'].replace('as of ', '')"
                 ],
                 "return_type": "str",
                 "selector": "root"
