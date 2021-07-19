@@ -9,42 +9,26 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail",
+        "spider": "financial_detail_field_mapping",
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://us.matthewsasia.com/funds/global-emerging-markets/emerging-markets-equity-fund/?FundClassType=MIEFX",
-            "https://us.matthewsasia.com/funds/global-emerging-markets/emerging-markets-equity-fund/?FundClassType=MEGMXR",
-            "https://us.matthewsasia.com/funds/global-emerging-markets/emerging-markets-small-companies-fund/?FundClassType=MISMX",
-            "https://us.matthewsasia.com/funds/global-emerging-markets/emerging-markets-small-companies-fund/?FundClassType=MSMLX1",
-            "https://us.matthewsasia.com/funds/asia-growth/asia-growth/?FundClassType=MIAPX",
-            "https://us.matthewsasia.com/funds/asia-growth/asia-growth/?FundClassType=MPACX1",
-            "https://us.matthewsasia.com/funds/asia-growth/pacific-tiger-fund/?FundClassType=MIPTX",
-            "https://us.matthewsasia.com/funds/asia-growth/pacific-tiger-fund/?FundClassType=MAPTX1",
-            "https://us.matthewsasia.com/funds/asia-growth/asia-esg-fund/?FundClassType=MISFX",
-            "https://us.matthewsasia.com/funds/asia-growth/asia-esg-fund/?FundClassType=MASGXR",
-            "https://us.matthewsasia.com/funds/asia-growth/asia-innovators-fund/?FundClassType=MITEX",
-            "https://us.matthewsasia.com/funds/asia-growth/asia-innovators-fund/?FundClassType=MATFX1",
-            "https://us.matthewsasia.com/funds/asia-growth/china-fund/?FundClassType=MICFX",
-            "https://us.matthewsasia.com/funds/asia-growth/china-fund/?FundClassType=MCHFX1",
-            "https://us.matthewsasia.com/funds/asia-growth/china-small-companies-fund/?FundClassType=MICHX",
-            "https://us.matthewsasia.com/funds/asia-growth/china-small-companies-fund/?FundClassType=MCSMXR",
-            "https://us.matthewsasia.com/funds/asia-growth/india-fund/?FundClassType=MIDNX",
-            "https://us.matthewsasia.com/funds/asia-growth/india-fund/?FundClassType=MINDX1",
-            "https://us.matthewsasia.com/funds/asia-growth/japan-fund/?FundClassType=MIJFX",
-            "https://us.matthewsasia.com/funds/asia-growth/japan-fund/?FundClassType=MJFOX1",
-            "https://us.matthewsasia.com/funds/asia-growth/korea-fund/?FundClassType=MIKOX",
-            "https://us.matthewsasia.com/funds/asia-growth/korea-fund/?FundClassType=MAKOX1",
-            "https://us.matthewsasia.com/funds/growth-and-income/growth-and-income-fund/?FundClassType=MICSX",
-            "https://us.matthewsasia.com/funds/growth-and-income/growth-and-income-fund/?FundClassType=MACSX1",
-            "https://us.matthewsasia.com/funds/growth-and-income/asia-dividend-fund/?FundClassType=MIPIX",
-            "https://us.matthewsasia.com/funds/growth-and-income/asia-dividend-fund/?FundClassType=MAPIX1",
-            "https://us.matthewsasia.com/funds/growth-and-income/china-dividend-fund/?FundClassType=MICDX",
-            "https://us.matthewsasia.com/funds/growth-and-income/china-dividend-fund/?FundClassType=MCDFX1",
-            "https://us.matthewsasia.com/funds/fixed-income/asia-total-return-bond-fund/?FundClassType=MINCX",
-            "https://us.matthewsasia.com/funds/fixed-income/asia-total-return-bond-fund/?FundClassType=MAINXR",
-            "https://us.matthewsasia.com/funds/fixed-income/asia-credit-opportunities-fund/?FundClassType=MICPX",
-            "https://us.matthewsasia.com/funds/fixed-income/asia-credit-opportunities-fund/?FundClassType=MCRDXR"
+            "https://us.matthewsasia.com/funds/global-emerging-markets/emerging-markets-equity-fund/",
+            "https://us.matthewsasia.com/funds/global-emerging-markets/emerging-markets-small-companies-fund/",
+            "https://us.matthewsasia.com/funds/asia-growth/asia-growth/",
+            "https://us.matthewsasia.com/funds/asia-growth/pacific-tiger-fund/",
+            "https://us.matthewsasia.com/funds/asia-growth/asia-esg-fund/",
+            "https://us.matthewsasia.com/funds/asia-growth/asia-innovators-fund/",
+            "https://us.matthewsasia.com/funds/asia-growth/china-fund/",
+            "https://us.matthewsasia.com/funds/asia-growth/china-small-companies-fund/",
+            "https://us.matthewsasia.com/funds/asia-growth/india-fund/",
+            "https://us.matthewsasia.com/funds/asia-growth/japan-fund/",
+            "https://us.matthewsasia.com/funds/asia-growth/korea-fund/",
+            "https://us.matthewsasia.com/funds/growth-and-income/growth-and-income-fund/",
+            "https://us.matthewsasia.com/funds/growth-and-income/asia-dividend-fund/",
+            "https://us.matthewsasia.com/funds/growth-and-income/china-dividend-fund/",
+            "https://us.matthewsasia.com/funds/fixed-income/asia-total-return-bond-fund/",
+            "https://us.matthewsasia.com/funds/fixed-income/asia-credit-opportunities-fund/"
         ],
         "ext_codes": {
             "instrument_name": {
@@ -67,13 +51,6 @@
                 ],
                 "return_type": "str",
                 "selector": "root"
-            },
-            "share_class": {
-                "paths": [
-                    "//select[@id='share_class-select']/text()"
-                ],
-                "return_type": "str",
-                "selector": "temp_class_blocks"
             },
             "portfolio_assets": {
                 "paths": [
@@ -139,11 +116,7 @@
             },
             "benchmarks": {
                 "paths": [
-                    "//a[contains(text(),'Benchmark')]/parent::td/following-sibling::td/text()",
-                    "//a[contains(text(),'Benchmark')]/parent::td/following-sibling::td/span/text()"
-                ],
-                "cleanup_functions": [
-                    "obj['benchmarks'][:1]"
+                    "//a[contains(text(),'Benchmark')]/parent::td/following-sibling::td//text()"
                 ],
                 "return_type": "list",
                 "selector": "root"
@@ -162,6 +135,18 @@
                 ],
                 "return_type": "str",
                 "selector": "temp_fund_managers"
+            }
+        },
+        "pagination": {
+            "pagination": {
+                "paths": [
+                    "//div[@class='share-class']//option[position()>1]/@value"
+                ],
+                "cleanup_functions": [
+                    "[(obj['fund_url'].split('?')[0] + '?FundClassType=' + o) for o in obj['pagination']]"
+                ],
+                "return_type": "list",
+                "selector": "root"
             }
         }
     }

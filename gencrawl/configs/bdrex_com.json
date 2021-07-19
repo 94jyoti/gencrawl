@@ -9,7 +9,7 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail_field_mapping",
+        "spider": "financial_detail_bdrex_com",
         "crawl_method": "SELENIUM",
         "wait_time": 3,
         "custom_settings": {
@@ -32,7 +32,8 @@
                     "//th[contains(text(),'Class')]/parent::tr/parent::thead/following-sibling::tbody/tr/td[1]"
                 ],
                 "child_return_strategy": "multiple_items",
-                "return_type": "selector" 	
+                "return_type": "selector",
+                "selector": "root"
             },
             "nasdaq_ticker": {
                 "paths": [
@@ -50,7 +51,7 @@
             },
             "share_class": {
                 "paths": [
-                    ".//text()"
+                    "./text()"
                 ],
                 "return_type": "str",
                 "selector": "temp_class_blocks"
@@ -106,6 +107,21 @@
                 ],
                 "return_type": "list-map",
                 "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h2[contains(text(),'Portfolio Managers')]/following-sibling::p/strong"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
             }
         }
     }
