@@ -1,0 +1,173 @@
+{
+    "website": "https://integrityvikingfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "integrityvikingfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_integrityvikingfunds_com",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.integrityvikingfunds.com/Fund/Details/IDIVX/integrity-dividend-harvest-fund",
+            "https://www.integrityvikingfunds.com/Fund/Details/IGIAX/integrity-esg-growth-and-income-fund",
+            "https://www.integrityvikingfunds.com/Fund/Details/ICPAX/integrity-mid-north-american-resources-fund",
+            "https://www.integrityvikingfunds.com/Fund/Details/KSMUX/kansas-municipal-fund",
+            "https://www.integrityvikingfunds.com/Fund/Details/MEMUX/maine-municipal-fund",
+            "https://www.integrityvikingfunds.com/Fund/Details/NEMUX/nebraska-municipal-fund",
+            "https://www.integrityvikingfunds.com/Fund/Details/OKMUX/oklahoma-municipal-fund",
+            "https://www.integrityvikingfunds.com/Fund/Details/VMTTX/viking-tax-free-fund-for-montana",
+            "https://www.integrityvikingfunds.com/Fund/Details/VNDFX/viking-tax-free-fund-for-north-dakota",
+            "https://www.integrityvikingfunds.com/Fund/Details/IHFAX/integrity-high-income-fund",
+            "https://www.integrityvikingfunds.com/Fund/Details/MDSAX/integrity-short-term-government-fund"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//div[@class='container']//h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//dt[contains(text(),'Symbol')]/following-sibling::dd[1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "(//dt[contains(text(),' Cusip')]/following-sibling::dd)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "fees_total_12b_1": {
+                "paths": [
+                    "//th[contains(text(),'Distribution and Service (12b-1) Fees')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "other_expenses": {
+                "paths": [
+                    "//th[contains(text(),'Other Expenses')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "management_fee": {
+                "paths": [
+                    "//th[contains(text(),'Management Fees')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "expense_waivers": {
+                "paths": [
+                    "//th[not(contains(.,'Total Annual Fund Operating Expenses'))][contains(text(),'Fee Waivers and Expense Reimbursements')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "(//th[contains(text(),'Total Annual Fund Operating Expenses')]/following-sibling::td)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "(//th[contains(text(),'Total Annual Fund Operating Expenses')]/following-sibling::td)[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "(//dt[contains(text(),' Inception Date')]/following-sibling::dd)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "(//dt[contains(text(),' Objective')]/following-sibling::dd)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "//h4[contains(text(),'30 Day SEC Yield ')]/parent::div/following-sibling::div//tr/td[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_30_day'].split('(')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "//h4[contains(text(),'30 Day SEC Yield ')]"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_date_30_day'].split('(')[-1].replace(')', '').replace('as of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_30_day": {
+                "paths": [
+                    "//h4[contains(text(),'30 Day SEC Yield ')]/parent::div/following-sibling::div//tr/td[2]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_without_waivers_30_day'].split('(')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_date_30_day": {
+                "paths": [
+                    "//h4[contains(text(),'30 Day SEC Yield ')]"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_without_waivers_date_30_day'].split('(')[-1].replace(')', '').replace('as of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//dt[contains(text(), 'Management Team')]/following-sibling::dd[1]/text()"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        },
+        "pagination": {
+            "pagination": {
+                "paths": [
+                    "//a[contains(text(),'Shares')]/@href"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}
