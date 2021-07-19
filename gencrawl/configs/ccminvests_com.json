@@ -1,0 +1,128 @@
+{
+    "website": "https://www.ccminvests.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "ccminvests.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.ccminvests.com/strategies/ccm-community-impact-bond-fund/cra-shares-craix/",
+            "https://www.ccminvests.com/strategies/ccm-community-impact-bond-fund/institutional-shares-cranx/",
+            "https://www.ccminvests.com/strategies/ccm-community-impact-bond-fund/retail-shares-cratx/",
+            "https://www.ccminvests.com/strategies/ccm-core-impact-equity-fund/",
+            "https://www.ccminvests.com/strategies/ccm-small-mid-cap-impact-value-fund/",
+            "https://www.ccminvests.com/strategies/ccm-alternative-income-fund-ccmnx/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//*[contains(@class,\"facts-holder facts-holder1\")]//*[@class='tabbbed']//div[not(contains(@class,'current'))][not(contains(@style,'none'))]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//*[contains(text(),'Ticker')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "asset_class": {
+                "paths": [
+                    "//*[contains(text(),'Asset Class')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//*[contains(text(),'Total Funds Assets')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "(//*[contains(text(),'Month-End Data ')]/em)[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('as of')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//*[contains(text(),'Gross Expense Ratio')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//*[contains(text(),'Net Expense Ratio**')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//*[contains(text(),'Inception')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "dividend_frequency": {
+                "paths": [
+                    "//*[contains(text(),'Dividends')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "//*[contains(text(),'30-Day SEC Yield')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_30_day": {
+                "paths": [
+                    "//*[contains(text(),'Unsubsidized 30-Day Yield')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//*[contains(text(),'Benchmark')]/following::td[1]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}

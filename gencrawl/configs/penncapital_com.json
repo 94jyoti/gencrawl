@@ -1,0 +1,119 @@
+{
+    "website": "https://www.penncapital.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "penncapital.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.penncapital.com/mutual-funds/penn-capital-short-duration-high-income-fund-formerly-penn-capital-defensive-short",
+            "https://www.penncapital.com/mutual-funds/penn-capital-opportunistic-high-income-fund-formerly-penn-capital-multi-credit-high",
+            "https://www.penncapital.com/mutual-funds/penn-capital-floating-rate-income-fund-formerly-penn-capital-defensive-floating-rate",
+            "https://www.penncapital.com/mutual-funds/penn-capital-special-situations-small-cap-equity-fund",
+            "https://www.penncapital.com/mutual-funds/penn-capital-mid-cap-core-fund-formerly-penn-capital-managed-alpha-smid-cap-equity"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/span[contains(text(),'Fund')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['instrument_name'].split('(')[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//span[contains(text(),'Ticker')]/following-sibling::div[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//span[contains(text(),'CUSIP')]/following-sibling::div[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//td[@data-label = 'Share Class']/div/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//p[contains(text(),'gross operating expenses')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'].split('Class ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//p[contains(text(),'net operating expenses')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].split('Class ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//td[@data-label = 'Inception Date']/div/time/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h3[contains(text(),'Objective')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h3[contains(text(),'Strategy')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//div[contains(text(),'Index')]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h2[contains(text(),'Portfolio Manager')]/following-sibling::article/div/h3"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}
