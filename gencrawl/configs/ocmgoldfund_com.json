@@ -1,0 +1,90 @@
+{
+    "website": "https://ocmgoldfund.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "ocmgoldfund.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://ocmgoldfund.com/investing/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//a[@class = 'logo']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//b[contains(text(),'Class')]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()[not(contains(.,'Class'))]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()[contains(.,'Class')]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "//span[contains(text(),'Redemption')]/text()"
+                ],
+                "cleanup_functions": [
+                    "[x.split(': ')[-1] for x in obj['redemption_fee']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    "//span[contains(text(),'Sales Load')]/text()"
+                ],
+                "cleanup_functions": [
+                    "[x.split(': ')[-1] for x in obj['maximum_sales_charge_full_load']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//span[contains(text(),'Minimum Investment')]/text()[not(contains(.,'IRA'))]"
+                ],
+                "cleanup_functions": [
+                    "[x.split(': ')[-1] for x in obj['minimum_initial_investment']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//span[contains(text(),'Subsequent Minimum Purchase')]/text()"
+                ],
+                "cleanup_functions": [
+                    "[x.split(': ')[-1] for x in obj['minimum_additional_investment']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            }
+        }
+    }
+}

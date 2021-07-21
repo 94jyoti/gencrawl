@@ -10,29 +10,24 @@
     "language": "ENGLISH",
     "detail": {
         "spider": "financial_detail",
-        "crawl_method": "SCRAPY_GET",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.ftportfolios.com/Retail/Cef/CefSummary.aspx?Ticker=FTHY",
-            "https://www.ftportfolios.com/Retail/Cef/CefSummary.aspx?Ticker=FIV",
-            "https://www.ftportfolios.com/Retail/Cef/CefSummary.aspx?Ticker=FDEU",
             "https://www.ftportfolios.com/Retail/MF/MFSummary.aspx?Ticker=FPEAX",
+            "https://www.ftportfolios.com/Retail/MF/MFSummary.aspx?Ticker=FOVAX",
             "https://www.ftportfolios.com/Retail/MF/MFSummary.aspx?Ticker=FDHAX"
         ],
         "ext_codes": {
             "instrument_name": {
                 "paths": [
-                    "//span[@id='FundNavigation_lblPageHeader']/text()"
+                    "//span[@id='FundNavigation_lblPageHeader']/text()",
+                    "//span[@id='FundNavigation1_lblPageHeader']/text()"
                 ],
                 "return_type": "str",
-                "selector": "root"
-            },
-            "temp_class_blocks": {
-                "paths": [
-                    "//td[contains(text(),'Share Class')]/following-sibling::td/text()"
-                ],
-                "child_return_strategy": "root",
-                "return_type": "selector",
                 "selector": "root"
             },
             "nasdaq_ticker": {
@@ -40,18 +35,26 @@
                     "//td[contains(text(),'Ticker')]/following-sibling::td/text()"
                 ],
                 "return_type": "str",
-                "selector": "temp_class_blocks"
+                "selector": "root"
             },
             "cusip": {
                 "paths": [
                     "//td[contains(text(),'CUSIP')]/following-sibling::td/text()"
                 ],
                 "return_type": "str",
-                "selector": "temp_class_blocks"
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//td[contains(text(),'Share Class')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
             },
             "portfolio_consultant": {
                 "paths": [
-                    "//td[contains(text(),'Investment Advisor')]/following-sibling::td/text()"
+                    "//td[contains(text(),'Servicing Agent')]/following-sibling::td/text()",
+                    "//td[contains(text(),'Sub-Advisor')]/following-sibling::td/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -68,7 +71,8 @@
                     "//div[@id='CurrentFundData1_FundControlContainer']/div[1]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['total_net_assets_date'].split('as of')[-1]"
+                    "obj['total_net_assets_date'].split('as of')[-1]",
+                    "obj['total_net_assets_date'].replace(')',' ')"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -85,7 +89,15 @@
                     "//div[@id='CurrentFundData1_FundControlContainer']/div[1]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['total_shares_outstanding_date'].split('as of')[-1]"
+                    "obj['total_shares_outstanding_date'].split('as of')[-1]",
+                    "obj['total_shares_outstanding_date'].replace(')',' ')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "deferred_sales_charge": {
+                "paths": [
+                    "//td[contains(text(),' Deferred Sales Charge')]/following-sibling::td/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -151,7 +163,8 @@
                     "(//div[@id='FundCharacteristics_FundControlContainer']/div)[1]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['average_weighted_maturity_as_of_date'].split('as of')[-1]"
+                    "obj['average_weighted_maturity_as_of_date'].split('as of')[-1]",
+                    "obj['average_weighted_maturity_as_of_date'].replace(')',' ')"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -189,7 +202,8 @@
                     "(//td[contains(text(),'30-Day SEC Yield ')]/span)[1]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['sec_yield_date_30_day'].split('as of')[-1]"
+                    "obj['sec_yield_date_30_day'].split('as of')[-1]",
+                    "obj['sec_yield_date_30_day'].replace(')',' ')"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -206,14 +220,24 @@
                     "(//td[contains(text(),'30-Day SEC Yield ')]/span)[2]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['sec_yield_without_waivers_date_30_day'].split('as of')[-1]"
+                    "obj['sec_yield_without_waivers_date_30_day'].split('as of')[-1]",
+                    "obj['sec_yield_without_waivers_date_30_day'].replace(')',' ')"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "benchmarks": {
                 "paths": [
-                    "//div[contains(text(),'Index Performance')]/parent::td/parent::tr/following-sibling::tr"
+                    "//div[contains(text(),'Index Performance')]/parent::td/parent::tr/following-sibling::tr/td[1][contains(text(),'Index')]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        },
+        "pagination": {
+            "pagination": {
+                "paths": [
+                    "//b[contains(text(),'Share Classes')]/parent::td/parent::tr/following-sibling::tr/td/a/@href"
                 ],
                 "return_type": "list",
                 "selector": "root"

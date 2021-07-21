@@ -1,0 +1,168 @@
+{
+    "website": "https://www.gr-funds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "gr-funds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_gr_funds_com",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.gr-funds.com/"
+        ],
+        "ext_codes": {
+            "temp_class_blocks": {
+                "paths": [
+                    "//th[contains(text(),'Ticker')]/parent::tr/parent::thead/parent::table//tbody//td[1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "//th[contains(text(),'CUSIP')]/parent::tr/parent::thead/parent::table//tbody//td[3]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//th[contains(text(),'Share Class')]/parent::tr/parent::thead/parent::table//tbody//td[2]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//th[contains(text(),'Gross Expense Ratio')]/parent::tr/parent::thead/parent::table//tbody//td[2]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//th[contains(text(),'Net Expense Ratio')]/parent::tr/parent::thead/parent::table//tbody//td[3]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Objective')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h2[contains(text(),'Principal Investment Strategies of the Fund')]/following-sibling::p/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//th[contains(text(),'Share Class')]/parent::tr/parent::thead/parent::table//tbody//td[7]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "temp_capital_gains": {
+                "paths": [
+                    "//th[contains(text(),'Record Date')]/parent::tr/parent::thead/parent::table//tbody/tr"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "cg_ex_date": {
+                "paths": [
+                    ".//td[4]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "cg_record_date": {
+                "paths": [
+                    ".//td[3]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "cg_pay_date": {
+                "paths": [
+                    ".//td[5]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "short_term_per_share": {
+                "paths": [
+                    ".//td[8]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "long_term_per_share": {
+                "paths": [
+                    ".//td[7]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "temp_dividends": {
+                "paths": [
+                    "//th[contains(text(),'Record Date')]/parent::tr/parent::thead/parent::table//tbody/tr"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "ex_date": {
+                "paths": [
+                    ".//td[4]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_dividends"
+            },
+            "record_date": {
+                "paths": [
+                    ".//td[3]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_dividends"
+            },
+            "pay_date": {
+                "paths": [
+                    ".//td[5]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_dividends"
+            },
+            "ordinary_income": {
+                "paths": [
+                    ".//td[6]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_dividends"
+            }
+        }
+    }
+}

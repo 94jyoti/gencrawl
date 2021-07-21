@@ -1,0 +1,134 @@
+{
+    "website": "https://www.lsvasset.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "lsvasset.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.lsvasset.com/value-equity-fund/",
+            "https://www.lsvasset.com/conservative-value-equity-fund/",
+            "https://www.lsvasset.com/small-cap-value-fund/",
+            "https://www.lsvasset.com/global-value-fund/",
+            "https://www.lsvasset.com/us-managed-volatility-fund/",
+            "https://www.lsvasset.com/global-managed-volatility-fund/",
+            "https://www.lsvasset.com/emerging-markets-equity-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1[contains(text(),'Fund')]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//li[contains(text(),'class')]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['nasdaq_ticker'].split(' \u2013')[0]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['share_class'].split('\u2013 ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "asset_class": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Information')]/following-sibling::p/text()[contains(.,'Asset Class')]"
+                ],
+                "cleanup_functions": [
+                    "obj['asset_class'].split(': ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Information')]/following-sibling::p/text()[contains(.,'Assets in Fund')]"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets'].split(': ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Information')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('of ')[-1].split(')')[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Information')]/following-sibling::p/text()[contains(.,'Gross Expense')]"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'][0].replace('Gross Expense Ratio: ','').split('),')",
+                    "[i.split('(')[0] for i in obj['total_expense_gross']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Information')]/following-sibling::p/text()[contains(.,'Net Expense')]"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'][0].split(':')[-1].split('),')",
+                    "[i.split('(')[0] for i in obj['total_expense_net']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Information')]/following-sibling::p/text()[contains(.,'Fund Inception')]"
+                ],
+                "cleanup_functions": [
+                    "obj['share_inception_date'].split(': ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Information')]/following-sibling::p/text()[contains(.,'Benchmark')]"
+                ],
+                "cleanup_functions": [
+                    "obj['benchmarks'].split(': ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}

@@ -11,17 +11,26 @@
     "detail": {
         "spider": "financial_detail",
         "crawl_method": "SCRAPY_GET",
+		"custom_settings": {
+             "CRAWLERA_PRESERVE_DELAY": true,
+			 "RETRY_TIMES": 5
+        },
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.brandes.com/us/funds/mutual-funds/brandes-core-plus-fixed-income-fund/BCPIX/Overview"
+			"https://www.brandes.com/us/funds/mutual-funds/brandes-core-plus-fixed-income-fund",
+			"https://www.brandes.com/us/funds/mutual-funds/brandes-emerging-markets-value-fund",
+			"https://www.brandes.com/us/funds/mutual-funds/brandes-global-equity-fund",
+			"https://www.brandes.com/us/funds/mutual-funds/brandes-international-equity-fund",
+			"https://www.brandes.com/us/funds/mutual-funds/brandes-international-small-cap-equity-fund",
+			"https://www.brandes.com/us/funds/mutual-funds/brandes-separately-managed-account-reserve-trust",
+			"https://www.brandes.com/us/funds/mutual-funds/brandes-small-cap-value-fund"
         ],
         "pagination":{
             "temp_url": {
                 "paths": [
-                    "//*[@id='ddlFunds']/option[1]/@value"
+                    "//*[@rel='canonical']//@href"
                 ],
-                "return_type":"str",
-                "cleanup_functions":["'https://www.brandes.com/us/funds/mutual-funds/'+obj['temp_url']"]
+                "return_type":"str"
             },
             "pagination": {
                 "paths": [
