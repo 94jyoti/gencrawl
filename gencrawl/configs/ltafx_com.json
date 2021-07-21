@@ -1,0 +1,113 @@
+{
+    "website": "http://www.ltafx.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "ltafx.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_itafx_com",
+        "crawl_method": "SCRAPY_GET",
+        
+        "parsing_type": "xpath",
+        "start_urls": [
+            "http://www.ltafx.com/home.aspx"
+        ],
+        "ext_codes": {
+            "sub_advisor": {
+                "paths": [
+                    "//*[contains(text(), 'Manager:')]/following-sibling::text()[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//*[contains(text(), 'Investment Objective:')]/following-sibling::text()[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//*[contains(text(), 'Investment Strategy:')]/following-sibling::text()[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//*[contains(text(), 'Inception date:')]/following-sibling::text()[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            
+            "temp_class_blocks": {
+                "paths": [
+                    "//table/tr[1]/td[position()>1]"
+                ],
+                "return_type": "selector",
+                "child_return_strategy":"multiple_items",
+                "selector": "root"
+            },
+
+            "share_class": {
+                "paths": [
+                    ".//p/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//table/tr[2]/td[position()>1]/p/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+
+            "deferred_sales_charge": {
+                "paths": [
+                    "//table/tr[3]/td[position()>1]/p/text()"
+                ],
+                "cleanup_functions": [
+                    "[oa.split('for')[0] for oa in obj['deferred_sales_charge']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+           
+            "nasdaq_ticker": {
+                "paths": [
+                    "//table/tr[4]/td[position()>1]/p/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+
+            "total_expense_gross": {
+                "paths": [
+                    "//table/tr[5]/td[position()>1]/p/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    "//table/tr[6]/td[position()>1]/p/text()"
+                ],
+                "cleanup_functions": [
+                    "[oa.split('or')[0] for oa in obj['maximum_sales_charge_full_load']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            }
+    
+        }
+    }
+}

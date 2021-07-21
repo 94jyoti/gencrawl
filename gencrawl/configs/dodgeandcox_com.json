@@ -13,7 +13,7 @@
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://dodgeandcox.com/stockfund.asp",
+            "https://dodgeandcox.com/incomefund.asp",
             "https://dodgeandcox.com/globalfund.asp",
             "https://dodgeandcox.com/ISF.asp",
             "https://dodgeandcox.com/EMSF.asp",
@@ -55,7 +55,8 @@
                     "//span[contains(text(),'Fund Characteristics')]/following-sibling::span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['total_net_assets_date'].split('unless')[0]"
+                    "obj['total_net_assets_date'].split('unless')[0]",
+                    "obj['total_net_assets_date'].replace('as of',' ')"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -83,9 +84,9 @@
             },
             "investment_strategy": {
                 "paths": [
-                    "//span[contains(text(),'Strategy')]/parent::td"
+                    "//span[contains(text(),'Strategy')]/following-sibling::*//text()"
                 ],
-                "return_type": "str",
+                "return_type": "join",
                 "selector": "root"
             },
             "minimum_initial_investment": {
@@ -123,6 +124,10 @@
                 "paths": [
                     "//th[contains(text(),'Distributions')]/parent::tr/td/text()"
                 ],
+                "cleanup_functions": [
+                    "obj['dividend_frequency'].split(';')[0] ",
+                    "obj['dividend_frequency'].split('in')[-1] "
+                ],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -138,7 +143,8 @@
                     "//span[contains(text(),'Fund Characteristics')]/following-sibling::span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['sec_yield_date_30_day'].split('unless')[0]"
+                    "obj['sec_yield_date_30_day'].split('unless')[0]",
+                    "obj['sec_yield_date_30_day'].replace('as of',' ')"
                 ],
                 "return_type": "str",
                 "selector": "root"

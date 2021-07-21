@@ -111,3 +111,5 @@ class FinancialDetailItem(FinancialItem):
     distribution_yield_12_month = Field()
     average_duration = Field()
     average_duration_as_of_date = Field()
+
+
