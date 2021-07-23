@@ -34,18 +34,11 @@
                     "//th[contains(text(),'Ticker')]/parent::tr/td/text()"
                 ],
                 "return_type": "str",
-                "selector": "temp_class_blocks"
+                "selector": "root"
             },
             "cusip": {
                 "paths": [
                     "//th[contains(text(),'CUSIP')]/parent::tr/td/text()"
-                ],
-                "return_type": "str",
-                "selector": "temp_class_blocks"
-            },
-            "total_net_assets": {
-                "paths": [
-                    "//th[contains(text(),'Total Net Assets ')]/parent::tr/td/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -61,13 +54,6 @@
                 "return_type": "str",
                 "selector": "root"
             },
-            "total_expense_gross": {
-                "paths": [
-                    "//th[contains(text(),'Expense Ratio')]/parent::tr/td/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
             "share_inception_date": {
                 "paths": [
                     "//span[contains(text(),'Inception Date')]/parent::th/following-sibling::td/text()"
@@ -77,7 +63,7 @@
             },
             "investment_objective": {
                 "paths": [
-                    "//span[contains(text(),'objectives')]/parent::td/span[2]/text()"
+                    "//span[contains(normalize-space(text()),'objective')]/parent::td/span[2]/text()"
                 ],
                 "return_type": "join",
                 "selector": "root"
@@ -103,57 +89,15 @@
                 "return_type": "str",
                 "selector": "root"
             },
-            "turnover_rate": {
-                "paths": [
-                    "//th[contains(text(),'Turnover Rate')]/parent::tr/td/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "turnover_rate_date": {
-                "paths": [
-                    "//span[contains(text(),'Fund Characteristics')]/following-sibling::span/text()"
-                ],
-                "cleanup_functions": [
-                    "obj['turnover_rate_date'].split('unless')[0]"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
             "dividend_frequency": {
                 "paths": [
                     "//th[contains(text(),'Distributions')]/parent::tr/td/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['dividend_frequency'].split(';')[0] ",
+                    "obj['dividend_frequency'].split(';')[0]",
                     "obj['dividend_frequency'].split('in')[-1] "
                 ],
                 "return_type": "str",
-                "selector": "root"
-            },
-            "sec_yield_30_day": {
-                "paths": [
-                    "//th[contains(text(),'30-Day SEC Yield')]/parent::tr/td/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "sec_yield_date_30_day": {
-                "paths": [
-                    "//span[contains(text(),'Fund Characteristics')]/following-sibling::span/text()"
-                ],
-                "cleanup_functions": [
-                    "obj['sec_yield_date_30_day'].split('unless')[0]",
-                    "obj['sec_yield_date_30_day'].replace('as of',' ')"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "benchmarks": {
-                "paths": [
-                    "(//strong[contains(text(),'Income Fund ')]/parent::td/parent::tr/following-sibling::tr[2]/td)[1]/text()"
-                ],
-                "return_type": "list",
                 "selector": "root"
             },
             "temp_fund_managers": {

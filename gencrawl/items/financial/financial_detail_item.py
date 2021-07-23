@@ -110,6 +110,4 @@ class FinancialDetailItem(FinancialItem):
     sec_yield_date_30_day = Field()
     distribution_yield_12_month = Field()
     average_duration = Field()
-    average_duration_as_of_date = Field()
-
-
+    average_duration_as_of_date = Field()  

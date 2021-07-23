@@ -13,6 +13,8 @@ class DodgeandcoxComDetail(FinancialDetailSpider):
 
     def get_items_or_req(self, response, default_item={}):
         items = self.prepare_items(response, default_item)
+        # import pdb;pdb.set_trace()
+
         item = items[0]
         api_url = "https://dodgeandcox.com/"+''.join(response.xpath('//span[contains(text(),"Characteristics")]/parent::a/@href').extract())
         meta = response.meta
@@ -23,9 +25,14 @@ class DodgeandcoxComDetail(FinancialDetailSpider):
 
     def parse_performance_response(self, response):
         items = response.meta['items']
-
-        items['benchmarks'] = ', '.join(response.xpath('//th[contains(normalize-space(text()),"Year") or contains(normalize-space(text()),"SINCE INCEPTION")]/parent::tr/parent::thead/parent::table/tbody/tr[@class="scaled-text"]/td[1]/text()').extract()).strip()
-        items['total_net_assets'] = response.xpath('//th[contains(normalize-space(text()),"Total Net Assets")]/following-sibling::td[2]/text()').extract_first()
+        xpath1 = response.xpath('//th[contains(normalize-space(text()),"Total Net Assets")]/following-sibling::td[2]/text()').extract_first()
+        xpath2 = response.xpath('//th[contains(normalize-space(text()),"Total Net Assets")]/parent::tr/th/span/text()').extract_first().replace('(','').replace(')','')
+        
+        items['total_net_assets'] = (xpath1 + ' ' + xpath2).strip()
+        
+        
+        
+        items['benchmarks'] = response.xpath('//th[contains(normalize-space(text()),"Year") or contains(normalize-space(text()),"SINCE INCEPTION")]/parent::tr/parent::thead/parent::table/tbody/tr[@class="scaled-text"]/td[1]/text()').extract()
         items['total_expense_gross'] = response.xpath('//th[contains(normalize-space(text()),"Expense Ratio")]/following-sibling::td[2]/text()').extract_first()
         items['turnover_rate'] = response.xpath('//th[contains(normalize-space(text()),"Portfolio Turnover")]/following-sibling::td[2]/text()').extract_first()
         items['turnover_rate_date'] = response.xpath('//th[contains(normalize-space(text()),"Portfolio Turnover")]/span/text()').extract_first().split(',')[0].replace('(','')
