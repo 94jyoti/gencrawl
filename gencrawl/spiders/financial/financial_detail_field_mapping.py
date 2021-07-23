@@ -28,6 +28,7 @@ class FinancialDetailFieldMapSpider(FinancialDetailSpider):
         return parsed_mapped_items
 
     def get_items_or_req(self, response, default_item=None):
+        open("w.html", "w").write(response.text)
         items = super().get_items_or_req(response, default_item)
         parsed_items = self.prepare_mapped_items(response, items)
         return parsed_items

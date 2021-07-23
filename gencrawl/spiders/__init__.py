@@ -141,7 +141,10 @@ class BaseSpider(Spider):
         if not self.pagination:
             return
         pagination_ext_codes = ext_codes or self.pagination
+        print(default_obj)
         pagination_urls = self.exec_codes(response, pagination_ext_codes, default_obj=default_obj)[0].get("pagination")
+        print("------")
+        print(pagination_urls)
         pagination_urls = [response.urljoin(url) for url in pagination_urls]
         return pagination_urls
 

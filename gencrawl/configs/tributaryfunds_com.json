@@ -1,0 +1,54 @@
+{
+    "website": "https://www.tributaryfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "tributaryfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.tributaryfunds.com/growth-opportunities-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//tbody[contains(.,'Fund Facts')]//tr[not(@id=\"tableHeader\") and position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//*[contains(text(),'Strategy')]/following-sibling::P/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            }
+        }
+    }
+}
