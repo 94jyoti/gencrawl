@@ -1,0 +1,137 @@
+{
+    "website": "https://www.a3.financial",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "a3.financial"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.a3.financial"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//div[@id='comp-ju1i3cxp']//h2//span/span/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['instrument_name'].split('(')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "(//span[contains(text(),'Ticker')]/parent::p/parent::div/following-sibling::div/p/span/span)[1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_class": {
+                "paths": [
+                    "(//span[contains(text(),'Share class')]/parent::span/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "asset_class": {
+                "paths": [
+                    "(//span[contains(text(),'Fund Structure')]/parent::span/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "management_fee": {
+                "paths": [
+                    "(//span[contains(text(),'Management Fee')]/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "(//span[contains(text(),'Net Expense Ratio / Gross Expense Ratio')]/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'].split('/')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "(//span[contains(text(),'Net Expense Ratio / Gross Expense Ratio')]/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].split('/')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "(//span[contains(text(),'Inception Date')]/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "distribution_frequency": {
+                "paths": [
+                    "(//span[contains(text(),'Distributions')]/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "(//span[contains(text(),'30-Day SEC Yield (subsidized)')]/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_30_day": {
+                "paths": [
+                    "(//span[contains(text(),'30 Day SEC Yield (unsubsidized)')]/parent::p/parent::div/following-sibling::div/p/span/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_capital_gains": {
+                "paths": [
+                    "//span[contains(text(),'Capital Gains')]/parent::p/parent::div/following-sibling::div/p/span"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "short_term_per_share": {
+                "paths": [
+                    "./span/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            },
+            "long_term_per_share": {
+                "paths": [
+                    "./span/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_capital_gains"
+            }
+        }
+    }
+}

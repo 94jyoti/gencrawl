@@ -1,9 +1,9 @@
 {
-    "website": "https://www.sprott.com/",
+    "website": "https://www.needhamfunds.com/",
     "domain": "financial",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "sprott.com"
+        "needhamfunds.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -17,19 +17,21 @@
         },
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.sprott.com/investment-strategies/sprott-gold-equity-fund/"
+            "https://www.needhamfunds.com/mutual-funds/growth-fund/",
+            "https://www.needhamfunds.com/mutual-funds/aggressive-growth-fund/",
+            "https://www.needhamfunds.com/mutual-funds/small-cap-growth-fund/"
         ],
         "ext_codes": {
             "instrument_name": {
                 "paths": [
-                    "//h1[@class = 'etfs-h1']/text()"
+                    "//h1/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "temp_class_blocks": {
                 "paths": [
-                    "//h5[contains(text(),'Fund Details')]/following::strong[position()=1 or position()=2]"
+                    "//h3[contains(text(),'Fund Statistics')]/parent::div/div/table/thead/tr/th/following-sibling::th"
                 ],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
@@ -37,62 +39,39 @@
             },
             "nasdaq_ticker": {
                 "paths": [
-                    "./text()"
-                ],
-                "cleanup_functions": [
-                    "obj['nasdaq_ticker'].split(' In')[0]"
-                ],
-                "return_type": "str",
-                "selector": "temp_class_blocks"
-            },
-            "cusip": {
-                "paths": [
-                    "//td[contains(text(),'CUSIP')]/following-sibling::td/text()"
+                    "//td[contains(text(),'Ticker Symbols')]/following-sibling::td/text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
             "share_class": {
                 "paths": [
-                    "./text()[contains(.,'Class')]"
+                    "./text()"
                 ],
                 "return_type": "str",
                 "selector": "temp_class_blocks"
             },
-            "total_net_assets": {
+            "portfolio_assets": {
                 "paths": [
-                    "//td[contains(text(),'Total Fund Assets')]/following-sibling::td/text()"
+                    "//div[contains(text(),'Net Assets')]/following-sibling::div/text()"
                 ],
-                "return_type": "list-map",
+                "return_type": "str",
                 "selector": "root"
             },
-            "total_net_assets_date": {
+            "portfolio_assets_date": {
                 "paths": [
-                    "//h5[contains(text(),'Fund Details')]/span/text()"
+                    "//h3[contains(text(),'Portfolio Characteristics')]/span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['total_net_assets_date'].split('of ')[-1]"
+                    "obj['portfolio_assets_date'].replace('as of',' ')"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "fees_total_12b_1": {
                 "paths": [
-                    "//td[contains(text(),'Distribution and Service (12b-1) Fee')]/following-sibling::td/text()"
-                ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
-            "other_expenses": {
-                "paths": [
-                    "//td[contains(text(),'Other Expenses')]/following-sibling::td/text()"
-                ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
-            "management_fee": {
-                "paths": [
-                    "//td[contains(text(),'Management Fee')]/following-sibling::td/text()"
+                    "//td[contains(text(),'12B-1 Fees')]/following-sibling::td/text()",
+                    "//td[contains(text(),'12b-1 Fees')]/following-sibling::td/text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
@@ -101,22 +80,19 @@
                 "paths": [
                     "//td[contains(text(),'Redemption Fee')]/following-sibling::td/text()"
                 ],
-                "cleanup_functions": [
-                    "obj['redemption_fee'].split('%')[0] + '%'"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "maximum_sales_charge_full_load": {
-                "paths": [
-                    "//td[contains(text(),'Sales Charge')]/following-sibling::td/text()"
-                ],
-                "return_type": "str",
+                "return_type": "list-map",
                 "selector": "root"
             },
             "total_expense_gross": {
                 "paths": [
-                    "//td[contains(text(),'Gross Annual Fund Operating Expenses')]/following-sibling::td/text()"
+                    "//td[contains(text(),'Gross Expense Ratio')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//td[contains(text(),'Net Expense Ratio')]/following-sibling::td/text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
@@ -130,58 +106,58 @@
             },
             "investment_objective": {
                 "paths": [
-                    "//h5[contains(text(),'Fund Objective')]/following-sibling::p[1]/text()"
+                    "//h3[contains(text(),'Investment Objective')]/parent::div/div/div/p/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
+            "investment_strategy": {
+                "paths": [
+                    "//div[contains(text(),'Strategy')]/parent::div/ul//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
             "minimum_initial_investment": {
                 "paths": [
-                    "//td[contains(text(),'Minimum Investment')]/following-sibling::td/text()"
+                    "//td[contains(text(),'Minimum Initial Investment')]/following-sibling::td/text()"
                 ],
                 "cleanup_functions": [
-                    "[m.split('(')[0] for m in obj['minimum_initial_investment']]"
+                    "[o.split('for')[0] for o in obj['minimum_initial_investment']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//td[contains(text(),'Minimum Subsequent Investment')]/following-sibling::td/text()"
+                ],
+                "cleanup_functions": [
+                    "[o.split('for')[0] for o in obj['minimum_additional_investment']]"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
             "turnover_rate": {
                 "paths": [
-                    "//td[contains(text(),'Turnover')]/following-sibling::td/text()"
+                    "//div[contains(text(),'Turnover')]/following-sibling::div/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "turnover_rate_date": {
                 "paths": [
-                    "//h2[contains(text(),'Portfolio')]/span/text()"
+                    "//h3[contains(text(),'Portfolio Characteristics')]/span/text()"
                 ],
                 "cleanup_functions": [
-                    "obj['turnover_rate_date'].split('of ')[-1]"
+                    "obj['turnover_rate_date'].replace('as of',' ')"
                 ],
                 "return_type": "str",
-                "selector": "root"
-            },
-            "dividend_frequency": {
-                "paths": [
-                    "//td[contains(text(),'Dividend Policy ')]/following-sibling::td/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "benchmarks": {
-                "paths": [
-                    "//td[contains(text(),'Index')]/text()"
-                ],
-                "cleanup_functions": [
-                    "list(set(obj['benchmarks']))"
-                ],
-                "return_type": "list",
                 "selector": "root"
             },
             "temp_fund_managers": {
                 "paths": [
-                    "//div[@class = 'person-card-data']"
+                    "//h3[contains(text(),'Portfolio Managers')]/parent::div/div/a/div/h4"
                 ],
                 "child_return_strategy": "multiple_objects",
                 "return_type": "selector",
@@ -189,7 +165,7 @@
             },
             "fund_manager": {
                 "paths": [
-                    "./span[1]/text()"
+                    "./text()"
                 ],
                 "return_type": "str",
                 "selector": "temp_fund_managers"

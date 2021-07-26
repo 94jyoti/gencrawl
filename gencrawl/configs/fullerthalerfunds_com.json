@@ -3,16 +3,27 @@
     "domain": "financial",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "fullerthalerfunds.com"
+        "fullerthalerfunds.com",
+        "wix-visual-data.appspot.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
     "language": "ENGLISH",
     "detail": {
         "spider": "financial_detail_field_mapping",
-        "crawl_method": "SCRAPY_GET",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
         "parsing_type": "xpath",
+        "iframe": "//iframe",
         "start_urls": [
+            "https://www.fullerthalerfunds.com/about",
+            "https://www.fullerthalerfunds.com/ftxsx",
+            "https://www.fullerthalerfunds.com/ftvsx",
+            "https://www.fullerthalerfunds.com/unconstrained-equity-ftzix",
+            "https://www.fullerthalerfunds.com/micro-cap-ftmsx",
             "https://www.fullerthalerfunds.com/small-mid-core-ftsix"
         ],
         "ext_codes": {
@@ -20,7 +31,6 @@
                 "paths": [
                     "//h4/span/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -28,7 +38,6 @@
                 "paths": [
                     "//td[contains(text(),'Ticker Symbol')]/following-sibling::td"
                 ],
-                "cleanup_functions": [],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
                 "selector": "root"
@@ -37,15 +46,13 @@
                 "paths": [
                     "./text()"
                 ],
-                "cleanup_functions": [],
-                "return_type": "list-map",
-                "selector": "root"
+                "return_type": "str",
+                "selector": "temp_class_blocks"
             },
             "cusip": {
                 "paths": [
                     "//td[contains(text(),'CUSIP')]/following-sibling::td/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "list-map",
                 "selector": "root"
             },
@@ -53,7 +60,6 @@
                 "paths": [
                     "//td[contains(text(),'Gross Expense Ratio')]/following-sibling::td/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "list-map",
                 "selector": "root"
             },
@@ -61,7 +67,6 @@
                 "paths": [
                     "//td[contains(text(),'Net Expense Ratio')]/following-sibling::td/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "list-map",
                 "selector": "root"
             },
@@ -69,7 +74,6 @@
                 "paths": [
                     "//td[contains(text(),'Inception Date')]/following-sibling::td/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "list-map",
                 "selector": "root"
             },
@@ -77,7 +81,6 @@
                 "paths": [
                     "//td[contains(text(),'Initial Investment')]/following-sibling::td/text()"
                 ],
-                "cleanup_functions": [],
                 "return_type": "list-map",
                 "selector": "root"
             }
