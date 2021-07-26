@@ -1,0 +1,147 @@
+{
+    "website": "https://www.royceinvest.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "royceinvest.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.royceinvest.com/funds/royce-dividend-value-fund/rdvix.aspx"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//span[@id='ctl01_LabelFullFundName']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//span[@id='ctl01_LabelShortFundName']"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "//strong[contains(text(),'CUSIP')]/following-sibling::span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "fees_total_12b_1": {
+                "paths": [
+                    "//strong[contains(text(),'Distribution (12b-1) fees')]/parent::td/following-sibling::td/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "other_expenses": {
+                "paths": [
+                    "//strong[contains(text(),'Other expenses')]/parent::td/following-sibling::td/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "management_fee": {
+                "paths": [
+                    "//strong[contains(text(),'Management fees')]/parent::td/following-sibling::td/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "initial_sales_charge": {
+                "paths": [
+                    "//strong[contains(text(),'Maximum sales charge (load) imposed on purchases')]/parent::td/following-sibling::td/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "deferred_sales_charge": {
+                "paths": [
+                    "//strong[contains(text(),'Maximum deferred sales charge ')]/parent::td/following-sibling::td/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "//strong[contains(text(),'Redemption fee')]/parent::td/following-sibling::td/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "(//strong[contains(text(),'Total annual Fund operating expenses')]/parent::td/following-sibling::td/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "(//strong[contains(text(),'Total annual Fund operating expenses')]/parent::td/following-sibling::td/span)[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h3[contains(text(),'Portfolio Management')]/parent::div//div//ul//li"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./a/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_in_industry": {
+                "paths": [
+                    ".//span//br/following-sibling::text()"
+                ],
+                "cleanup_functions": [
+                    "obj['fund_manager_years_of_experience_in_industry'].split('on')[0] "
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        },
+        "pagination": {
+            "pagination": {
+                "paths": [
+                    "//select[contains(@name,'ShareClass')]//option//@value"
+                ],
+                "cleanup_functions": [
+                    "[obj['fund_url'].rsplit(\"/\")[0]+p.lower() for p in obj['pagination']]\" with \"[obj['fund_url'].rsplit(\"/\", 1)[0]+p.lower() for p in obj['pagination']]"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}

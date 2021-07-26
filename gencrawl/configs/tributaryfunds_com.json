@@ -1,0 +1,158 @@
+{
+    "website": "https://www.tributaryfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "tributaryfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.tributaryfunds.com/growth-opportunities-fund/",
+            "https://www.tributaryfunds.com/small-company-fund/",
+            "https://www.tributaryfunds.com/small-mid-cap-fund/",
+            "https://www.tributaryfunds.com/balanced-fund/",
+            "https://www.tributaryfunds.com/income-fund/https://www.tributaryfunds.com/nebraska-tax-free/",
+            "https://www.tributaryfunds.com/short-intermediate-bond-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//tbody[contains(.,'Fund Facts')]//tr[not(@id=\"tableHeader\") and position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./td[3]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "./td[4]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_class": {
+                "paths": [
+                    "./td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "fees_total_12b_1": {
+                "paths": [
+                    "//tbody[contains(.,'Expenses')]//tr[not(@id=\"tableHeader\") and position()>1]/td[4]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "other_expenses": {
+                "paths": [
+                    "//tbody[contains(.,'Expenses')]//tr[not(@id=\"tableHeader\") and position()>1]/td[3]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "management_fee": {
+                "paths": [
+                    "//tbody[contains(.,'Expenses')]//tr[not(@id=\"tableHeader\") and position()>1]/td[2]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "shareholder_service_fees": {
+                "paths": [
+                    "//tbody[contains(.,'Expenses')]//tr[not(@id=\"tableHeader\") and position()>1]/td[6]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    "//tbody[contains(.,'Expenses')]//tr[not(@id=\"tableHeader\") and position()>1]/td[5]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//tbody[contains(.,'Expenses')]//tr[not(@id=\"tableHeader\") and position()>1]/td[7]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "./td[5]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//*[contains(text(),'Objective')]/parent::div//*[not(self::h3)]//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//*[contains(text(),'Strategy')]/following-sibling::p/text()[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "./td[7]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "dividend_frequency": {
+                "paths": [
+                    "./td[6]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//*[contains(text(),'Portfolio Managers')]/following::div[@class=\"manager-info\"]/h2"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

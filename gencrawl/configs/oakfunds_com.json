@@ -1,0 +1,164 @@
+{
+    "website": "https://www.oakfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "oakfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.oakfunds.com/funds/white-oak-select-growth",
+            "https://www.oakfunds.com/funds/rock-oak-core-growth",
+            "https://www.oakfunds.com/funds/river-oak-discovery",
+            "https://www.oakfunds.com/funds/red-oak-technology-select",
+            "https://www.oakfunds.com/funds/black-oak-emerging-technology",
+            "https://www.oakfunds.com/funds/live-oak-health-sciences",
+            "https://www.oakfunds.com/funds/pin-oak-equity"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//span[contains(text(),'Ticker')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['nasdaq_ticker'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//span[contains(text(),'Cusip')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['cusip'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    "//span[contains(text(),'Load')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['maximum_sales_charge_full_load'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//span[contains(text(),'Gross Expense Ratio')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//span[contains(text(),'Net Expense Ratio')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//h3[contains(text(),'Inception Date')]/parent::div/span/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h2[contains(text(),'Investment Goal')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//span[contains(text(),'Minimum Investment')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['minimum_initial_investment'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//span[contains(text(),'Minimum Subsequent Investment')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['minimum_additional_investment'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "(//h2[contains(text(),'Fund Performance')]/parent::div/div[4]/div/div/table/thead/tr/th[3])[1]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//div[@class = 'employeeName']"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_in_industry": {
+                "paths": [
+                    "./following::div[@class= 'employeeYears']//text()"
+                ],
+                "cleanup_functions": [
+                    "obj['fund_manager_years_of_experience_in_industry'].split('experience')[0] "
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_firm": {
+                "paths": [
+                    "./following::div[@class= 'employeeOakYears']//text()"
+                ],
+                "cleanup_functions": [
+                    "obj['fund_manager_firm'].split('with')[0] "
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

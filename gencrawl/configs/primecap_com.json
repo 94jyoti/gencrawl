@@ -1,0 +1,211 @@
+{
+    "website": "https://www.primecap.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "primecap.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.primecap.com/odyssey-stock-fund/",
+            "https://www.primecap.com/odyssey-growth-fund/",
+            "https://www.primecap.com/odyssey-aggressive-growth-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//span[@data-selector = 'fundPageHeader']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//div[@data-selector = 'fundValue']/div/label[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['nasdaq_ticker'].split(':')[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//label[contains(text(),'CUSIP')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//label[contains(text(),'Fund Assets')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//div[contains(text(),'Fund Facts')]/following-sibling::div/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('of ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "other_expenses": {
+                "paths": [
+                    "//label[contains(text(),'Other Expenses')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "management_fee": {
+                "paths": [
+                    "//label[contains(text(),'Management Fee')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//label[contains(text(),'Total Annual Fund Operating Expenses')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "acquired_fund_fees_and_expenses": {
+                "paths": [
+                    "//label[contains(text(),'Acquired Fund Fees and Expenses')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//label[contains(text(),'Fund Inception Date')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//div[contains(text(),'Investment Objective')]/following-sibling::div/span/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//div[contains(text(),'Principal Investment Strategy')]/following-sibling::div/span/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//label[contains(text(),'Minimum Initial Investment') and not(contains(text(),'IRA'))]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//label[contains(text(),'Portfolio Turnover Ratio')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate_date": {
+                "paths": [
+                    "//div[contains(text(),'Fund Facts')]/following-sibling::div/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['turnover_rate_date'].split('of ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "//label[contains(text(),'30 Day SEC Yield')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "//div[contains(text(),'Fund Facts')]/following-sibling::div/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_date_30_day'].split('of ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "distribution_yield_12_month": {
+                "paths": [
+                    "//label[contains(text(),'12 Month Distribution Rate')]/following-sibling::label/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//tr[@data-selector = 'tableRow']/following-sibling::tr/td[@data-selector = 'entityName']/span/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//div[contains(text(),'Portfolio Management')]/following-sibling::table/tbody/tr"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./td[1]/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_in_industry": {
+                "paths": [
+                    "./td[4]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_firm": {
+                "paths": [
+                    "//span[contains(text(),'Total years with')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['fund_manager_firm'].split('with ')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "fund_manager_years_of_experience_with_fund": {
+                "paths": [
+                    "./td[3]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}
