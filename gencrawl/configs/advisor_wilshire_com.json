@@ -1,0 +1,212 @@
+{
+    "website": "https://advisor.wilshire.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "advisor.wilshire.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://advisor.wilshire.com/ProductsServices/MutualFunds/WilshireIncomeOpportunitiesFund.aspx",
+            "https://advisor.wilshire.com/ProductsServices/MutualFunds/Wilshire5000IndexFund.aspx",
+            "https://advisor.wilshire.com/ProductsServices/MutualFunds/WilshireSmallCompanyValuePortfolio.aspx",
+            "https://advisor.wilshire.com/ProductsServices/MutualFunds/WilshireLargeCompanyValuePortfolio.aspx",
+            "https://advisor.wilshire.com/ProductsServices/MutualFunds/WilshireLargeCompanyGrowthPortfolio.aspx",
+            "https://advisor.wilshire.com/ProductsServices/MutualFunds/WilshireInternationalEquityFund.aspx",
+            "https://advisor.wilshire.com/ProductsServices/MutualFunds/WilshireSmallCompanyGrowthPortfolio.aspx"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//h2[contains(text(),'Performance')]//following::*[contains(text(),'Quarterly')]//preceding::td[contains(text(),\"Class\")]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['nasdaq_ticker'].split('Class')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "//*[contains(text(),\"Fees & Minimums\")]//following::li[contains(.,\"CUSIP\")]/text()"
+                ],
+                "cleanup_functions": [
+                    "[o.split(':')[-1] for o in obj['cusip']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['share_class'].split('(')[0] "
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//h2[contains(text(),\"Fund Facts\")]//following::li[contains(.,\"Fund Assets:\")][1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//h2[contains(text(),\"Fund Facts\")]//following::p[contains(.,\"Fundamental Characteristics\")]//following-sibling::span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('of ')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "fees_total_12b_1": {
+                "paths": [
+                    "//*[contains(text(),\"Fees & Minimums\")]//following::li[contains(.,\"12b-1 Fee\")]/text()"
+                ],
+                "cleanup_functions": [
+                    "[o.split(':')[-1] for o in obj['fees_total_12b_1']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//*[contains(text(), 'Fees & Minimums')]/following::text()[contains(., 'Gross') or starts-with(.,'Expense')]"
+                ],
+                "cleanup_functions": [
+                    "[o.split(':')[-1] for o in obj['total_expense_gross']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//*[contains(text(), 'Fees & Minimums')]/following::text()[contains(., 'Net')]"
+                ],
+                "cleanup_functions": [
+                    "[o.split(':')[-1] for o in obj['total_expense_net']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "effective_duration": {
+                "paths": [
+                    "//h2[contains(text(),\"Fund Facts\")]//following::li[contains(text(),\"Effective Duration\")]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['effective_duration'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "effective_duration_date": {
+                "paths": [
+                    "//h2[contains(text(),\"Fund Facts\")]//following::p[contains(.,\"Fundamental Characteristics\")]//following-sibling::span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['effective_duration_date'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//*[contains(text(),\"Fees & Minimums\")]//following::li[contains(.,\"Minimum Initial\")]/text()"
+                ],
+                "cleanup_functions": [
+                    "[o.split(':')[-1] for o in obj['minimum_initial_investment']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//*[contains(text(),\"Fees & Minimums\")]//following::li[contains(.,\"Minimum Subsequent\")]/text()"
+                ],
+                "cleanup_functions": [
+                    "[o.split(':')[-1] for o in obj['minimum_additional_investment']]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "//*[contains(text(), '30-Day SEC Yield')]/br/following-sibling::text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_30_day'][0].split('%')",
+                    "[o for o in obj['sec_yield_30_day'] if 'Subsidized' in o]",
+                    "[o.split(':')[-1] + '%' for o in obj['sec_yield_30_day']]",
+                    "[obj['sec_yield_30_day'][-1], obj['sec_yield_30_day'][0]]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "//h2[contains(text(),\"Fund Facts\")]//following::p[contains(.,\"Fundamental Characteristics\")]//following-sibling::span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_date_30_day'].split('of ')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_30_day": {
+                "paths": [
+                    "//*[contains(text(), '30-Day SEC Yield')]/br/following-sibling::text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_without_waivers_30_day'][0].split('%')",
+                    "[o for o in obj['sec_yield_without_waivers_30_day'] if 'Unsubsidized' in o]",
+                    "[o.split(':')[-1] + '%' for o in obj['sec_yield_without_waivers_30_day']]",
+                    "[obj['sec_yield_without_waivers_30_day'][-1], obj['sec_yield_without_waivers_30_day'][0]]"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_date_30_day": {
+                "paths": [
+                    "//h2[contains(text(),\"Fund Facts\")]//following::p[contains(.,\"Fundamental Characteristics\")]//following-sibling::span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_without_waivers_date_30_day'].split('of ')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//h2[contains(text(),'Performance')]//following::span[contains(text(),'Quarterly')]//following::*[@class='footnote'][1]//preceding::td[contains(.,'Index')]"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}
