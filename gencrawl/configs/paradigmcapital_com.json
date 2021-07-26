@@ -1,0 +1,121 @@
+{
+    "website": "https://www.paradigmcapital.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "paradigmcapital.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.paradigmcapital.com/products/value-fund/",
+            "https://www.paradigmcapital.com/products/select-fund/",
+            "https://www.paradigmcapital.com/products/micro-cap-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//span[contains(text(),'Symbol')]/parent::li/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//h3[contains(text(),'CUSIP')]/following-sibling::p/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "asset_class": {
+                "paths": [
+                    "//span[contains(text(),'Asset Class')]/parent::li/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "//span[contains(text(),'Fund Net Assets')]/parent::li/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "//h3[contains(text(),'redemption fee')]/following-sibling::ul/li/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['redemption_fee'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//h3[contains(text(),'fund facts')]/parent::div/ul/li[6]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//span[contains(text(),'Inception Date')]/parent::li/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h3[contains(text(),'investment objective')]/parent::div/p//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//h3[contains(text(),'fund facts')]/parent::div/ul/li[3]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['turnover_rate'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h3[contains(text(),'investment professionals')]/following-sibling::h5"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}
