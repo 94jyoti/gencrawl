@@ -8,7 +8,6 @@ class GreencenturyComDetail(FinancialDetailSpider):
     name = 'financial_detail_greencentury_com'
 
     def get_items_or_req(self, response, default_item=None):
-        # items = super().get_items_or_req(response, default_item)
         parsed_items = []
         items = self.prepare_items(response, default_item)
         
@@ -23,6 +22,8 @@ class GreencenturyComDetail(FinancialDetailSpider):
         leng = len(body)
         len1 = None
         len2 = None
+        len3 = None
+        len4 = None
         for i in range(leng):
             if 'Expense Ratio' in body[i]:
                 for j in range(i,leng):
@@ -30,14 +31,26 @@ class GreencenturyComDetail(FinancialDetailSpider):
                         len1 = j
                         break
                 for k in range(len1,leng):
-                    if body[k].strip() != '' and 'Institutional' in body[k  ].strip():
+                    if body[k].strip() != '' and 'Institutional' in body[k].strip():
                         len2 = k
+                        break
+            elif 'Minimum Investment/Fund' in body[i]:
+                for j in range(i,leng):
+                    if body[j].strip() != '' and 'Regular' in body[j].strip():
+                        len3 = j
+                        break
+                for k in range(len3,leng):
+                    if body[k].strip() != '' and 'Institutional' in body[k].strip():
+                        len4 = k
                         break
         for item in items:
             if 'Individual' in item['share_class'] or 'Investor' in item['share_class']:
                 item['total_expense_gross'] = body[len1].split(':')[1].strip()
+                item['minimum_initial_investment'] = body[len3].split(':')[1].strip()
             elif 'Institutional' in item['share_class']:
                 item['total_expense_gross'] = body[len2].split(':')[1].strip()
+                item['minimum_initial_investment'] = body[len4].split(':')[1].strip()
+
             item['share_inception_date'] = share_inception_date
             item['investment_objective'] = ' '.join(response.xpath('//h3[contains(text(),"Objective")]/following-sibling::p[count(preceding-sibling::h3)=1]/descendant-or-self::text()').extract()).strip()
             item['investment_strategy'] = ' '.join(response.xpath('//h3[contains(text(),"Investment Strategy")]/following-sibling::p[count(preceding-sibling::h3)=2]/descendant-or-self::text()').extract()).strip()
@@ -46,8 +59,6 @@ class GreencenturyComDetail(FinancialDetailSpider):
             item['deferred_sales_charge'] = response.xpath("//strong[contains(text(),'Sales Charge')]/parent::span/text()[contains(.,'Back End Load')]").get().split(':')[1]
             item['redemption_fee'] = response.xpath("//strong[contains(text(),'Redemption Fee')]/following-sibling::text()[1]").get().split('(')[0]
             item['maximum_sales_charge_full_load'] = response.xpath("//strong[contains(text(),'Sales Charge')]/parent::span/text()[contains(.,'Front End Load')]").get().split(':')[1]
-            item['minimum_additional_investment'] = response.xpath("//strong[contains(text(),'Minimum Investment/Fund')]/parent::span/text()[contains(.,'Regular')]").get().split(':')[1]
             item['sub_advisor'] = response.xpath("//span[contains(text(),'Investment Sub-advisor')]/text()").get().split(':')[1]
             parsed_items.append(self.generate_item(item, FinancialDetailItem))
-            # import pdb;pdb.set_trace()
         return parsed_items

@@ -48,7 +48,7 @@
                     "./text()"
                 ],
                 "cleanup_functions": [
-                    "obj['share_class'].split('-')[-1].split('(')[0]"
+                    "obj['share_class'].split('-')[-1].split('\u2013')[-1].split('(')[0]"
                 ],
                 "return_type": "str",
                 "selector": "temp_class_blocks"
@@ -79,6 +79,16 @@
                 ],
                 "cleanup_functions": [
                     "obj['portfolio_assets_date'].split('of')[-1].replace(':','')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//p/em[contains(text(),'[1]')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['benchmarks'].split('in the')[-1]"
                 ],
                 "return_type": "str",
                 "selector": "root"

@@ -9,7 +9,7 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail",
+        "spider": "financial_detail_dodgeandcox_com",
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
