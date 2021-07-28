@@ -28,7 +28,8 @@ class DodgeandcoxComDetail(FinancialDetailSpider):
         
         items['total_net_assets'] = (xpath1 + ' ' + xpath2).strip()
         items['benchmarks'] = response.xpath('//th[contains(normalize-space(text()),"Year") or contains(normalize-space(text()),"SINCE INCEPTION")]/parent::tr/parent::thead/parent::table/tbody/tr[@class="scaled-text"]/td[1]/text()').extract()
-        items['total_expense_gross'] = response.xpath('//th[contains(normalize-space(text()),"Expense Ratio")]/following-sibling::td[2]/text()').extract_first()
+        items['total_expense_gross'] = response.xpath('//th[contains(normalize-space(text()),"Expense Ratio") and not(contains(text(),"Net"))]/following-sibling::td[2]/text()').extract_first()
+        items['total_expense_net'] = response.xpath('//th[contains(normalize-space(text()),"Net Expense Ratio")]/following-sibling::td[2]/text()').extract_first()
         items['turnover_rate'] = response.xpath('//th[contains(normalize-space(text()),"Portfolio Turnover")]/following-sibling::td[2]/text()').extract_first()
         items['turnover_rate_date'] = response.xpath('//th[contains(normalize-space(text()),"Portfolio Turnover")]/span/text()').extract_first().split(',')[0].replace('(','')
         items['sec_yield_30_day'] = response.xpath('//th[contains(normalize-space(text()),"30-Day SEC")]/following-sibling::td[2]/text()').extract_first()
