@@ -1,0 +1,112 @@
+{
+    "website": "http://www.mundoval.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "mundoval.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.mundoval.com/mundoval-fund"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//td[contains(text(),'Ticker')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//td[contains(text(),'CUSIP')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "//td[contains(text(),'Net Assets')]/following-sibling::td/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets']+' millions'"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets_date": {
+                "paths": [
+                    "//td[contains(text(),'Net Assets')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets_date'].split('as of')[-1] ",
+                    "obj['total_net_assets_date'].replace(')', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//td[contains(text(),'Expense Ratio')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//td[contains(text(),'Inception Date')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h3[contains(text(),'The Objective of the Fund')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h3[contains(text(),'Investment Strategies')]/parent::div/ul[1]//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//td[contains(text(),'Regular Account')]/following-sibling::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//td[contains(text(),'Regular Account')]/following-sibling::td[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//td[contains(text(),'Portfolio Turnover')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}

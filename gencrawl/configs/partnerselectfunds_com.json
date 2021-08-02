@@ -1,9 +1,9 @@
 {
-    "website": "https://www.schroders.com/",
+    "website": "https://partnerselectfunds.com",
     "domain": "financial",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "schroders.com","schroders.filepoint.live"
+        "partnerselectfunds.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -11,14 +11,18 @@
     "detail": {
         "spider": "financial_detail_field_mapping",
         "crawl_method": "SELENIUM",
-        "wait_time": 5,
+        "wait_time": 3,
         "custom_settings": {
             "HTTPCACHE_ENABLED": false
         },
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.schroders.com/en/us/private-investor/mutual-funds/mutual-funds-range/core-bond-fund/",
-            "https://www.schroders.com/en/us/private-investor/mutual-funds/mutual-funds-range/long-duration-investment-grade-bond-fund/"
+            "https://partnerselectfunds.com/alternative-strategies-fund/",
+            "https://partnerselectfunds.com/equity-fund/",
+            "https://partnerselectfunds.com/high-income-alternatives-fund/",
+            "https://partnerselectfunds.com/international-fund/",
+            "https://partnerselectfunds.com/funds/oldfield-international-value-fund/",
+            "https://partnerselectfunds.com/sbh-focused-small-value-fund/"
         ],
         "ext_codes": {
             "instrument_name": {
@@ -30,7 +34,7 @@
             },
             "temp_class_blocks": {
                 "paths": [
-                    "//th[contains(text(),'Shares')]"
+                    "//th[contains(text(),'Performance')]/ancestor::thead/following-sibling::tbody/tr/td[contains(text(),'Fund') and not(contains(text(),'Index'))]"
                 ],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
@@ -38,49 +42,55 @@
             },
             "nasdaq_ticker": {
                 "paths": [
-                    "//td[contains(text(),'Ticker')]/following-sibling::td/text()"
+                    "//th[contains(text(),'Expense Ratios')]/following-sibling::th/text()[not(contains(.,'Ratio'))]",
+                    "//td[contains(text(),'Symbol')]/following-sibling::td/text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
             "cusip": {
                 "paths": [
-                    "//td[contains(text(),'CUSIP')]/following-sibling::td/text()"
+                    "//td[contains(text(),'Cusip')]/following-sibling::td/text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
             "share_class": {
                 "paths": [
-                    "./text()"
+                    "./text()[contains(.,'Class')]"
+                ],
+                "cleanup_functions": [
+                    "obj['share_class'].split('(')[-1].split('Class')[0]"
                 ],
                 "return_type": "str",
                 "selector": "temp_class_blocks"
             },
-            "total_net_assets": {
+            "fees_total_12b_1": {
                 "paths": [
-                    "//td[contains(text(),'Fund Assets')]/following-sibling::td/span/text()"
+                    "//td[contains(text(),'12B-1 Fees')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//th[contains(text(),'Gross Expense Ratio')]/ancestor::thead/following-sibling::tbody/tr/td[2]/text()",
+                    "//td[contains(text(),'Gross Expense Ratio')]/following-sibling::td/text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
-            "total_net_assets_date": {
+            "total_expense_net": {
                 "paths": [
-                    "//span[@class = 'dailyDate']/text()"
+                    "//th[contains(text(),'Gross Expense Ratio')]/ancestor::thead/following-sibling::tbody/tr/td[3]/text()",
+                    "//td[contains(text(),'Net Expense Ratio')]/following-sibling::td/text()"
                 ],
-                "return_type": "str",
+                "return_type": "list-map",
                 "selector": "root"
             },
             "share_inception_date": {
                 "paths": [
                     "//td[contains(text(),'Inception Date')]/following-sibling::td/text()"
-                ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
-            "investment_objective": {
-                "paths": [
-                    "//h3[contains(text(),'Investment Objective')]/following-sibling::p[1]/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -89,26 +99,22 @@
                 "paths": [
                     "//td[contains(text(),'Minimum Investment')]/following-sibling::td/text()"
                 ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
-            "minimum_additional_investment": {
-                "paths": [
-                    "//td[contains(text(),'Min. Subsequent Inv.')]/following-sibling::td/text()"
+                "cleanup_functions": [
+                    "obj['minimum_initial_investment'].split('(')[0].split('retirement')[0].split('Retirement')[0]"
                 ],
-                "return_type": "list-map",
+                "return_type": "str",
                 "selector": "root"
             },
             "benchmarks": {
                 "paths": [
-                    "//td[contains(text(),'Benchmark')]/following-sibling::td/text()"
+                    "//td[contains(text(),'Index')]/text()"
                 ],
-                "return_type": "list-map",
+                "return_type": "list",
                 "selector": "root"
             },
             "temp_fund_managers": {
                 "paths": [
-                    "//div[@class='article-section profile-block']//div[@class='row hidden-xs']//h3[contains(text(),'CFA')]"
+                    "//div[@class = 'manager_list']/div/figure/following-sibling::div/h4"
                 ],
                 "child_return_strategy": "multiple_objects",
                 "return_type": "selector",
