@@ -1,0 +1,229 @@
+{
+    "website": "https://www.dws.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "dws.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-california-tax-free-income-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-capital-growth-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-core-equity-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-croci-equity-dividend-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-croci-international-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-croci-us-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-emerging-markets-equity-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-emerging-markets-fixed-income-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-enhanced-commodity-strategy-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-equity-500-index-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-esg-core-equity-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-esg-global-bond-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-esg-international-core-equity-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-floating-rate-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-global-high-income-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-global-income-builder-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-global-macro-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-global-small-cap-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-gnma-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-health-and-wellness-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-high-income-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-intermediate-tax-free-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-international-growth-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-large-cap-focus-growth-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-latin-america-equity-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-managed-municipal-bond-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-massachusetts-tax-free-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-multi-asset-conservative-allocation-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-multi-asset-growth-allocation-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-multi-asset-moderate-allocation-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-new-york-tax-free-income-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-rreef-global-infrastructure-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-rreef-global-real-estate-securities-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-rreef-real-assets-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-rreef-real-estate-securities-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-s&p-500-index-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-science-and-technology-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-short-duration-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-short-term-municipal-bond-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-small-cap-core-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-small-cap-growth-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-strategic-high-yield-tax-free-fund.html/S",
+            "https://fundsus.dws.com/us/en-us/products/mutual-funds/dws-total-return-bond-fund.html/S"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//div[@class='fund_title']/div/div/h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//p[contains(text(),'Ticker')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//p[contains(text(),'CUSIP')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "asset_class": {
+                "paths": [
+                    "//p[contains(text(),'Asset Class')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//p[contains(text(),'Total Net Assets')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//div[contains(text(),'Fund Facts')]/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].replace('As of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//span[contains(text(),'Gross')]/parent::div/div/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//span[contains(text(),'Net')]/parent::div/div/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//p[contains(text(),'Share Class Inception Date')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "average_weighted_maturity": {
+                "paths": [
+                    "//p[contains(text(),'Effective Maturity')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//p[contains(text(),'Minimum Initial Investment')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//p[contains(text(),'Subsequent Investment Amount')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//p[contains(text(),'Turnover Rate %')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "dividend_frequency": {
+                "paths": [
+                    "//p[contains(text(),'Dividend Frequency')]/following-sibling::h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "//span[contains(text(),'Sec 30-day Subsidized')]/parent::div/div/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "//div[contains(text(),'Yield Information')]/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_date_30_day'].replace('As of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_30_day": {
+                "paths": [
+                    "//span[contains(text(),'Sec 30-day Non-Subsidized')]/parent::div/div/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_date_30_day": {
+                "paths": [
+                    "//div[contains(text(),'Yield Information')]/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_without_waivers_date_30_day'].replace('As of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//div[contains(text(),'Management Team')]/parent::div/div/div"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_in_industry": {
+                "paths": [
+                    "./following-sibling::p[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        },
+        "pagination": {
+            "pagination": {
+                "paths": [
+                    "//h1[contains(text(),'DWS California Tax-Free Income Fund')]/parent::div/div/ul/li/a/@href"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}

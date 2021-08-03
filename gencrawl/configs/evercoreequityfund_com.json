@@ -1,0 +1,134 @@
+{
+    "website": "https://evercoreequityfund.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "evercoreequityfund.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://evercoreequityfund.com/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//strong[contains(text(),'Strategy:')]/parent::p/parent::div/parent::div/parent::div/p//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//h3[contains(text(),'SYMBOL')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['nasdaq_ticker'].split('(')[-1] ",
+                    "obj['nasdaq_ticker'].replace(')', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "//h3[contains(text(),'FUND ASSETS')]/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets_date": {
+                "paths": [
+                    "//h5/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets_date'].split('As of')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "management_fee": {
+                "paths": [
+                    "//span[contains(text(),'Management Fees')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['management_fee'].split(':')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//span[contains(text(),'Gross Expense Ratio')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'].split(':')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//span[contains(text(),'Net Expense Ratio')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].split(':')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//span[contains(text(),'INCEPTION DATE')]/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//strong[contains(text(),'Strategy:')]/parent::p/parent::div/h3/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//strong[contains(text(),'Strategy:')]/parent::p/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//h3[contains(text(),'PORTFOLIO TURNOVER')]/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate_date": {
+                "paths": [
+                    "//h5/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['turnover_rate_date'].split('As of')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//span[contains(text(),'BENCHMARK')]/text()"
+                ],
+                "cleanup_functions": [
+                    "[o.split(':')[-1] for o in obj['benchmarks']]"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}

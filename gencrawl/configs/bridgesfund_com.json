@@ -1,0 +1,125 @@
+{
+    "website": "https://bridgesfund.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "bridgesfund.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://bridgesfund.com/about-the-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//p[contains(text(),'Fund Name')]/parent::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//td[contains(text(),'Symbol')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//td[contains(text(),'Cusip')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "//td[contains(text(),'Total Fund Assets')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets_date": {
+                "paths": [
+                    "//strong[contains(text(),'FUND FACTS')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets_date'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "//td[contains(text(),'Redemption Fee')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    "//td[contains(text(),'Sales Charge')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//td[contains(text(),'Expense Ratio')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//td[contains(text(),'Inception Date')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//td[contains(text(),'Minimum Investment')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//td[contains(text(),'Turnover Ratio')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate_date": {
+                "paths": [
+                    "//strong[contains(text(),'FUND FACTS')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets_date'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "dividend_frequency": {
+                "paths": [
+                    "//td[contains(text(),'Dividend ')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//strong[contains(text(),'Fund Name')]/parent::td/parent::tr/following-sibling::tr[2]/td[1]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}

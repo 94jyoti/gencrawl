@@ -1,0 +1,67 @@
+{
+    "website": "https://fundxfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "fundxfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://fundxfunds.com/fundx-aggressive-upgrader-hotfx",
+            "https://fundxfunds.com/fundx-upgrader-fundx",
+            "https://fundxfunds.com/fundx-sustainable-impact-srifx",
+            "https://fundxfunds.com/fundx-conservative-upgrader-relax",
+            "https://fundxfunds.com/fundx-flexible-income-incmx"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "(//*[text()='Gross expense ratio']//following::span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "(//*[text()='Net expense ratio']//following::span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//h4[contains(text(),'Inception date')]/following-sibling::p/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//h4[contains(text(),'Minimum Investment')]/following-sibling::p/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "(//div[@class=\"tabs__heading is-active\"]//following::tbody//td[1])[3]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}

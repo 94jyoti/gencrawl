@@ -1,0 +1,142 @@
+{
+    "website": "https://investments.miraeasset.us",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "investments.miraeasset.us"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://investments.miraeasset.us/mutual-funds/emerging-markets-great-consumer-fund?class=I",
+            "https://investments.miraeasset.us/mutual-funds/emerging-markets-great-consumer-fund?class=A",
+            "https://investments.miraeasset.us/mutual-funds/emerging-markets-great-consumer-fund?class=C",
+            "https://investments.miraeasset.us/mutual-funds/emerging-markets-fund?class=I",
+            "https://investments.miraeasset.us/mutual-funds/emerging-markets-fund?class=A",
+            "https://investments.miraeasset.us/mutual-funds/emerging-markets-fund?class=C"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1[contains(text(),'Fund')]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//dt[contains(text(),'Ticker')]/following-sibling::dd/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//dt[contains(text(),'CUSIP')]/following-sibling::dd/p/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//select[@id = 'class-selector']/option[@selected]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['share_class'].split(':')[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "asset_class": {
+                "paths": [
+                    "//dt[contains(text(),'Asset Class')]/following-sibling::dd/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_consultant": {
+                "paths": [
+                    "//em[contains(text(),'investment manager')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_consultant'].split('(\"')[0].split(',')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//dt[contains(text(),'Fund Assets')]/following-sibling::dd/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Facts')]/sub/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('of')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//dt[contains(text(),'Gross Expense Ratio')]/following-sibling::dd/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//dt[contains(text(),'Net Expense Ratio')]/following-sibling::dd/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//dt[contains(text(),'Inception Date')]/following-sibling::dd/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h2[contains(text(),'Investment Strategy')]/following-sibling::p/text()",
+                    "//h2[contains(text(),'Investment Strategy')]/following-sibling::ul/li/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//dt[contains(text(),'Benchmark')]/following-sibling::dd/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//section[@id = 'management-team']/div[2]//h3"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}
