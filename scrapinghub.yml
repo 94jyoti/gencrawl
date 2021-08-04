@@ -4,6 +4,9 @@ projects:
  
 requirements:
   file: ./requirements.txt
-
+# comment next line if deploying using docker
+stack: scrapy:2.5
 version: AUTO
-image: true
+# make image true if deploying using docker
+image: false
+
