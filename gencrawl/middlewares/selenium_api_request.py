@@ -42,7 +42,7 @@ class GenSeleniumApiMiddleware():
         request = request.replace(url=original_url)
 
         return HtmlResponse(
-            originalUrl,
+            original_url,
             body=str.encode(response.json()['html']),
             encoding='utf-8',
             request=request,
