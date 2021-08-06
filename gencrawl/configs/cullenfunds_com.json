@@ -10,7 +10,8 @@
     "language": "ENGLISH",
     "detail": {
         "spider": "financial_detail_field_mapping",
-        "crawl_method": "SCRAPY_GET",
+        "crawl_method": "SELENIUM",
+        "wait_time":3,
         "parsing_type": "xpath",
         "start_urls": [
             "http://www.cullenfunds.com/mutual-funds/high-dividend/overview",

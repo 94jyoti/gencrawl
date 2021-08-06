@@ -10,7 +10,11 @@
     "language": "ENGLISH",
     "detail": {
         "spider": "financial_detail",
-        "crawl_method": "SCRAPY_GET",
+        "crawl_method": "SELENIUM",
+        "wait_time": 10,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
         "parsing_type": "xpath",
         "start_urls": [
             "https://www.nb.com/en/us/products/mutual-funds/absolute-return-multi-manager-fund"
@@ -22,21 +26,6 @@
                 ],
                 "return_type": "str",
                 "selector": "root"
-            },
-            "temp_class_blocks": {
-                "paths": [
-                    "//div[contains(text(),'Symbol')]/following-sibling::div"
-                ],
-                "child_return_strategy": "multiple_items",
-                "return_type": "selector",
-                "selector": "root"
-            },
-            "nasdaq_ticker": {
-                "paths": [
-                    "./text()"
-                ],
-                "return_type": "str",
-                "selector": "temp_class_blocks"
             },
             "cusip": {
                 "paths": [
@@ -114,18 +103,11 @@
                 ],
                 "return_type": "str",
                 "selector": "temp_fund_managers"
-            }
-        },
-        "pagination": {
-            "pagination": {
-                "paths": [
-                    "//ul[@class='dropdown-list']//li/a/@href"
-                ],
-                "cleanup_functions": [
-                    "[obj['fund_url']+p for p in obj['pagination']]"
-                ],
-                "return_type": "list",
-                "selector": "root"
+            },
+            "temp_id":{
+             "paths":["//a[@id='1252']/@data-shareclass-itemid"],
+             "return_type": "str",
+             "selector": "root"
             }
         }
     }

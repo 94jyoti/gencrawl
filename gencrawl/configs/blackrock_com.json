@@ -1,63 +1,186 @@
 {
-    "website": "https://www.blackrock.com",
-    "spider": "financial_detail",
+    "website": "https://www.blackrock.com/",
     "domain": "financial",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "www.blackrock.com"
+        "blackrock.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "crawl_method": "SELENIUM",
-        "wait_time": 8,
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.blackrock.com/us/individual/products/227557/blackrock-high-yield-bondinstitutional-class-fund"
+            "https://www.blackrock.com/us/individual/products/227356/blackrock-us-mortgage-portfolio-inst-cl-fund"
         ],
         "ext_codes": {
-            "share_class": {
+            "instrument_name": {
                 "paths": [
-                    "//select[contains(@id,\"shareClassSelect\")]//option[contains(@selected,'selected')]//text()"
-                ],
-                "cleanup_functions": [
-                    "obj['share_class'].replace('class','')"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "asset_class": {
-                "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Asset Class')]/following-sibling::span//text()"
+                    "(//div[@class='identifier-wrapper']/following-sibling::h1)[1]/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "nasdaq_ticker": {
                 "paths": [
-                    "//h1[contains(@class,\"product-title\")]/parent::div//following-sibling::div/p/text()"
+                    "(//div[@class='identifier-wrapper']/p)[1]/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
             "cusip": {
                 "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'CUSIP')]/following-sibling::span//text()"
+                    "//span[contains(text(),'CUSIP')]/parent::div/span[2]/text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
             },
-            "instrument_name": {
+            "asset_class": {
                 "paths": [
-                    "//h1[contains(@class,\"product-title\")]//text()"
+                    "//span[contains(text(),'Asset Class')]/parent::div/span[2]/text()"
                 ],
                 "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//span[contains(text(),'Size of Fund (Millions)')]/parent::div/span[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//span[contains(text(),'Size of Fund (Millions)')]/parent::div/span/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].replace('as of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "//span[contains(text(),'Size of Class (Millions)')]/parent::div/span[2]/text()",
+                    "//span[contains(text(),'Net Assets')]/parent::div/span[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets_date": {
+                "paths": [
+                    "//span[contains(text(),'Size of Class (Millions)')]/parent::div/span/span/text()",
+                    "//span[contains(text(),'Net Assets')]/parent::div/span/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets_date'].replace('as of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//td[contains(text(),'Gross Expense Ratio')]/following-sibling::td/text()",
+                    "//span[contains(text(),'Gross Expense Ratio')]/following-sibling::span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//td[contains(text(),'Net Expense Ratio')]/following-sibling::td/text()",
+                    "//span[contains(text(),'Net Expense Ratio')]/following-sibling::span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//span[contains(text(),'Share Class launch date')]/parent::div/span[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "effective_duration": {
+                "paths": [
+                    "//span[contains(text(),'Effective Duration')]/parent::div/span[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "effective_duration_date": {
+                "paths": [
+                    "//span[contains(text(),'Effective Duration')]/parent::div/span/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['effective_duration_date'].replace('as of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//span[contains(text(),'Turnover')]/parent::div/span[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "distribution_frequency": {
+                "paths": [
+                    "//span[contains(text(),'Distribution Frequency')]/parent::div/span[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "//span[contains(text(),'30 Day SEC Yield')]/parent::div/span[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "//span[contains(text(),'30 Day SEC Yield')]/parent::div/span/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_date_30_day'].replace('as of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_30_day": {
+                "paths": [
+                    "//span[contains(text(),'Unsubsidized 30-Day SEC Yield')]/parent::div/span[2]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_date_30_day": {
+                "paths": [
+                    "//span[contains(text(),'Unsubsidized 30-Day SEC Yield')]/parent::div/span/span/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_without_waivers_date_30_day'].replace('as of', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//span[contains(text(),'Benchmark Index')]/parent::div/span[2]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['benchmarks'][0].split(',')"
+                ],
+                "return_type": "list",
                 "selector": "root"
             },
             "temp_fund_managers": {
                 "paths": [
-                    "//div[contains(@class,'bio-list side-panel')]/div"
+                    "//div[@class='fund-manager-bio clearfix']/div/div/a[not(contains(.,'Read More'))]"
                 ],
                 "child_return_strategy": "multiple_objects",
                 "return_type": "selector",
@@ -65,156 +188,10 @@
             },
             "fund_manager": {
                 "paths": [
-                    ".//div[@class=\"pm-name\"]//a//text()",".//div[@class=\"pm-name\"]//text()"
+                    "./text()"
                 ],
                 "return_type": "str",
                 "selector": "temp_fund_managers"
-            },
-            "benchmarks": {
-                "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Benchmark')]/following-sibling::span//text()"
-                ],
-                "return_type": "list",
-                "selector": "root"
-            },
-            "total_expense_gross": {
-                "paths": [
-                    "//td[contains(text(),'Gross Expense Ratio')]//following-sibling::td//text()",
-                    "//span[contains(text(),'Gross Expense Ratio')]//following-sibling::span[@class='data']/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "total_expense_net": {
-                "paths": [
-                    "//td[contains(text(),'Net Expense Ratio')]//following-sibling::td//text()",
-                    "//span[contains(text(),'Net Expense Ratio')]//following-sibling::span[@class='data']/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "share_inception_date": {
-                "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Share Class launch date')]/following-sibling::span//text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "portfolio_assets": {
-                "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Size of Fund')]/following-sibling::span//text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "portfolio_assets_date": {
-                "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Size of Fund')]//following-sibling::span//text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "total_net_assets": {
-                "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Size of Class')]/following-sibling::span//text()",
-                    "//div[contains(@class, 'totalNetAssets')]//span[@class='data']/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "total_net_assets_date": {
-                "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Size of  Class')]//following-sibling::span//text()",
-                    "//div[contains(@class, 'totalNetAssets')]//span[@class='as-of-date']/text()",
-                    "//div[contains(@class, 'totalSeriesSizeInMillions')]//span[@class='as-of-date']/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "average_modified_duration": {
-                "paths": [
-                    "//span[contains(text(), 'Modified Duration')]/following-sibling::span[@class='data']/text()"
-                ]
-            },
-            "sec_yield_30_day": {
-                "paths": [
-                    "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'30 Day SEC Yield')]/following-sibling::span//text()"
-                ],
-                "cleanup_functions": [
-                    "obj['sec_yield_30_day'].replace('-', '').strip()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "sec_yield_date_30_day": {
-                "paths": [
-                    "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'30 Day SEC Yield')]//following-sibling::span//text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "sec_yield_without_waivers_30_day": {
-                "paths": [
-                    "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'Unsubsidized 30-Day SEC Yield')]/following-sibling::span//text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "sec_yield_without_waivers_date_30_day": {
-                "paths": [
-                    "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'Unsubsidized 30-Day SEC Yield')]//following-sibling::span//text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "effective_duration": {
-                "paths": [
-                    "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'Effective Duration')]/following-sibling::span//text()"
-                ],
-                "cleanup_functions": [
-                    "obj['effective_duration'].replace('-', '').strip()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "effective_duration_date": {
-                "paths": [
-                    "//div[contains(@id,\"fundamentalsAndRisk\")]//span[contains(text(),'Effective Duration')]/a/following-sibling::span[@class='as-of-date']/text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "acquired_fund_fees_and_expenses": {
-                "paths": [
-                    "//li[contains(text(),'Acquired Fund Fees and Expenses')]//text()"
-                ],
-                "cleanup_functions": [
-                    "obj['acquired_fund_fees_and_expenses'][-1]"
-                ],
-                "return_type": "list",
-                "selector": "root"
-            },
-            "distribution_frequency": {
-                "paths": [
-                    "//div[contains(@id,\"keyFundFacts\")]//span[contains(text(),'Distribution Frequency')]/following-sibling::span//text()"
-                ],
-                "return_type": "str",
-                "selector": "root"
-            },
-            "temp_cg": {
-                "paths": [
-                    "//table[@aria-describedby=\"allDistroTable_info\"]//tbody"
-                ],
-                "child_return_strategy": "multiple_objects",
-                "return_type": "selector",
-                "selector": "root"
-            },
-            "cg_ex_date": {
-                "paths": [
-                    ".//tr//td[contains(@class,'ExDate')]//text()"
-                ],
-                "return_type": "str",
-                "selector": "temp_cg"
             }
         }
     }

@@ -1,0 +1,160 @@
+{
+    "website": "https://frontiermutualfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "frontiermutualfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_frontier_com",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://frontiermutualfunds.com/funds/mfg-global-equity/",
+            "https://frontiermutualfunds.com/funds/mfg-global-plus/",
+            "https://frontiermutualfunds.com/funds/mfg-global-sustainable/",
+            "https://frontiermutualfunds.com/funds/mfg-core-infrastructure/",
+            "https://frontiermutualfunds.com/funds/mfg-select-infrastructure/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//h2[contains(text(),'Fund Data')]/parent::div/div/ul/li/a"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//p[contains(text(),'Ticker')]/b[1]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//p[contains(text(),'Ticker')]/b[2]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['share_class'].split('Share')[0] "
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "fees_total_12b_1": {
+                "paths": [
+                    "//th[contains(text(),'12b-1')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "other_expenses": {
+                "paths": [
+                    "//th[contains(text(),'Total Other Expenses')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "management_fee": {
+                "paths": [
+                    "//th[contains(text(),'Management Fees')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "shareholder_service_fees": {
+                "paths": [
+                    "//th[contains(text(),'Servicing Fee')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "//h4[contains(text(),'Annual Fund Operating Expenses')]/parent::div/div[2]/p[1]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "expense_waivers": {
+                "paths": [
+                    "//th[contains(text(),'Fee Waiver')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//th[contains(text(),'Total Annual Fund Operating Expenses')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//th[contains(text(),'Net Expenses')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "acquired_fund_fees_and_expenses": {
+                "paths": [
+                    "//th[contains(text(),'Acquired Fund Fees and Expenses')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h2[contains(text(),'Investment Objective')]/parent::div/div/p/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h2[contains(text(),'Principal Investment Strategy')]/parent::div/div//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h2[contains(text(),'Portfolio Manager')]/parent::div/div/div/div/h3"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}
