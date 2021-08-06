@@ -26,13 +26,16 @@ RETRY_HTTP_CODES = [400, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429]
 CRAWLERA_ENABLED = True
 CRAWLERA_APIKEY = 'd1d3dfa7dc4444a88a253a0263be5877'
 
+
 DOWNLOADER_MIDDLEWARES = {
     # engine
     'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
-    'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800
+    # 'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800,
+    'gencrawl.middlewares.selenium_api_request.GenSeleniumApiMiddleware': 550
     # website
 }
+SELENIUM_URL = "http://xpathexractoralb-516078059.ap-south-1.elb.amazonaws.com/api/xvfy/procx"
 SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
 # SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
 SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless']
