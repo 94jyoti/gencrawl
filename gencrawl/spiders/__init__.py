@@ -103,8 +103,9 @@ class BaseSpider(Spider):
         self.logger.info("Total urls to be crawled - {}".format(len(objs)))
         return objs
 
-    def make_request(self, url, callback=None, method=Statics.CRAWL_METHOD_DEFAULT, headers=None, meta=None, body=None,
-                     wait_time=Statics.WAIT_TIME_DEFAULT, wait_until=None, iframe=None, dont_filter=False):
+    def make_request(self, url, callback=None, method=Statics.CRAWL_METHOD_DEFAULT, headers=None, cookies=None,
+                     meta=None, body=None, wait_time=Statics.WAIT_TIME_DEFAULT, wait_until=None,
+                     iframe=None, dont_filter=False):
         headers = headers or dict()
         meta = meta or dict()
         if method == Statics.CRAWL_METHOD_SELENIUM:
@@ -112,10 +113,11 @@ class BaseSpider(Spider):
                                          wait_until=wait_until, iframe=iframe, dont_filter=dont_filter)
         else:
             if method == Statics.CRAWL_METHOD_GET:
-                request = Request(url, callback=callback, meta=meta, headers=headers, dont_filter=dont_filter)
-            elif method == Statics.CRAWL_METHOD_POST:
-                request = Request(url, callback=callback, method="POST", meta=meta, headers=headers, body=body,
+                request = Request(url, callback=callback, meta=meta, headers=headers, cookies=cookies,
                                   dont_filter=dont_filter)
+            elif method == Statics.CRAWL_METHOD_POST:
+                request = Request(url, callback=callback, method="POST", meta=meta, headers=headers,cookies=cookies,
+                                  body=body, dont_filter=dont_filter)
             else:
                 self.logger.error(f"Request type is not supported - {method}")
         return request
