@@ -143,10 +143,8 @@ class BaseSpider(Spider):
         if not self.pagination:
             return
         pagination_ext_codes = ext_codes or self.pagination
-        print(default_obj)
         pagination_urls = self.exec_codes(response, pagination_ext_codes, default_obj=default_obj)[0].get("pagination")
-        print("------")
-        print(pagination_urls)
+        self.logger.info(f'Pagination will be followed for these pagination urls - {pagination_urls}')
         pagination_urls = [response.urljoin(url) for url in pagination_urls]
         return pagination_urls
 
@@ -162,19 +160,22 @@ class BaseSpider(Spider):
             yield self.make_request(url, callback=self.parse, meta=meta)
 
     def parse(self, response):
-        pagination_fields = response.meta
-        pagination_fields = {k: v for k, v in pagination_fields.items() if k not in Statics.IGNORE_META_FIELDS}
         default_item = self.get_default_item(response)
         items_or_req = self.get_items_or_req(response, default_item=default_item)
+
         navigation = self.parse_navigation(response, items_or_req)
         if isinstance(navigation, Iterable) and (not isinstance(navigation, dict)):
             yield from navigation
         else:
             yield navigation
 
-        default_paginated_obj = {self.url_key: response.meta.get(self.url_key)}
-        pagination_urls = self.get_pagination_urls(response, default_obj=default_paginated_obj)
-        yield from self.get_pagination_requests(pagination_urls, pagination_fields)
+        if response.meta.get("follow_pagination") != False:
+            pagination_fields = deepcopy(response.meta)
+            pagination_fields['follow_pagination'] = False
+            pagination_fields = {k: v for k, v in pagination_fields.items() if k not in Statics.IGNORE_META_FIELDS}
+            default_paginated_obj = {self.url_key: response.meta.get(self.url_key)}
+            pagination_urls = self.get_pagination_urls(response, default_obj=default_paginated_obj)
+            yield from self.get_pagination_requests(pagination_urls, pagination_fields)
 
     def parse_navigation(self, response, items):
         navigation = self.navigation
@@ -310,6 +311,7 @@ class BaseSpider(Spider):
             if not obj[key]:
                 break
             try:
+                globals()['obj'] = obj
                 obj[key] = eval(clean_up, globals(), locals())
             except Exception as e:
                 self.logger.error(
