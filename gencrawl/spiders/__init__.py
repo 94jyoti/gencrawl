@@ -144,8 +144,8 @@ class BaseSpider(Spider):
             return
         pagination_ext_codes = ext_codes or self.pagination
         pagination_urls = self.exec_codes(response, pagination_ext_codes, default_obj=default_obj)[0].get("pagination")
-        self.logger.info(f'Pagination will be followed for these pagination urls - {pagination_urls}')
         pagination_urls = [response.urljoin(url) for url in pagination_urls]
+        self.logger.info(f'Pagination will be followed for these pagination urls - {pagination_urls}')
         return pagination_urls
 
     def get_pagination_requests(self, pagination_urls, pagination_fields):
