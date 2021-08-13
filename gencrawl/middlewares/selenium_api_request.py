@@ -40,10 +40,16 @@ class GenSeleniumApiMiddleware():
         del request.meta['selenium_original_url']
 
         request = request.replace(url=original_url)
-
+        try:
+            body = response.json()['html']
+            status = 200
+        except:
+            body = ''
+            status = 405
         return HtmlResponse(
             original_url,
-            body=str.encode(response.json()['html']),
+            status=status,
+            body=str.encode(body),
             encoding='utf-8',
             request=request,
         )
