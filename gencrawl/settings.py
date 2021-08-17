@@ -9,7 +9,9 @@ NEWSPIDER_MODULE = 'gencrawl.spiders'
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36'
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
-   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'X-Crawlera-Profile': 'desktop',
+    'X-Crawlera-Cookies': 'disable'
 }
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 DOWNLOAD_DELAY = 3
