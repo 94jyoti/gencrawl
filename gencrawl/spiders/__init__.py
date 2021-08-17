@@ -28,7 +28,7 @@ from scrapy.selector import Selector
 from abc import ABC, abstractmethod
 from gencrawl.settings import CONFIG_DIR, RES_DIR
 from gencrawl.util.google_sheet_config_setup_v2 import GoogleConfig
-from gencrawl.dal import db_urls
+from gencrawl.dal import DAL
 
 
 class BaseSpider(Spider):
@@ -47,7 +47,6 @@ class BaseSpider(Spider):
             config_filename = config + Statics.CONFIG_EXT
             config_fp = os.path.join(CONFIG_DIR, config_filename)
             config = json.loads(open(config_fp).read())
-            
         custom_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
         if custom_settings:
             crawler.settings.frozen = False
@@ -85,7 +84,6 @@ class BaseSpider(Spider):
         if urls:
             for url in urls.split("|"):
                 objs.append({self.url_key: url})
-                
         elif input_file:
             input_file = os.path.join(RES_DIR, input_file)
             for line in open(input_file, encoding="utf-8"):
@@ -98,15 +96,17 @@ class BaseSpider(Spider):
                         obj = {self.url_key: url.group(1).strip()}
                 objs.append(obj)
         elif db:
-            domain = self.config['website'].split('//')[1].replace('www.','').strip('/')
-            fund_urls = db_urls(domain)
+            domain = Utility.get_allowed_domains([self.config['website']])[0]
+            db_obj = DAL(self.settings)
+            fund_urls = db_obj.get_db_urls(domain)
+            self.logger.info(f"{len(fund_urls)} URLs fetched from mini crawler")
             for url in fund_urls:
                 objs.append({self.url_key: url})
         else:
             urls = self.specific_config.get("start_urls", [])
             for url in urls:
                 objs.append({self.url_key: url})
-        
+
         if not objs:
             self.logger.error("Input not provided.")
         self.logger.info("Total urls to be crawled - {}".format(len(objs)))
