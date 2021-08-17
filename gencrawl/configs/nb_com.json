@@ -90,6 +90,27 @@
                 "return_type": "str",
                 "selector": "root"
             },
+            "average_effective_duration_as_of_date": {
+                "paths": [
+                    "//h3[contains(text(),'Product Characteristics')]/parent::div/following-sibling::div/date/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "average_weighted_maturity": {
+                "paths": [
+                    "//div[contains(text(),'Weighted Average Maturity')]/following-sibling::div/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "average_weighted_maturity_as_of_date": {
+                "paths": [
+                    "//h3[contains(text(),'Product Characteristics')]/parent::div/following-sibling::div/date/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
             "temp_fund_managers": {
                 "paths": [
                     "//div[@class='row bio-group']/div"

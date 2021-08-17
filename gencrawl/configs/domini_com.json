@@ -1,0 +1,250 @@
+{
+    "website": "https://www.domini.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "domini.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_domini_com",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.domini.com/domini-funds/domini-impact-equity-fund",
+            "https://www.domini.com/domini-funds/domini-international-opp-fund",
+            "https://www.domini.com/domini-funds/domini-sustainable-solutions-fund-inv",
+            "https://www.domini.com/domini-funds/domini-impact-international-equity-fund",
+            "https://www.domini.com/domini-funds/domini-impact-bond-fund"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//*[@class='breadcrumbs']//li//a[contains(text(),'Shares')]//text()"
+                ],
+                "cleanup_functions": [
+                    "obj['instrument_name'].split('-')[0] ",
+                    "obj['instrument_name'].replace('\u2120','')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//div[contains(text(),'Symbol')]/following-sibling::div/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//h4[contains(text(),'CUSIP')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//select[@name='share-class']/option[(@selected)]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_consultant": {
+                "paths": [
+                    "//h4[contains(text(),'Adviser')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//h4[contains(text(),'Net Assets')]/following-sibling::p[1]/text()[contains(., 'Fund:')]"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//h4[contains(text(),'Net Assets')]/following-sibling::p[1]/em/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('as of')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "//h4[contains(text(),'Net Assets')]/following-sibling::p[1]/text()[contains(., 'shares')]"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets_date": {
+                "paths": [
+                    "//h4[contains(text(),'Net Assets')]/following-sibling::p[1]/em/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('as of')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "initial_sales_charge": {
+                "paths": [
+                    "//h4[contains(text(),'Front-End Sales Charge')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//h4[contains(text(),'Annual Expense Ratio')]/following-sibling::p[1]/text()[contains(., 'Gross')]"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'].split(':')[-1] ",
+                    "obj['total_expense_gross'].replace('*', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//h4[contains(text(),'Annual Expense Ratio')]/following-sibling::p[1]/text()[contains(., 'Gross')]"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].split(':')[-1] ",
+                    "obj['total_expense_gross'].replace('*', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//h4[contains(text(),'Inception Date')]/following-sibling::p[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['share_inception_date'].split(':')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h4[contains(text(),'Fund Objective')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "(//h3[contains(text(),'Investment Strategy')]/following-sibling::section/div)[1]//text()",
+                    "(//h2[contains(text(),'Investment Strategy')]/following-sibling::section/div)[1]//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "effective_duration": {
+                "paths": [
+                    "//td[contains(text(),'Effective Duration')]/following-sibling::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "effective_duration_date": {
+                "paths": [
+                    "(//div[@id='characteristics']/parent::div/div[3]/div/section/div/div/section/div/p[1]/em)[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['effective_duration_date'].split('as of')[-1] ",
+                    "obj['effective_duration_date'].split('unless')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//h4[contains(text(),'Minimum Initial Investment')]/following-sibling::p[1]/text()[contains(., 'standard')]",
+                    "//h4[contains(text(),'Minimum Initial Investment')]/following-sibling::p[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['minimum_initial_investment'].split('for')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//td[contains(text(),'Annual Turnover')]/following-sibling::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate_date": {
+                "paths": [
+                    "//td[contains(text(),'Annual Turnover')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['turnover_rate_date'].split('as of')[-1] ",
+                    "obj['turnover_rate_date'].split(')')[0] ",
+                    "obj['turnover_rate_date'].replace('**', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sub_advisor": {
+                "paths": [
+                    "//h4[contains(text(),'Subadviser')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "distribution_frequency": {
+                "paths": [
+                    "//h4[contains(text(),'Capital Gains')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "dividend_frequency": {
+                "paths": [
+                    "//h4[contains(text(),'Dividends')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//h3[contains(text(),'Shares Performance')]/parent::div/div[3]/div/table/tbody/tr[2]/td[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "[o.split('(')[0] for o in obj['benchmarks']]"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        },
+        "pagination": {
+            "pagination": {
+                "paths": [
+                    "(//ul[@id='share-class-selectSelectBoxItOptions']/following-sibling::select)[1]/option[not(@selected)]/@value"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}

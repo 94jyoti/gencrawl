@@ -118,6 +118,18 @@
                 "return_type": "str",
                 "selector": "root"
             }
+        },
+        "pagination": {
+            "pagination": {
+                "paths": [
+                    "//select[@name=\"shareclass\"]//option[not(@selected)]//@value"
+                ],
+                "cleanup_functions": [
+                    "[\"http://www.ashmoregroup.com\"+p for p in obj['pagination']]"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
         }
     }
 }
