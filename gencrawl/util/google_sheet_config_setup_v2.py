@@ -78,11 +78,11 @@ class GoogleConfig:
         detail = parsed_config[crawl_type]
         detail['spider'] = self.spider
         detail["crawl_method"] = df.pop("Crawl Method")[0]
-        if detail['crawl_method'] == Statics.CRAWL_METHOD_SELENIUM:
-            detail['wait_time'] = Statics.WAIT_TIME_DEFAULT
-            detail['custom_settings'] = {
-              "HTTPCACHE_ENABLED": False
-            }
+        # if detail['crawl_method'] == Statics.CRAWL_METHOD_SELENIUM:
+        #     detail['wait_time'] = Statics.WAIT_TIME_DEFAULT
+        #     detail['custom_settings'] = {
+        #       "HTTPCACHE_ENABLED": False
+        #     }
         detail["parsing_type"] = Statics.PARSING_TYPE_XPATH
         detail['start_urls'] = split_g(df.pop("fund_urls")[0])
         ext_codes = dict()

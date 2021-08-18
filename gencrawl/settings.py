@@ -9,7 +9,9 @@ NEWSPIDER_MODULE = 'gencrawl.spiders'
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36'
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
-   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'X-Crawlera-Profile': 'desktop',
+    'X-Crawlera-Cookies': 'disable'
 }
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 DOWNLOAD_DELAY = 3
@@ -20,7 +22,7 @@ COOKIES_ENABLED = False
 AUTOTHROTTLE_ENABLED = False
 RETRY_ENABLED = True
 RETRY_TIMES = 5
-RETRY_HTTP_CODES = [400, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429]
+RETRY_HTTP_CODES = [400, 405, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429]
 
 # proxy settings
 CRAWLERA_ENABLED = True
@@ -29,10 +31,10 @@ CRAWLERA_APIKEY = 'd1d3dfa7dc4444a88a253a0263be5877'
 
 DOWNLOADER_MIDDLEWARES = {
     # engine
-    'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 551,
+    'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 550,
+    'gencrawl.middlewares.selenium_api_request.GenSeleniumApiMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
     # 'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800,
-    'gencrawl.middlewares.selenium_api_request.GenSeleniumApiMiddleware': 550
     # website
 }
 SELENIUM_URL = "http://xpathexractoralb-516078059.ap-south-1.elb.amazonaws.com/api/xvfy/procx"
@@ -52,7 +54,7 @@ LOG_LEVEL = 'DEBUG'
 HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = 'httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES = [400, 404, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429]
+HTTPCACHE_IGNORE_HTTP_CODES = [400, 403, 404, 405, 408, 429, 500, 502, 503, 504, 520, 522, 524]
 HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # directories
