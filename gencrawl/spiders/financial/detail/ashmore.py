@@ -22,6 +22,7 @@ class AshmoreComDetail(FinancialDetailSpider):
 
     def start_requests(self):
         for i, obj in enumerate(self.input):
+            print(i)
             url = obj[self.url_key]
             #print(obj[self.pagination])
             pagination_fields =obj
@@ -37,6 +38,8 @@ class AshmoreComDetail(FinancialDetailSpider):
                        "Accept-Encoding": "gzip, deflate", "Host": "www.ashmoregroup.com","X-Crawlera-Session":"create","X-Crawlera-Cookies": "disable"}
             yield scrapy.Request(static_url, headers=headers, method="POST",meta={'fund_url': url, 'cookiejar': i}, callback=self.make_request,dont_filter=True,body="market_country=usa&language=en-us%2Cen-us-ii%2Cen-us-ipi%2Cen-us-ifa&role=individual+investors&form_build_id=form-T0930Y0jj-2BK9pSGCoHmYL1hSdEnq_rbuGiHfAjNcI&form_id=taxonomyuserroles_multilingualselfcert")
 
+    
+    
     def make_request(self, response):
             print("111111111111111111")
             #items = self.prepare_items(response, default_item)
@@ -78,10 +81,15 @@ class AshmoreComDetail(FinancialDetailSpider):
             file = open("testtttttt111111111111.html", "w")
             file.write(response.text)
             file.close()
+            yield items[0]
             print("aleeneknk")
+            if(response.meta.get('dont_follow')):
+            	return 
             pagination=response.xpath("//select[@name='shareclass']//option[not(@selected)]//@value").extract()
             for i in pagination:
             	url="http://www.ashmoregroup.com"+i
-            	yield scrapy.Request(url,callback=self.start_requests,dont_filter=True)
-            
+            	yield scrapy.Request(url, headers=headers, callback=self.parse_mainurl, meta={'cookiejar': response.meta['cookiejar'],"dont_follow":True}, method="POST", dont_filter=True,body="agree_terms=1&op=AGREED&form_build_id=form-7umQrrioxwQxDSEl1PQ5XqVnL9PS8AgI1eGKdiQJdz8&form_id=taxonomyuserroles_multilingualselfcert_terms")
+        	print(pagination)
+        	
             print("share classssss",response.xpath('//select[@name="shareclass"]//option[(@selected)]//text()').extract()[0])
+'''
