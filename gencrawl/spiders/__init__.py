@@ -16,6 +16,7 @@ import time
 import uuid
 from shutil import which
 from gencrawl.middlewares.selenium_request import GenSeleniumRequest
+# from gencrawl.middlewares.selenium_api_request import GenSeleniumApiMiddleware
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,6 +28,7 @@ from scrapy.selector import Selector
 from abc import ABC, abstractmethod
 from gencrawl.settings import CONFIG_DIR, RES_DIR
 from gencrawl.util.google_sheet_config_setup_v2 import GoogleConfig
+from gencrawl.dal import DAL
 
 
 class BaseSpider(Spider):
@@ -45,7 +47,6 @@ class BaseSpider(Spider):
             config_filename = config + Statics.CONFIG_EXT
             config_fp = os.path.join(CONFIG_DIR, config_filename)
             config = json.loads(open(config_fp).read())
-            
         custom_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
         if custom_settings:
             crawler.settings.frozen = False
@@ -58,9 +59,10 @@ class BaseSpider(Spider):
         self.settings = get_project_settings()
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
+        self.db = kwargs.get("db")
         self.config = config
         self.specific_config = config[self.crawl_type]
-        self.input = self._get_start_urls(self.urls, self.input_file)
+        self.input = self._get_start_urls(self.urls, self.input_file, self.db)
         self.job_id = uuid.uuid1().hex
         self.allowed_domains = config['allowed_domains']
         self.website = config['website']
@@ -77,7 +79,7 @@ class BaseSpider(Spider):
         self.all_url_keys = [Statics.URL_KEY_FINANCIAL_LISTING, Statics.URL_KEY_FINANCIAL_DETAIL]
         self.ignore_meta_fields = Statics.IGNORE_META_FIELDS
 
-    def _get_start_urls(self, urls, input_file):
+    def _get_start_urls(self, urls, input_file, db):
         objs = list()
         if urls:
             for url in urls.split("|"):
@@ -93,6 +95,13 @@ class BaseSpider(Spider):
                     if url:
                         obj = {self.url_key: url.group(1).strip()}
                 objs.append(obj)
+        elif db:
+            domain = Utility.get_allowed_domains([self.config['website']])[0]
+            db_obj = DAL(self.settings)
+            fund_urls = db_obj.get_db_urls(domain)
+            self.logger.info(f"{len(fund_urls)} URLs fetched from mini crawler")
+            for url in fund_urls:
+                objs.append({self.url_key: url})
         else:
             urls = self.specific_config.get("start_urls", [])
             for url in urls:

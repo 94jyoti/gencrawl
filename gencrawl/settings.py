@@ -68,3 +68,9 @@ if os.environ.get('SHUB_JOBKEY') or os.environ.get('ENVIRONMENT') == Statics.ENV
     ENVIRONMENT = Statics.ENV_PROD
 else:
     ENVIRONMENT = Statics.ENV_DEV
+
+# db settings
+DB_USER = 'postgres'
+DB_PASS = 'kapow123'
+DB_HOST = '65.2.58.32'
+DB_PORT = '5432'
