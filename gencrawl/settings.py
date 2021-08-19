@@ -74,5 +74,5 @@ DB_USER = 'postgres'
 DB_PASS = 'kapow123'
 DB_HOST = '65.2.58.32'
 DB_PORT = '5432'
-DB_SCHEMA = 'postgres'
+DB_NAME = 'postgres'
 

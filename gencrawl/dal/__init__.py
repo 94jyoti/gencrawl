@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 class DAL:
 	def __init__(self, settings):
 		self.engine = create_engine(
-			f'postgresql+psycopg2://{settings["DB_USER"]}:{settings["DB_PASS"]}@{settings["DB_HOST"]}:{settings["DB_PORT"]}/{settings["DB_SCHEMA"]}',
+			f'postgresql+psycopg2://{settings["DB_USER"]}:{settings["DB_PASS"]}@{settings["DB_HOST"]}:{settings["DB_PORT"]}/{settings["DB_NAME"]}',
 			pool_use_lifo=True, pool_pre_ping=True, pool_recycle=3600)
 
 	def create_session(self, engine):
