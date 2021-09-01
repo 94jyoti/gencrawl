@@ -89,7 +89,4 @@ class AshmoreComDetail(FinancialDetailSpider):
             for i in pagination:
             	url="http://www.ashmoregroup.com"+i
             	yield scrapy.Request(url, headers=headers, callback=self.parse_mainurl, meta={'cookiejar': response.meta['cookiejar'],"dont_follow":True}, method="POST", dont_filter=True,body="agree_terms=1&op=AGREED&form_build_id=form-7umQrrioxwQxDSEl1PQ5XqVnL9PS8AgI1eGKdiQJdz8&form_id=taxonomyuserroles_multilingualselfcert_terms")
-        	print(pagination)
-        	
             print("share classssss",response.xpath('//select[@name="shareclass"]//option[(@selected)]//text()').extract()[0])
-'''

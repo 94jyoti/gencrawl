@@ -42,8 +42,9 @@ SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
 # SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
 SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless']
 
+# default client, has to be removed from here in future
+CLIENT = 'NFN'
 ITEM_PIPELINES = {
-      'gencrawl.pipelines.nfn_pipelines.NFNPipeline': 300,
 }
 
 # encoding

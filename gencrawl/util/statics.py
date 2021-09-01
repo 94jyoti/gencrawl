@@ -1,12 +1,17 @@
 class Statics:
-    # domain and crawl type constants
+    # domain constants
     DOMAIN_FINANCIAL = 'financial'
+    DOMAIN_HOSPITAL = 'hospital'
+
+    # crawl types
     CRAWL_TYPE_DETAIL = 'detail'
     CRAWL_TYPE_LISTING = 'listing'
 
     # url keys
     URL_KEY_FINANCIAL_DETAIL = "fund_url"
     URL_KEY_FINANCIAL_LISTING = "url"
+    URL_KEY_HOSPITAL_DETAIL = "doctor_url"
+    URL_KEY_HOSPITAL_LISTING = 'search_url'
 
     # return types
     RETURN_TYPE_DEFAULT = 'str'
@@ -64,11 +69,13 @@ class Statics:
     # messages
     RETRY_CONDITION_MSG = "RETRY_CONDITION_MATCHED"
 
-    # config link
-    GOOGLE_LINK_V2 = "https://docs.google.com/spreadsheets/u/1/d/1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw/export?format=csv&id=1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw&gid=1108971848"
-
     # environement
     ENV_PROD = 'PRODUCTION'
     ENV_DEV = 'DEVELOPMENT'
+
+
+    # clients
+    CLIENT_NFN = "NFN"
+    CLIENT_DHC = "DHC"
 
 
