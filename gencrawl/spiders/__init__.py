@@ -71,7 +71,7 @@ class BaseSpider(Spider):
 
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.logger.info("Config Loaded - \n{}".format(config))
+        self.logger.info("Config Loaded - \n{}".format(json.dumps(config)))
         self.settings = get_project_settings()
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
