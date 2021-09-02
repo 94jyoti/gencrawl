@@ -102,6 +102,12 @@ class GoogleConfig:
                 custom_settings = json.loads(custom_settings[0])
                 detail["custom_settings"] = custom_settings
 
+        if 'decision_tags' in df.keys():
+            decision_tags = split_g(df.pop('decision_tags')[0])
+            if decision_tags:
+                decision_tags = json.loads(decision_tags[0])
+                parsed_config["decision_tags"] = decision_tags
+
         ext_codes = dict()
         detail["ext_codes"] = ext_codes
         xpaths = dict()

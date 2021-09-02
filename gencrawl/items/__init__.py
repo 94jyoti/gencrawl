@@ -15,6 +15,7 @@ class BaseItem(Item):
     crawl_datetime = Field()
     http_status = Field()
     job_id = Field()
+    gencrawl_id = Field()
     temp_fields = Field()
 
 

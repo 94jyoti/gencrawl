@@ -79,7 +79,7 @@ class BaseSpider(Spider):
         self.config = config
         self.specific_config = config[self.crawl_type]
         self.input = self._get_start_urls(self.urls, self.input_file, self.db)
-        self.job_id = uuid.uuid1().hex
+        self.job_id = str(uuid.uuid4())
         self.allowed_domains = config['allowed_domains']
         self.website = config['website']
         self.parsing_type = self.specific_config.get('parsing_type') or config['parsing_type']
@@ -161,7 +161,7 @@ class BaseSpider(Spider):
             default_item[key] = response.meta[key]
         default_item["job_id"] = self.job_id
         default_item['http_status'] = response.status
-        default_item['crawl_datetime'] = datetime.now()
+        default_item['crawl_datetime'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
         return default_item
 
     def get_pagination_urls(self, response, ext_codes=None, default_obj=None):
@@ -434,6 +434,7 @@ class BaseSpider(Spider):
                 item[key] = obj.get(key)
             elif key not in self.ignore_meta_fields:
                 temp_fields[key] = str(value)[:Statics.MAX_OTHER_FIELDS_LENGTH] + "..."
+        item['gencrawl_id'] = uuid.uuid4().hex
         return item
 
     # return field names from the ext_codes. The temp_ fields are assigned first in the queue and
