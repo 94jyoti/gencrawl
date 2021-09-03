@@ -1,0 +1,89 @@
+{
+    "website": "https://cipvt.com/",
+    "domain": "financial",
+    "crawl_method": "SELENIUM",
+    "allowed_domains": [
+        "cipvt.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_cipvt_com",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            
+            "https://cipvt.com/small-cap/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h2[contains(text(),'Fund') and not(contains(text(),'Mutual'))]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//div[contains(@id,'shares')]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+
+            
+            "nasdaq_ticker": {
+                "paths": [
+                    ".//strong[contains(text(),'Ticker')]/following::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+
+            "cusip": {
+                "paths": [
+                    ".//strong[contains(text(),'Cusip')]/following::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_class": {
+                "paths": [
+                    "./preceding-sibling::div[1]/a[contains(text(),'Shares')]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    ".//strong[contains(text(),'Gross')]/following::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "total_expense_net": {
+                "paths": [
+                    ".//strong[contains(text(),'Net')]/following::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "share_inception_date": {
+                "paths": [
+                    ".//strong[contains(text(),'Fund Inception')]/following::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    ".//strong[contains(text(),'Minimum')]/following::td[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            }
+        }
+    }
+}

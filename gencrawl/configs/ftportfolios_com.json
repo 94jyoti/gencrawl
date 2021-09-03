@@ -9,7 +9,7 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail",
+        "spider": "financial_detail_ftportfolios_com",
         "crawl_method": "SELENIUM",
         "wait_time": 3,
         "custom_settings": {
@@ -17,9 +17,8 @@
         },
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.ftportfolios.com/Retail/MF/MFSummary.aspx?Ticker=FPEAX",
-            "https://www.ftportfolios.com/Retail/MF/MFSummary.aspx?Ticker=FOVAX",
-            "https://www.ftportfolios.com/Retail/MF/MFSummary.aspx?Ticker=FDHAX"
+            "https://www.ftportfolios.com/Retail/MF/MFSummary.aspx?Ticker=FPEAX"
+            
         ],
         "ext_codes": {
             "instrument_name": {
