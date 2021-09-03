@@ -1,0 +1,106 @@
+{
+    "website": "https://prospectorpartners.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "prospectorpartners.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_prospectorpartners_com",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://prospectorpartners.com/funds/prospector-capital-appreciation-fund/#section-2",
+            "https://prospectorpartners.com/funds/prospector-opportunity-fund/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//h4[contains(text(),'Ticker')]/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "//strong[contains(text(),redemption)]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['redemption_fee'].split('redemption')[0].split('a')[-1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//p[contains(text(),'expense ratio')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_gross'].split('gross expense ratio is')[-1].split('and')[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//p[contains(text(),'expense ratio')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].split('net expense ratio is')[-1].split('%')[0] +'%'"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h4[contains(text(),'Objective')]/following-sibling::div/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h4[contains(text(),'strategies:')]/following-sibling::div/p/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//td[contains(text(),'Index')]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//div[@class = 'portfolio-managers']//a"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

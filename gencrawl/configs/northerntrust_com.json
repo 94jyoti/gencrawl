@@ -1,0 +1,126 @@
+{
+    "website": "https://www.northerntrust.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "northerntrust.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_custom_spider",
+        "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NMMEX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NMIEX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOEMX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NGREX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NSRIX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NSRKX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOIEX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOIGX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOINX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOLCX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOLVX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOMIX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NMFIX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NMMGX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NENGX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NSGRX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NSCKX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NSIDX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOSGX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NOSIX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NUESX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NUEIX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NOAZX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NOBOX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NCITX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NCATX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NOCBX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NOFIX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NHFIX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NHYMX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NOITX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NMEDX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NMHYX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/BSBAX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NSITX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NSIUX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NTAUX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NOTEX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NUSFX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/NOUGX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/fixed-income/BTIAX",
+            "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/multi-asset/BBALX"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//span[contains(text(),'Ticker')]/parent::p/following-sibling::h3[1]/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//span[contains(text(),'CUSIP')]/parent::span/parent::td/following-sibling::td/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "//h3[contains(text(),'Redemption Fee')]/following-sibling::p/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['redemption_fee'].split('on')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//span[contains(text(),'Inception Date')]/following::td[1]/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h3[contains(text(),'Fund Objective')]/following-sibling::p/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h3[contains(text(),'Fund Strategy')]/following-sibling::ul//text()",
+                    "//h3[contains(text(),'Fund Strategy')]/following-sibling::p//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "sub_advisor": {
+                "paths": [
+                    "//th[contains(text(),'SUB-ADVISER')]/parent::tr/parent::thead/following-sibling::tbody/tr/td[1]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    }
+}
