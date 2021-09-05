@@ -14,7 +14,38 @@
         
         "parsing_type": "xpath",
         "start_urls": [
+            "https://www.payden.com/corpbfrm.aspx",
+            "https://www.payden.com/arfrm.aspx",
+            "https://www.payden.com/cmifrm.aspx",
+            "https://www.payden.com/cbfrm.aspx",
+            "https://www.payden.com/corpbfrm.aspx",
+            "https://www.payden.com/gnmafrm.aspx",
+            "https://www.payden.com/hifrm.aspx",
+            "https://www.payden.com/frfrm.aspx",
+            "https://www.payden.com/lmfrm.aspx",
+            "https://www.payden.com/sbfrm.aspx",
+            "https://www.payden.com/sifrm.aspx",
+            "https://www.payden.com/ustfrm.aspx",
+            "https://www.payden.com/emfrm.aspx",
+            "https://www.payden.com/emlfrm.aspx",
+            "https://www.payden.com/emcfrm.aspx",
+            "https://www.payden.com/gfifrm.aspx",
+            "https://www.payden.com/gsbfrm.aspx",
+            "https://www.payden.com/crfrm.aspx",
+            "https://www.payden.com/vlfrm.aspx",
+            "https://www.payden.com/arfrm.aspx",
+            "https://www.payden.com/cbfrm.aspx",
+            "https://www.payden.com/cbfrm.aspx",
+            "https://www.payden.com/frfrm.aspx",
+            "https://www.payden.com/lmfrm.aspx",
+            "https://www.payden.com/sifrm.aspx",
+            "https://www.payden.com/emfrm.aspx",
+            "https://www.payden.com/emfrm.aspx",
+            "https://www.payden.com/emcfrm.aspx",
+            "https://www.payden.com/gfifrm.aspx",
+            "https://www.payden.com/vlfrm.aspx",
             "https://www.payden.com/vlfrm.aspx"
+
 
 
                        
