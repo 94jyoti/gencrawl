@@ -43,6 +43,8 @@ class PaydenDetail(FinancialDetailSpider):
         print("tickers:",len(tickers))
 
         if len(tickers)>1:
+
+            yield self.generate_item(items[0], FinancialDetailItem)
             for ticker in tickers[1:]:
                 meta['ticker'] = ticker
 
@@ -87,19 +89,31 @@ class PaydenDetail(FinancialDetailSpider):
         selector = scrapy.Selector(text=response.text, type="html")
         #tickers = selector.xpath("//select[@id='drpClass']/option/@value").getall()
 
+        cusip = selector.xpath("//td[contains(text(),'CUSIP')]/following-sibling::td/text()").get()
+
+        share_class = selector.xpath("//select[contains(@name,'Class')]/option[@selected]/text()").get()
+        portfolio_assets = selector.xpath("//td[contains(text(),'Fund Total Net Assets')]/following-sibling::td/text()").get()
+        maximum_sales_charge_full_load = selector.xpath("//td[contains(text(),'Sales Charge')]/following-sibling::td/text()").get()
+        share_inception_date = selector.xpath("(//td[contains(text(),'Share Class Inception Date')]/following-sibling::td)[1]/text()").get()
         item = meta['items']
 
         item_copy = copy.deepcopy(item)
 
         
         item_copy[0]['nasdaq_ticker']=ticker
+        item_copy[0]['cusip']=cusip
+        item_copy[0]['share_class']=share_class
+        item_copy[0]['portfolio_assets']=portfolio_assets
+        item_copy[0]['share_inception_date']=share_inception_date
 
-        print("item_copy:",item_copy)
+
+
+        #print("item_copy:",item_copy)
 
 
 
 
-        #yield self.generate_item(item_copy, FinancialDetailItem)
+        yield self.generate_item(item_copy[0], FinancialDetailItem)
 
 
 
