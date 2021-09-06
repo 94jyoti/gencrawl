@@ -3,7 +3,7 @@
     "domain": "financial",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "beechhilltotalreturnfund.com"
+        "beechhilltotalreturnfund.com","http://www.geminifund.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -22,6 +22,13 @@
                 ],
                 "cleanup_functions": [
                     "obj['instrument_name'].split('is')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//span[contains(text(),'Ticker')]//parent::td//parent::tr//following::tr/td[1]//text()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -60,6 +67,41 @@
                 ],
                 "return_type": "str",
                 "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h2[contains(text(),'Manager')]//following::p[1]"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    ".//strong//text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_in_industry": {
+                "paths": [
+                    ".//strong//following::text()[1]"
+                ],
+                "cleanup_functions": [
+                    "re.findall(r'\\d*\\.?\\d+',obj['fund_manager_years_of_experience_in_industry'])[0]"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_with_fund": {
+                "paths": [
+                    ".//strong//following::text()[1]"
+                ],
+                "cleanup_functions": [
+                    "re.findall(r'\\d*\\.?\\d+',obj['fund_manager_years_of_experience_with_fund'])[-1]"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
             }
         }
     }
