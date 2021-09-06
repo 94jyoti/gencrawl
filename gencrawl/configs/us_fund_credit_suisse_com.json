@@ -1,0 +1,112 @@
+{
+    "website": "http://us-fund.credit-suisse.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "us-fund.credit-suisse.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "http://us-fund.credit-suisse.com/index.cfm?ct=individual&nav=funds&fundid=2&tab=2",
+            "http://us-fund.credit-suisse.com/index.cfm?ct=individual&nav=funds&fundid=1&tab=2",
+            "http://us-fund.credit-suisse.com/index.cfm?ct=individual&nav=funds&fundid=12&tab=2",
+            "http://us-fund.credit-suisse.com/index.cfm?ct=individual&nav=funds&fundid=3&tab=2",
+            "http://us-fund.credit-suisse.com/index.cfm?ct=individual&nav=funds&fundid=11&tab=2",
+            "http://us-fund.credit-suisse.com/index.cfm?ct=individual&nav=funds&fundid=9&tab=2"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//div[@id='mainContent']/h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//span[contains(text(),'Ticker')]/parent::p/parent::td/following-sibling::td/p/span"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "//span[contains(text(),'CUSIP')]/parent::p/parent::td/following-sibling::td/p/span/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "portfolio_consultant": {
+                "paths": [
+                    "//span[contains(text(),'Advisor')]/parent::p/parent::td/following-sibling::td/p/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "initial_sales_charge": {
+                "paths": [
+                    "//span[contains(text(),'Max initial sales charge')]/parent::p/parent::td/following-sibling::td/p/span/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//span[contains(text(),'Gross Expense Ratio')]/parent::p/parent::td/following-sibling::td/p/span/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//span[contains(text(),'Net Expense Ratio')]/parent::p/parent::td/following-sibling::td/p/span/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//span[contains(text(),'Inception Date')]/parent::p/parent::td/following-sibling::td/p/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//span[contains(text(),'Fund Strategy')]/parent::p/parent::td/following-sibling::td/p/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//*[contains(text(),'Fund Managers')]/parent::div/div/div/h3"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

@@ -1,0 +1,163 @@
+{
+    "website": "https://www.bbhfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "bbhfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-equity-funds/bbh-select-series-large-cap-fund.html",
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-equity-funds/bbh-select-series-mid-cap-fund.html",
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-income-fund.html",
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-limited-duration-fund.html",
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-intermediate-municipal-bond-fund.html",
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-us-government-money-market-fund.html",
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-partner-funds/bbh-partner-fund---international-equity.html",
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-partner-funds/bbh-partner-fund-select-short-term-assets.html",
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-partner-funds/bbh-partner-fund-small-cap-equity.html"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "(//h2[contains(text(),'Fund')])[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "(//select)[1]/option"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "(//span[contains(text(),'Ticker')])//preceding::div[1]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "(//span[contains(text(),'CUSIP')])//preceding::div[1]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "asset_class": {
+                "paths": [
+                    "(//span[contains(text(),'Category')])[1]//preceding::div[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "(//li[@class='cmp-fundteaser__entry-fund-assets']//div[contains(text(),'$')])[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//li[@class='cmp-fundteaser__entry-fund-assets']//span[contains(.,'as of')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('date ')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "(//li[@class='cmp-fundteaser__entry-share-class-assets']//div[contains(text(),'$')])/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets_date": {
+                "paths": [
+                    "//li[@class='cmp-fundteaser__entry-share-class-assets']//span[contains(.,'as of')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_net_assets_date'].split('date ')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//span[contains(text(),'Gross Expense Ratio')]/preceding::div[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//span[contains(text(),'Net Expense Ratio')]/preceding::div[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "(//span[contains(text(),'Inception Date')])[1]//preceding::div[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//li[@class='cmp-fundteaser__entry-minimum-initial-investment']//div[contains(text(),'$')]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_additional_investment": {
+                "paths": [
+                    "//li[@class='cmp-fundteaser__entry-minimum-subsequent-investment']//div[contains(text(),'$')]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//span[text()='Benchmark']/parent::div[1]//preceding-sibling::div/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//*[contains(@href,'who-we-are/our-team/')]"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

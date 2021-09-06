@@ -9,8 +9,8 @@ import urllib.parse
 from gencrawl.util.statics import Statics
 
 
-class AshmoreComDetail(FinancialDetailSpider):
-    name = 'financial_detail_ashmore_com'
+class AshmomDetail(FinancialDetailSpider):
+    name = 'financial_detailhmore_com'
     custom_settings = {
         "HTTPCACHE_ENABLED": False,
         "CONCURRENT_REQUESTS_PER_DOMAIN": 2,
@@ -81,6 +81,7 @@ class AshmoreComDetail(FinancialDetailSpider):
             file = open("testtttttt111111111111.html", "w")
             file.write(response.text)
             file.close()
+    '''
             yield items[0]
             print("aleeneknk")
             if(response.meta.get('dont_follow')):
@@ -91,5 +92,6 @@ class AshmoreComDetail(FinancialDetailSpider):
             	yield scrapy.Request(url, headers=headers, callback=self.parse_mainurl, meta={'cookiejar': response.meta['cookiejar'],"dont_follow":True}, method="POST", dont_filter=True,body="agree_terms=1&op=AGREED&form_build_id=form-7umQrrioxwQxDSEl1PQ5XqVnL9PS8AgI1eGKdiQJdz8&form_id=taxonomyuserroles_multilingualselfcert_terms")
         	print(pagination)
         	
-            print("share classssss",response.xpath('//select[@name="shareclass"]//option[(@selected)]//text()').extract()[0])
-'''
+            print("share
+             classssss",response.xpath('//select[@name="shareclass"]//option[(@selected)]//text()').extract()[0])
+    '''

@@ -12,10 +12,14 @@ class UsfundsComDetail(FinancialDetailSpider):
     name = 'financial_detail_usfunds_com'
 
     def get_items_or_req(self, response, default_item={}):
-        items = self.prepare_items(response, default_item)
+        file=open("usfunds.html","w")
+        file.write(response.text)
+        file.close()
+        items = super().get_items_or_req(response, default_item)
         gross_url = "https://www.usfunds.com"+response.xpath("//a[text()='Performance']//@href").extract()[0]
         meta = response.meta
         meta['items'] = items
+        print(gross_url)
         yield self.make_request(gross_url, callback=self.performance, meta=meta)
 
     def performance(self, response):

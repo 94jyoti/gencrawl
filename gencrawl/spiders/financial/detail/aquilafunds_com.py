@@ -13,8 +13,8 @@ from gencrawl.util.statics import Statics
 # import urllib
 import itertools
 import traceback
-import nltk
-from nltk.corpus import wordnet
+#import nltk
+#from nltk.corpus import wordnet
 
 
 class AquilaComDetail(FinancialDetailFieldMapSpider):

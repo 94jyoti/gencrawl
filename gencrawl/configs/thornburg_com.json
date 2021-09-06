@@ -1,0 +1,125 @@
+{
+    "website": "https://www.thornburg.com",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "thornburg.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.thornburg.com/products-performance/mutual-funds/equity-funds/fgo//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/equity-funds/fiv//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/equity-funds/fbwi//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/equity-funds/fig//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/equity-funds/fdw//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/equity-funds/fv//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/equity-funds/fcg//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/multi-asset-funds/fib//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/multi-asset-funds/fs//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fldi//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fgov//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fli//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fsi//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fldm//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/flm//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fim//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fca//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fnm//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fny//fund-facts/",
+            "https://www.thornburg.com/products-performance/mutual-funds/bond-funds/fsm//fund-facts/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//div[@class='page-title']/h1/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['instrument_name'].split('-')[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//h3[contains(text(),'Fund Facts')]/parent::header/following-sibling::div/table/tbody/tr/td[2]/span"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "//h3[contains(text(),'Fund Facts')]/parent::header/following-sibling::div/table/tbody/tr/td[5]/span/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//h3[contains(text(),'Fund Facts')]/parent::header/following-sibling::div/table/tbody/tr/td[1]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//h3[contains(text(),'Fund Facts')]/parent::header/following-sibling::div/table/tbody/tr/td[6]/span/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h4[contains(text(),'FUND OBJECTIVE')]/parent::header/following-sibling::p/text()",
+                    "//h4[contains(text(),'Fund Objective')]/parent::header/following-sibling::p/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//section[@class='investment_strategy']/text()",
+                    "//h4[contains(text(),'Investment Strategy')]/parent::header/following-sibling::p/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//b[contains(text(),'Benchmark:')]/parent::li/text()",
+                    "//b[contains(text(),'Benchmarks')]/parent::li/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h4[contains(text(),'PORTFOLIO MANAGEMENT')]/parent::header/parent::div/parent::div/parent::section/div/div/div/div/a"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

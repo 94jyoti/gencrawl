@@ -75,7 +75,6 @@ class AmericanbeaconDetail(FinancialDetailSpider):
                 # i['investment_strategy']=investment
                 '''
                 bench_mark = []
-
                 for benchmark in temp_class_benchmark:
                     bench_mark.append(benchmark['benchmarks'])
                 i['benchmarks'] = bench_mark

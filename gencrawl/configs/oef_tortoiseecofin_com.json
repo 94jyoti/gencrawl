@@ -1,0 +1,144 @@
+{
+    "website": "https://oef.tortoiseecofin.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "oef.tortoiseecofin.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://oef.tortoiseecofin.com/funds/tortoise-mlp-pipeline-fund-inst/",
+            "https://oef.tortoiseecofin.com/funds/tortoise-mlp-energy-income-fund-inst/",
+            "https://oef.ecofininvest.com/funds/ecofin-global-renewables-infrastructure-fund/?_ga=2.90518874.1532026311.1629881205-1483385332.1626781997",
+            "https://oef.tortoiseecofin.com/funds/tortoise-mlp-energy-income-fund-a/",
+            "https://oef.tortoiseecofin.com/funds/tortoise-mlp-energy-income-fund-c/",
+            "https://oef.ecofininvest.com/funds/ecofin-global-renewables-infrastructure-fund-a/",
+            "https://oef.tortoiseecofin.com/funds/tortoise-mlp-pipeline-fund-a/",
+            "https://oef.tortoiseecofin.com/funds/tortoise-mlp-pipeline-fund-c/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "(//div[@class='filter-option-inner']/div/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "(//div[@class='filter-option-inner']/div/text())[3]"
+                ],
+                "cleanup_functions": [
+                    "obj['nasdaq_ticker'].split('(')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "(//p[contains(text(),'CUSIP')]/following-sibling::p/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "(//div[@class='filter-option-inner']/div/text())[3]"
+                ],
+                "cleanup_functions": [
+                    "obj['share_class'].split('(')[-1] ",
+                    "obj['share_class'].replace(')', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//p[contains(text(),'Total Assets ')]/following-sibling::p/text()",
+                    "//th[contains(text(),'Total Assets')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//p[contains(text(),'Fund Details')]/following-sibling::p/text()",
+                    "//th[contains(text(),'Fund Details')]/following-sibling::th/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split('As of')[-1] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "initial_sales_charge": {
+                "paths": [
+                    "(//p[contains(text(),'Max Front-End Sales Load')]/following-sibling::p/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "deferred_sales_charge": {
+                "paths": [
+                    "(//p[contains(text(),'Max Deferred Sales Load')]/following-sibling::p/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "redemption_fee": {
+                "paths": [
+                    "(//p[contains(text(),'Redemption Fee')]/following-sibling::p/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "(//p[contains(text(),'Expense Ratio Net')]/following-sibling::p/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//p[contains(text(),'Investment objective ')]/following-sibling::p/text()",
+                    "(//p[contains(text(),'Investment Objective')]/following-sibling::p/text())[1]",
+                    "//th[contains(text(),'Objective')]/following-sibling::td/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "(//p[contains(text(),'Minimum Investment')]/following-sibling::p/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "(//p[contains(text(),'30-Day SEC Yield')]/following-sibling::p/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "//p[contains(text(),'Fund Stats')]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['sec_yield_date_30_day'].split('as of')[-1] ",
+                    "obj['sec_yield_date_30_day'].replace(':', '')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}
