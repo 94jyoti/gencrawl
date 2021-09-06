@@ -95,3 +95,4 @@ class AshmomDetail(FinancialDetailSpider):
             print("share
              classssss",response.xpath('//select[@name="shareclass"]//option[(@selected)]//text()').extract()[0])
     '''
+            print("share classssss",response.xpath('//select[@name="shareclass"]//option[(@selected)]//text()').extract()[0])

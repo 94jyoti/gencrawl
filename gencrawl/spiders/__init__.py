@@ -36,8 +36,12 @@ class BaseSpider(Spider):
     @classmethod
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
+
+        # client taken from argument, otherwise from the settings
+        cls.client = kwargs.get("client", get_project_settings()['CLIENT']).upper()
+
         # config set up from google sheet
-        google_config = GoogleConfig().main(config, CONFIG_DIR, crawler.settings['ENVIRONMENT'])
+        google_config = GoogleConfig(cls.client).main(config, CONFIG_DIR, crawler.settings['ENVIRONMENT'])
         # config returned from google config, if None i.e. no config exists at google sheet, then take the value
         # provided in arguments
         if google_config:
@@ -47,15 +51,27 @@ class BaseSpider(Spider):
             config_filename = config + Statics.CONFIG_EXT
             config_fp = os.path.join(CONFIG_DIR, config_filename)
             config = json.loads(open(config_fp).read())
-        custom_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
-        if custom_settings:
-            crawler.settings.frozen = False
-            crawler.settings.update(custom_settings)
-            crawler.settings.freeze()
+
+        # settings item pipelines according to the client
+        custom_settings = {
+            "ITEM_PIPELINES": {
+                **get_project_settings()['ITEM_PIPELINES'],
+                f'gencrawl.pipelines.{cls.client.lower()}_pipelines.{cls.client}Pipeline': 300,
+            }
+        }
+        # settings as provided in the config json
+        config_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
+        if config_settings:
+            custom_settings.update(config_settings)
+        # unfreeze, updating the settings & freezing again.
+        crawler.settings.frozen = False
+        crawler.settings.update(custom_settings)
+        crawler.settings.freeze()
         return super().from_crawler(crawler, config, *args, **kwargs)
 
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.logger.info("Config Loaded - \n{}".format(json.dumps(config)))
         self.settings = get_project_settings()
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
@@ -63,7 +79,7 @@ class BaseSpider(Spider):
         self.config = config
         self.specific_config = config[self.crawl_type]
         self.input = self._get_start_urls(self.urls, self.input_file, self.db)
-        self.job_id = uuid.uuid1().hex
+        self.job_id = str(uuid.uuid4())
         self.allowed_domains = config['allowed_domains']
         self.website = config['website']
         self.parsing_type = self.specific_config.get('parsing_type') or config['parsing_type']
@@ -145,7 +161,7 @@ class BaseSpider(Spider):
             default_item[key] = response.meta[key]
         default_item["job_id"] = self.job_id
         default_item['http_status'] = response.status
-        default_item['crawl_datetime'] = datetime.now()
+        default_item['crawl_datetime'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
         return default_item
 
     def get_pagination_urls(self, response, ext_codes=None, default_obj=None):
@@ -418,6 +434,7 @@ class BaseSpider(Spider):
                 item[key] = obj.get(key)
             elif key not in self.ignore_meta_fields:
                 temp_fields[key] = str(value)[:Statics.MAX_OTHER_FIELDS_LENGTH] + "..."
+        item['gencrawl_id'] = uuid.uuid4().hex
         return item
 
     # return field names from the ext_codes. The temp_ fields are assigned first in the queue and

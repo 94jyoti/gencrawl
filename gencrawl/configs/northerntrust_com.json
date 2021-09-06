@@ -9,8 +9,12 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail_northern_com",
+        "spider": "financial_detail_custom_spider",
         "crawl_method": "SELENIUM",
+        "wait_time": 3,
+        "custom_settings": {
+            "HTTPCACHE_ENABLED": false
+        },
         "parsing_type": "xpath",
         "start_urls": [
             "https://www.northerntrust.com/united-states/what-we-do/investment-management/northern-funds/funds-and-performance/equity/NMMEX",

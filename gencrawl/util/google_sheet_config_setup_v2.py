@@ -10,13 +10,15 @@ import numpy as np
 from gencrawl.util.statics import Statics
 from gencrawl.util.utility import Utility
 from gencrawl.settings import CONFIG_DIR, SPIDER_DIR
+from gencrawl.settings import CLIENT as DEFAULT_CLIENT
 SPIDER_TEMPLATE = '''from gencrawl.spiders.financial.financial_detail_spider import FinancialDetailSpider
 from gencrawl.spiders.financial.financial_detail_field_mapping import FinancialDetailFieldMapSpider
+from gencrawl.spiders.hospital.hospital_detail_spider import HospitalDetailSpider
 import scrapy
 
 
 class {spider_cls}({parent_cls}):
-    name = 'financial_detail_{website}'
+    name = '{domain}_detail_{website}'
 
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
@@ -26,11 +28,17 @@ class {spider_cls}({parent_cls}):
 
 class GoogleConfig:
 
-    def __init__(self):
+    def __init__(self, client=None):
         self.spider = None
         self.config_name = None
+        self.client = client or DEFAULT_CLIENT
+        if self.client == Statics.CLIENT_DHC:
+            self.google_link = "https://docs.google.com/spreadsheets/u/1/d/1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw/export?format=csv&id=1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw&gid=1934331278"
+        else:
+            self.google_link = "https://docs.google.com/spreadsheets/u/1/d/1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw/export?format=csv&id=1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw&gid=1108971848"
         self.spider_class_map = {"financial_detail": "FinancialDetailSpider",
-                                 "financial_detail_field_map": "FinancialDetailFieldMapSpider"}
+                                 "financial_detail_field_map": "FinancialDetailFieldMapSpider",
+                                 "hospital_detail": "HospitalDetailSpider"}
 
     def download_csv_file(self, url):
         response = requests.get(url)
@@ -70,6 +78,9 @@ class GoogleConfig:
         parsed_config['domain'] = domain
         parsed_config['crawl_method'] = Statics.CRAWL_METHOD_DEFAULT
         parsed_config['allowed_domains'] = Utility.get_allowed_domains([website])
+        if 'allowed_domains' in df.keys():
+            parsed_config['allowed_domains'].extend(split_g(df.pop("allowed_domains")[0]))
+
         parsed_config['parsing_type'] = Statics.PARSING_TYPE_DEFAULT
         parsed_config['country'] = "US"
         parsed_config['language'] = "ENGLISH"
@@ -85,6 +96,18 @@ class GoogleConfig:
         #     }
         detail["parsing_type"] = Statics.PARSING_TYPE_XPATH
         detail['start_urls'] = split_g(df.pop("fund_urls")[0])
+        if 'custom_settings' in df.keys():
+            custom_settings = split_g(df.pop('custom_settings')[0])
+            if custom_settings:
+                custom_settings = json.loads(custom_settings[0])
+                detail["custom_settings"] = custom_settings
+
+        if 'decision_tags' in df.keys():
+            decision_tags = split_g(df.pop('decision_tags')[0])
+            if decision_tags:
+                decision_tags = json.loads(decision_tags[0])
+                parsed_config["decision_tags"] = decision_tags
+
         ext_codes = dict()
         detail["ext_codes"] = ext_codes
         xpaths = dict()
@@ -149,7 +172,8 @@ class GoogleConfig:
                     spider_cls = [c[0].upper() + c[1:].lower() for c in spider_cls]
                     spider_cls = ''.join(spider_cls)
                     parent_cls = self.spider_class_map[spider.replace("_custom_spider", "")]
-                    template = SPIDER_TEMPLATE.format(spider_cls=spider_cls, parent_cls=parent_cls, website=config_name)
+                    template = SPIDER_TEMPLATE.format(domain=spider.split("_")[0], spider_cls=spider_cls,
+                                                      parent_cls=parent_cls, website=config_name)
                     w.write(template)
 
     def save_configs(self, configs, config_dir):
@@ -161,15 +185,19 @@ class GoogleConfig:
                 w.write(json.dumps(jsn, indent=4))
 
     def main(self, website, config_dir, env):
-        df = self.download_csv_file(Statics.GOOGLE_LINK_V2)
+        df = self.download_csv_file(self.google_link)
         website_df = self.filter_website_in_config(df, website)
         if not website_df.empty:
             p_configs = self.create_configs(website_df)
             # only write files in development env
+
             if env == Statics.ENV_DEV:
                 if self.spider.endswith("_custom_spider"):
                     self.create_custom_script(p_configs)
 
                 self.save_configs(p_configs, config_dir)
             return p_configs[list(p_configs.keys())[0]]
+        else:
+            print("No matched website- {} configuration found on google sheet.......".format(website))
+
 
