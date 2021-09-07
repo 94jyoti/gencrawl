@@ -1,6 +1,7 @@
 from gencrawl.items.hospital.hospital_detail_item import HospitalDetailItem
 from gencrawl.util.utility import Utility
 from gencrawl.util.statics import Statics
+import requests
 import csv
 import os
 import re
@@ -15,13 +16,17 @@ class DHCPipeline:
         self.state_rgx = re.compile(r'\s([A-Z]{2})\s')
         phone_rgx = ['(\(\d{3}\)[-\s]\d{3}[-\s]\d{4})', '(\d{3}[-\s]\d{3}[\s-]\d{4})']
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
-        us_states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
-                     'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
-                     'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
-                     'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
-                     'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
-                     'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-                     'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'District of Columbia']
+        resp = requests.get(Statics.CITY_STATE_GOOGLE_LINK)
+        us_cities = set()
+        us_states = set()
+        for row in Utility.read_csv_from_response(resp):
+            city, state = row['City'], row['State']
+            if city:
+                us_cities.add(city)
+            if state:
+                us_states.add(state)
+
+        self.us_cities = sorted(us_cities, key=len, reverse=True)
         self.us_states = sorted(us_states, key=len, reverse=True)
 
     def open_spider(self, spider):
@@ -74,10 +79,17 @@ class DHCPipeline:
 
         if item.get('address'):
             address = item['address']
+
             if not item.get('zip'):
                 pincode = self.pincode_rgx.search(address, re.S)
                 if pincode:
                     item['zip'] = pincode.group(1)
+
+            if not item.get("city"):
+                for city in self.us_cities:
+                    if city.lower() in address.lower():
+                        item['city'] = city
+                        break
 
             if not item.get("state"):
                 for state in self.us_states:
