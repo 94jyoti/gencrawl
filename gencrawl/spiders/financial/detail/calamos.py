@@ -12,9 +12,6 @@ class CalamosfundsComDetail(FinancialDetailFieldMapSpider):
     }
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
-        file=open("brroke_test.html","w")
-        file.write(response.text)
-        file.close()
         for item in items:
             temp_url=item['fund_url'].rsplit("-",1)
             temp_url.remove(temp_url[len(temp_url)-1])
