@@ -13,7 +13,24 @@
         "crawl_method": "SELENIUM",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.brownadvisory.com/mf/funds/sustainable-bond-fund"
+            "https://www.brownadvisory.com/mf/funds/beutel-goodman-large-cap-value-fund",
+            "https://www.brownadvisory.com/mf/funds/emerging-markets-select-fund",
+            "https://www.brownadvisory.com/mf/funds/equity-income-fund",
+            "https://www.brownadvisory.com/mf/funds/flexible-equity-fund",
+            "https://www.brownadvisory.com/mf/funds/global-leaders-fund",
+            "https://www.brownadvisory.com/mf/funds/growth-equity-fund",
+            "https://www.brownadvisory.com/mf/funds/mid-cap-growth-fund",
+            "https://www.brownadvisory.com/mf/funds/small-cap-fundamental-value-fund",
+            "https://www.brownadvisory.com/mf/funds/small-cap-growth-fund",
+            "https://www.brownadvisory.com/mf/funds/sustainable-growth-fund",
+            "https://www.brownadvisory.com/mf/funds/wmc-strategic-european-equity-fund",
+            "https://www.brownadvisory.com/mf/funds/intermediate-income-fund",
+            "https://www.brownadvisory.com/mf/funds/maryland-bond-fund",
+            "https://www.brownadvisory.com/mf/funds/mortgage-securities-fund",
+            "https://www.brownadvisory.com/mf/funds/sustainable-bond-fund",
+            "https://www.brownadvisory.com/mf/funds/tax-exempt-bond-fund",
+            "https://www.brownadvisory.com/mf/funds/tax-exempt-sustainable-bond-fund",
+            "https://www.brownadvisory.com/mf/funds/total-return-fund"
         ],
         "ext_codes": {
             "instrument_name": {

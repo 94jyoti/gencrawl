@@ -12,9 +12,6 @@ class BrookefieldfundsComDetail(FinancialDetailFieldMapSpider):
     }
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
-        file=open("brroke_test.html","w")
-        file.write(response.text)
-        file.close()
         for item in items:
             item['share_inception_date']=response.xpath("//div[contains(@class,'key-stats-container key')]//p[contains(@class,'stat-value InceptionDate')]//span[contains(@class,'"+item['nasdaq_ticker']+"')]//text()").extract()[0]
             item['sec_yield_30_day']=response.xpath("//div[contains(@class,'key-stats-container key')]//p[contains(@class,'ThirtyDaySECYieldSubsidized')]//span[contains(@class,'"+item['nasdaq_ticker']+"')]//text()").extract()[0]
@@ -43,20 +40,12 @@ class BrookefieldfundsComDetail(FinancialDetailFieldMapSpider):
             try:
                 for iter in gross_net:
                         data=iter.split("and")
-                        print(data)
-                        print(iter in item['share_class'])
                         if(item['share_class'].replace("Class","") in iter):
-                            print(iter)
                             for i in data:
-                                print("isnide fri")
                                 if("gross" in i):
-                                    print("yes")
                                     item['total_expense_gross']=re.findall(r'\d*\.?\d+', i)[0]
-                                    print(item['total_expense_gross'])
                                 if("net" in i):
-                                    print("yes donee")
                                     item['total_expense_net']=re.findall(r'\d*\.?\d+', i)[0]
-                #print(gross_net)
             except:
                 pass
 

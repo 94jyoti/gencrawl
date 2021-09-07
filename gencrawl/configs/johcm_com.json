@@ -27,6 +27,9 @@
                 "paths": [
                     "//h3/span/text()"
                 ],
+                "cleanup_functions": [
+                    "obj['field_name'].split('(')[0] "
+                ],
                 "return_type": "str",
                 "selector": "root"
             },
@@ -71,7 +74,8 @@
                     "//h3[contains(text(),'Fund details')]//following-sibling::h5//text()"
                 ],
                 "cleanup_functions": [
-                    "obj['portfolio_assets_date'].replace(\"as at\",\"\").strip()"
+                    "obj['portfolio_assets_date'].replace(\"as at\",\"\").strip()",
+                    "obj['field_name'].split('Data')[-1] "
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -85,7 +89,7 @@
             },
             "total_expense_net": {
                 "paths": [
-                    "(//td//b[contains(.,'Net Expense')])[1]//ancestor::tr[1]//following-sibling::tr//td[4]//text()"
+                    "(//td//b[contains(.,'Net Expense')])[1]//ancestor::tr[1]//following-sibling::tr//td[3]//text()"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
@@ -95,21 +99,24 @@
                     "//table[@class='shareclass-table ']//tbody//tr//td[2]//text()"
                 ],
                 "cleanup_functions": [
-                    "obj['share_inception_date'].split(') ')[-1] "
+                    "[o.split(') ')[-1] for o in obj['share_inception_date']]"
                 ],
                 "return_type": "list-map",
                 "selector": "root"
             },
             "investment_objective": {
                 "paths": [
-                    "//h5[contains(text(),'Investment Objective')]//following-sibling::p//text()"
+                    "//h5[contains(text(),'Investment Objective')]//following-sibling::p//text()",
+                    "//h5[contains(text(),'Investment objective')]//following-sibling::p//text()"
                 ],
                 "return_type": "join",
                 "selector": "root"
             },
             "investment_strategy": {
                 "paths": [
-                    "//h5[contains(text(),'Investment Strategy')]/following-sibling::ul//li//text()"
+                    "//h5[contains(text(),'Investment Strategy')]/following-sibling::ul//li//text()",
+                    "(//h5[contains(text(),'Investment Strategy')]/following-sibling::text())[1]",
+                    "//h5[contains(text(),'Investment Strategy')]/following-sibling::p[not(contains(.,'JOHCM') or contains(.,'%'))]/text()"
                 ],
                 "return_type": "join",
                 "selector": "root"
@@ -123,7 +130,7 @@
             },
             "sub_advisor": {
                 "paths": [
-                    "//th[contains(text(),'Investment Adviser')]//following-sibling::td//text()"
+                    "//th[contains(text(),'Investment')]//following-sibling::td//text()"
                 ],
                 "return_type": "str",
                 "selector": "root"

@@ -10,19 +10,15 @@ class BdrexComDetail(FinancialDetailFieldMapSpider):
 
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
-        print(items)
         gross_net_temp = (
         response.xpath("//div[@class='fund-section']//following::p[1]//small//text()").extract()[0]).split(",")
         for item in items:
-            print("sharrerrrerererere", item['share_class'])
             for i in gross_net_temp:
                 if (item['share_class'] in i):
                     g_n = i.split("and")
                     for j in g_n:
                         if ("gross expenses" in j):
-                            print(j)
                             item['total_expense_gross'] = re.findall(r'\d*\.?\d+%', j)[0]
-                            print(item['total_expense_gross'])
                         if ("reimbursement" in j):
                             item['total_expense_net'] = re.findall(r'\d*\.?\d+%', j)[0]
 
@@ -45,5 +41,3 @@ class BdrexComDetail(FinancialDetailFieldMapSpider):
             item['fund_managers'] = fund_manager
             item['sub_advisor'] = advisors.replace("Adviser:", "").strip()
             yield self.generate_item(item, FinancialDetailItem)
-
-        # return items
