@@ -13,6 +13,8 @@ class DHCPipeline:
         self.redundant_fields = ['temp_fields']
         self.pincode_rgx = re.compile(r'([\d]{5})')
         self.state_rgx = re.compile(r'\s([A-Z]{2})\s')
+        phone_rgx = ['(\(\d{3}\)[-\s]\d{3}[-\s]\d{4})', '(\d{3}[-\s]\d{3}[\s-]\d{4})']
+        self.phone_rgx = [re.compile(r) for r in phone_rgx]
         us_states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
                      'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
                      'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
@@ -57,6 +59,11 @@ class DHCPipeline:
     def parse_phone(self, item):
         if item.get("phone"):
             item['phone'] = item['phone'].replace("tel:", "")
+            for rgx in self.phone_rgx:
+                phone = rgx.search(item['phone'], re.S)
+                if phone:
+                    item['phone'] = phone.group(1)
+                    break
         return item
 
     def parse_address(self, item):
@@ -78,12 +85,18 @@ class DHCPipeline:
                         item['state'] = state
                         break
 
-            if item.get("state"):
+            if not item.get("state"):
                 state = self.state_rgx.search(address.replace(",", ' ').replace(
                     ';', ' ').replace('\n', ' ').replace('\t', ' '), re.S)
                 if state:
                     item['state'] = state.group(1)
 
+            if not item.get("phone"):
+                for rgx in self.phone_rgx:
+                    phone = rgx.search(address, re.S)
+                    if phone:
+                        item['phone'] = phone.group(1)
+                        break
         return item
 
     def process_item(self, item, spider):
