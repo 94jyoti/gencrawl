@@ -1,15 +1,35 @@
 from gencrawl.items.hospital.hospital_detail_item import HospitalDetailItem
 from gencrawl.util.utility import Utility
 from gencrawl.util.statics import Statics
+import requests
 import csv
 import os
+import re
 from gencrawl.settings import RES_DIR
 
 
 class DHCPipeline:
 
-    def open_spider(self, spider):
+    def __init__(self):
         self.redundant_fields = ['temp_fields']
+        self.pincode_rgx = re.compile(r'([\d]{5})')
+        self.state_rgx = re.compile(r'\s([A-Z]{2})\s')
+        phone_rgx = ['(\(\d{3}\)[-\s]\d{3}[-\s]\d{4})', '(\d{3}[-\s]\d{3}[\s-]\d{4})']
+        self.phone_rgx = [re.compile(r) for r in phone_rgx]
+        resp = requests.get(Statics.CITY_STATE_GOOGLE_LINK)
+        us_cities = set()
+        us_states = set()
+        for row in Utility.read_csv_from_response(resp):
+            city, state = row['City'], row['State']
+            if city:
+                us_cities.add(city)
+            if state:
+                us_states.add(state)
+
+        self.us_cities = sorted(us_cities, key=len, reverse=True)
+        self.us_states = sorted(us_states, key=len, reverse=True)
+
+    def open_spider(self, spider):
         self.decision_tags = spider.config.get("decision_tags") or {}
 
     def parse_field(self, field):
@@ -41,9 +61,61 @@ class DHCPipeline:
                 item['middle_name'] = raw_name[1]
         return item
 
+    def parse_phone(self, item):
+        if item.get("phone"):
+            item['phone'] = item['phone'].replace("tel:", "")
+            for rgx in self.phone_rgx:
+                phone = rgx.search(item['phone'], re.S)
+                if phone:
+                    item['phone'] = phone.group(1)
+                    break
+        return item
+
+    def parse_address(self, item):
+        if not item.get("address"):
+            address_keys = ['address_line_1', 'city', 'state', 'zip']
+            address_values = [item[k] for k in address_keys if item.get(k)]
+            item['address'] = ' '.join(address_values)
+
+        if item.get('address'):
+            address = item['address']
+
+            if not item.get('zip'):
+                pincode = self.pincode_rgx.search(address, re.S)
+                if pincode:
+                    item['zip'] = pincode.group(1)
+
+            if not item.get("city"):
+                for city in self.us_cities:
+                    if city.lower() in address.lower():
+                        item['city'] = city
+                        break
+
+            if not item.get("state"):
+                for state in self.us_states:
+                    if state.lower() in address.lower():
+                        item['state'] = state
+                        break
+
+            if not item.get("state"):
+                state = self.state_rgx.search(address.replace(",", ' ').replace(
+                    ';', ' ').replace('\n', ' ').replace('\t', ' '), re.S)
+                if state:
+                    item['state'] = state.group(1)
+
+            if not item.get("phone"):
+                for rgx in self.phone_rgx:
+                    phone = rgx.search(address, re.S)
+                    if phone:
+                        item['phone'] = phone.group(1)
+                        break
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
             item = self.parse_item(item)
             if not self.decision_tags.get("dont_split_name"):
                 item = self.split_name(item)
+            item = self.parse_phone(item)
+            item = self.parse_address(item)
         return item

@@ -78,4 +78,7 @@ class Statics:
     CLIENT_NFN = "NFN"
     CLIENT_DHC = "DHC"
 
+    # Google links
+    CITY_STATE_GOOGLE_LINK = "https://docs.google.com/spreadsheets/u/1/d/1rg55Fwn5UjNcgGJcDZFGD3a-X0MR-YqpKOoCUVNTmuc/export?format=csv&id=1rg55Fwn5UjNcgGJcDZFGD3a-X0MR-YqpKOoCUVNTmuc&gid=0"
+
 

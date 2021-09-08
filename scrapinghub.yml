@@ -1,6 +1,8 @@
 projects:
   nfn:
     id: 533749
+  dhc:
+    id: 551976
  
 requirements:
   file: ./requirements.txt

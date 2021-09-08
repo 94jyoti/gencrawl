@@ -3,6 +3,8 @@ import re
 import hashlib
 import os
 import csv
+import codecs
+from io import BytesIO
 from datetime import datetime
 from unidecode import unidecode
 from w3lib.html import replace_entities, remove_tags
@@ -62,6 +64,15 @@ class Utility:
     @staticmethod
     def change_datetime_format(date_string, from_fmt="%Y-%m-%d", to_fmt="%Y-%m-%d"):
         return datetime.strptime(date_string, from_fmt).strftime(to_fmt)
+
+    @staticmethod
+    def read_csv_from_response(response):
+        try:
+            buffer = BytesIO(response.body)
+        except:
+            buffer = BytesIO(response.content)
+        decoder = codecs.getreader('utf-8')
+        return list(csv.DictReader(decoder(buffer, errors='strict')))
 
     @staticmethod
     def read_csv(fp, encoding="utf-8", delimiter=","):
