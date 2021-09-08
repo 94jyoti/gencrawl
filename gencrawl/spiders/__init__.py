@@ -36,9 +36,9 @@ class BaseSpider(Spider):
     @classmethod
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
-
         # client taken from argument, otherwise from the settings
-        cls.client = kwargs.get("client", get_project_settings()['CLIENT']).upper()
+        cls.settings = crawler.settings
+        cls.client = kwargs.get("client", cls.settings['CLIENT']).upper()
 
         # config set up from google sheet
         google_config = GoogleConfig(cls.client).main(config, CONFIG_DIR, crawler.settings['ENVIRONMENT'])
@@ -72,7 +72,6 @@ class BaseSpider(Spider):
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.logger.info("Config Loaded - \n{}".format(json.dumps(config)))
-        self.settings = get_project_settings()
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
         self.db = kwargs.get("db")

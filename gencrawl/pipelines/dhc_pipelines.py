@@ -103,7 +103,7 @@ class DHCPipeline:
 
     def parse_name(self, item):
         raw_name = item.get('raw_full_name')
-        designations = item['designation'] or []
+        designations = item.get('designation') or []
         suffix = item['suffix'] or ''
         for sep in self.name_separators:
             raw_name = raw_name.replace(sep, ' ')
