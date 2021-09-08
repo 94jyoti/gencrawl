@@ -48,16 +48,6 @@
                 "return_type": "selector",
                 "selector": "root"
             },
-            "nasdaq_ticker": {
-                "paths": [
-                    "//th[contains(text(),'Share Class')]/parent::tr/parent::thead/parent::table/tbody/tr[1]/td[1]/text()"
-                ],
-                "cleanup_functions": [
-                    "[o.split(',')[0].split('(')[-1].replace(\")\",\" \") for o in obj['nasdaq_ticker']]"
-                ],
-                "return_type": "list-map",
-                "selector": "root"
-            },
             "share_class": {
                 "paths": [
                     "./text()"
@@ -67,16 +57,16 @@
             },
             "total_expense_gross": {
                 "paths": [
-                    "//strong[contains(text(),'Expense Ratio')]/text()"
+                    "(//strong[contains(text(),'Expense Ratio')]/text())[1]"
                 ],
-                "return_type": "list-map",
+                "return_type": "str",
                 "selector": "root"
             },
             "total_expense_net": {
                 "paths": [
-                    "//strong[contains(text(),'Expense Ratio')]/text()"
+                    "(//strong[contains(text(),'Expense Ratio')]/text())[2]"
                 ],
-                "return_type": "list-map",
+                "return_type": "str",
                 "selector": "root"
             },
             "share_inception_date": {

@@ -12,6 +12,10 @@ class BrownadvisoryDetail(FinancialDetailFieldMapSpider):
 
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
+        if(items[0]['total_expense_gross']==None):
+            gross=response.xpath("(//strong[contains(text(),'Gross Expense Ratios: ')]//following-sibling::strong)[position()!=last()]//text()").extract()
+            print("dnwklncdwlkckc",gross)
+
         url="https://www.brownadvisory.com/mf"
         meta = response.meta
         meta['items'] = items
