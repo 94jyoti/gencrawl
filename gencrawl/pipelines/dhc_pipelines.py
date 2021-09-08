@@ -125,7 +125,7 @@ class DHCPipeline:
             if not item.get("designation"):
                 item = self.parse_designation(item)
             item = self.parse_name(item)
-        if isinstance(item['designation'], list):
+        if isinstance(item.get('designation'), list):
             item['designation'] = '___'.join(item['designation'])
         return item
 
