@@ -12,8 +12,9 @@ class DHCPipeline:
 
     def __init__(self):
         self.redundant_fields = ['temp_fields']
-        self.name_separators = [";", ","]
-        self.pincode_rgx = re.compile(r'([\d]{5})')
+        self.name_separators = [","]
+        pincode_rgx = ['([\d]{5}-[\d]{4})', '([\d]{5})']
+        self.pincode_rgx = [re.compile(r) for r in pincode_rgx]
         self.state_rgx = re.compile(r'\s([A-Z]{2})\s')
         phone_rgx = ['(\(\d{3}\)[-\s]\d{3}[-\s]\d{4})', '(\d{3}[-\s]\d{3}[\s-]\d{4})']
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
@@ -46,7 +47,7 @@ class DHCPipeline:
     def parse_field(self, field):
         if isinstance(field, bool):
             field = "true" if field else "false"
-            return  field
+            return field
         elif isinstance(field, dict):
             return field
         elif isinstance(field, int) or isinstance(field, float):
@@ -77,7 +78,7 @@ class DHCPipeline:
                 break
         return item
 
-    def parse_designation(self, item):
+    def parse_designation_backup(self, item):
         def parse_d(name):
             for sep in self.name_separators:
                 name = name.replace(sep, ' ')
@@ -101,13 +102,28 @@ class DHCPipeline:
 
         return item
 
+    # default implementation takes designation after first comma
+    def parse_designation(self, item):
+        raw_name = item['raw_full_name']
+        # parse the designations after first comma
+        if ',' in raw_name:
+            designation = raw_name.split(",", 1)[-1]
+            suffix = item.get("suffix") or ''
+            designation = designation.replace(suffix, '').strip(", ")
+            designation = [d.strip() for d in designation.split(",")]
+            item['designation'] = designation
+        else:
+            item = self.parse_designation_backup(item)
+        return item
+
     def parse_name(self, item):
         raw_name = item.get('raw_full_name')
-        designations = item.get('designation') or []
-        suffix = item['suffix'] or ''
-        for sep in self.name_separators:
-            raw_name = raw_name.replace(sep, ' ')
+        if "," in raw_name:
+            raw_name = raw_name.split(",")[0]
+
         raw_name = [r.strip() for r in raw_name.split() if r.strip()]
+        designations = item.get('designation') or []
+        suffix = item.get('suffix') or ''
         raw_name = [r for r in raw_name if r not in designations and r != suffix]
         if not item.get("first_name") and len(raw_name) > 0:
             item['first_name'] = raw_name[0].strip()
@@ -139,6 +155,14 @@ class DHCPipeline:
                     break
         return item
 
+    # Receive a line that have an address + city and separate them
+    def parse_city(self, line):
+        words = line.split()
+        for i in range(1, len(words)):
+            city = ' '.join(words[i:])
+            if city in self.us_cities:
+                return city
+
     def parse_fields_from_address(self, item):
         if not item.get("address"):
             address_keys = ['address_line_1', 'city', 'state', 'zip']
@@ -147,16 +171,11 @@ class DHCPipeline:
 
         if item.get('address'):
             address = item['address']
-
             if not item.get('zip'):
-                pincode = self.pincode_rgx.search(address, re.S)
-                if pincode:
-                    item['zip'] = pincode.group(1)
-
-            if not item.get("city"):
-                for city in self.us_cities:
-                    if city.lower() in address.lower():
-                        item['city'] = city
+                for rgx in self.pincode_rgx:
+                    pincode = rgx.search(address, re.S)
+                    if pincode:
+                        item['zip'] = pincode.group(1)
                         break
 
             if not item.get("state"):
@@ -178,8 +197,23 @@ class DHCPipeline:
                         item['phone'] = phone.group(1)
                         break
 
-            if item.get("city") and not item.get("address_line_1"):
-                address_lines = item['address'].split(item['city'])[0].strip().split(",", 1)
+            for key in ['zip', 'phone', 'state']:
+                val = item.get(key) or ''
+                address = address.replace(val, '').strip(" ,\n")
+
+            if not item.get("city"):
+                city = self.parse_city(address)
+                if not city:
+                    for city in self.us_cities:
+                        if city.lower() in address.lower():
+                            break
+                item['city'] = city
+
+            if not item.get("address_line_1"):
+                if item.get("city"):
+                    address_lines = item['address'].split(item['city'])[0].strip().split(",", 1)
+                else:
+                    address_lines = address.split(",")
                 item['address_line_1'] = address_lines[0]
                 if len(address_lines) == 2:
                     item['address_line_2'] = address_lines[1]
