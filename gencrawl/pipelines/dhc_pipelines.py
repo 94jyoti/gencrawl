@@ -219,10 +219,18 @@ class DHCPipeline:
 
         return item
 
+    def parse_list_fields(self, item):
+        for key in ["affiliation", "speciality", "practice_name"]:
+            values = item.get(key)
+            if values and isinstance(values, list):
+                item[key] = [v.strip() for v in values if v and v.strip()]
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
             item = self.parse_fields_from_name(item)
             item = self.parse_phone(item)
             item = self.parse_fields_from_address(item)
             item = self.parse_item(item)
+            item = self.parse_list_fields(item)
         return item
