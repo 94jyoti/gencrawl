@@ -29,90 +29,45 @@ class PaydenDetail(FinancialDetailSpider):
         logging.info("InvestorFundsUSHSBCDetail...get_items_or_req")
         items = super().get_items_or_req(response, default_item)
         #print("Items:",len(items))
-
         meta = response.meta
-        
         meta['items'] = items
-
-        #print("meta['items']:",meta['items'])
-        print("hello")
-
         selector = scrapy.Selector(text=response.text, type="html")
         tickers = selector.xpath("//select[@id='drpClass']/option/@value").getall()
-
-        print("tickers:",len(tickers))
-
         if len(tickers)>1:
-
             yield self.generate_item(items[0], FinancialDetailItem)
             for ticker in tickers[1:]:
                 meta['ticker'] = ticker
-
-
-
                 form = {
-                       
                         "__VIEWSTATE":selector.xpath("//input[@id='__VIEWSTATE']/@value").get(),
-
                         "__VIEWSTATEGENERATOR":selector.xpath("//input[@id='__VIEWSTATEGENERATOR']/@value").get(),
-
                         "__EVENTVALIDATION": selector.xpath("//input[@id='__EVENTVALIDATION']/@value").get(),
-
                         "drpClass":ticker
-
                         }
-
-
                 h = {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
                 }
-
                 r = scrapy.Request(response.url,method='POST',body = urllib.parse.urlencode(form),headers=h,callback=self.distributions,dont_filter=True,meta=meta)
-
                 yield(r)
         else:
             for i in items:
                 yield self.generate_item(i, FinancialDetailItem)
-
-
-           
-
-
     def distributions(self,response):
-        print("here")
         meta = response.meta
         ticker = meta['ticker']
-
-        #print(response.text)
-        #open(ticker+'.html','w',encoding='utf-8').write(response.text)
         selector = scrapy.Selector(text=response.text, type="html")
-        #tickers = selector.xpath("//select[@id='drpClass']/option/@value").getall()
-
         cusip = selector.xpath("//td[contains(text(),'CUSIP')]/following-sibling::td/text()").get()
-
         share_class = selector.xpath("//select[contains(@name,'Class')]/option[@selected]/text()").get()
         portfolio_assets = selector.xpath("//td[contains(text(),'Fund Total Net Assets')]/following-sibling::td/text()").get()
         maximum_sales_charge_full_load = selector.xpath("//td[contains(text(),'Sales Charge')]/following-sibling::td/text()").get()
         share_inception_date = selector.xpath("(//td[contains(text(),'Share Class Inception Date')]/following-sibling::td)[1]/text()").get()
         item = meta['items']
-
         item_copy = copy.deepcopy(item)
-
-        
         item_copy[0]['nasdaq_ticker']=ticker
         item_copy[0]['cusip']=cusip
         item_copy[0]['share_class']=share_class
         item_copy[0]['portfolio_assets']=portfolio_assets
         item_copy[0]['share_inception_date']=share_inception_date
-
-
-
-        #print("item_copy:",item_copy)
-
-
-
-
         yield self.generate_item(item_copy[0], FinancialDetailItem)
 
 
