@@ -18,14 +18,16 @@
         },
         "parsing_type": "xpath",
         "start_urls": [
+            "https://www.commercefunds.com/fund-information/mutual-funds/value",
             "https://www.commercefunds.com/fund-information/mutual-funds/growth",
             "https://www.commercefunds.com/fund-information/mutual-funds/midcap-growth",
-            "https://www.commercefunds.com/fund-information/mutual-funds/value",
             "https://www.commercefunds.com/fund-information/mutual-funds/bond",
             "https://www.commercefunds.com/fund-information/mutual-funds/short-term-government",
             "https://www.commercefunds.com/fund-information/mutual-funds/national-tax-free-intermediate-bond",
             "https://www.commercefunds.com/fund-information/mutual-funds/missouri-tax-free-intermediate-bond",
             "https://www.commercefunds.com/fund-information/mutual-funds/kansas-tax-free-intermediate-bond"
+        
+            
         ],
         "ext_codes": {
             "instrument_name": {
