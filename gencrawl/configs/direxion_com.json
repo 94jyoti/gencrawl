@@ -1,0 +1,99 @@
+{
+    "website": "https://www.direxion.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "direxion.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.direxion.com/product/hilton-tactical-income-fund",
+            "https://www.direxion.com/product/monthly-7-10-year-treasury-bull-bear-2x-funds",
+            "https://www.direxion.com/product/monthly-high-yield-bull-1-2x-fund",
+            "https://www.direxion.com/product/monthly-emerging-markets-bull-2x-fund",
+            "https://www.direxion.com/product/monthly-nasdaq-100-bull-bear-1-25x-funds",
+            "https://www.direxion.com/product/monthly-nasdaq-100-bull-2x-fund",
+            "https://www.direxion.com/product/monthly-sp-500-bull-bear-2x-funds",
+            "https://www.direxion.com/product/monthly-small-cap-bull-bear-2x-funds"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//strong[contains(.,'Fund')]/parent::p/strong[position()<4]/text()[not(contains(.,'Distributor'))]"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//th[contains(text(),'Symbol')]/ancestor::thead/following-sibling::tbody/tr/td[1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    "//*[@data-key=\"IndexCusip\"]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//*[@data-key=\"ExpenseRatioGross\"]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//*[@data-key=\"ExpenseRatioNet\"]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "(//*[@data-key=\"ExpenseRatioGross\"]//following::td[1]/text())"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "duration": {
+                "paths": [
+                    "//td[contains(text(),'Duration')]/following-sibling::td"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "weighted_average_duration": {
+                "paths": [
+                    "//td[contains(text(),'Weighted Average Maturity')]/following-sibling::td"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//*[@data-key=\"Index\"]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            }
+        }
+    }
+}
