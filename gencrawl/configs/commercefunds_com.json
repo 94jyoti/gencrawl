@@ -11,10 +11,10 @@
     "detail": {
         "spider": "financial_detail",
         "crawl_method": "SELENIUM",
-        "wait_time": 3,
+        "wait_time": 5,
         "custom_settings": {
-            "HTTPCACHE_ENABLED": false,
-            "CRAWLERA_ENABLED" : false
+            "HTTPCACHE_ENABLED": true,
+            "CRAWLERA_ENABLED" : true
         },
         "parsing_type": "xpath",
         "start_urls": [

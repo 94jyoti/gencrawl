@@ -1,0 +1,138 @@
+{
+    "website": "https://muhlx.muhlenkamp.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "muhlx.muhlenkamp.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://muhlx.muhlenkamp.com/"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h2/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['instrument_name'].split('(')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//h3[contains(text(),'Ticker Symbol')]/following-sibling::h3[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//h3[contains(text(),'CUSIP')]/following-sibling::h3[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_management_style": {
+                "paths": [
+                    "//h3[contains(text(),'Style')]/following-sibling::h3[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_consultant": {
+                "paths": [
+                    "//strong[contains(text(),'Investment Adviser')]/parent::span/parent::p/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_consultant'].split('(')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    "//h3[contains(text(),'Sales Charge')]/following-sibling::h3[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    "//h3[contains(text(),'Gross Expense Ratio')]/following-sibling::h3[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//h3[contains(text(),'Net Expense Ratio')]/following-sibling::h3[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['total_expense_net'].replace('**','')"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//h3[contains(text(),'Inception Date')]/following-sibling::h3[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//strong[contains(text(),'Objective')]/parent::span/parent::p/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//strong[contains(text(),'Strategy')]/parent::span/parent::p//text()"
+                ],
+                "cleanup_functions": [
+                    "obj['investment_strategy'].split(':')[-1]"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//h3[contains(text(),'Min Initial Investment')]/following-sibling::h3[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['minimum_initial_investment'].split('or')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//strong[contains(text(),'Portfolio Manager')]/parent::span/parent::p"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "cleanup_functions": [
+                    "obj['fund_manager'].split(',')[0]"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

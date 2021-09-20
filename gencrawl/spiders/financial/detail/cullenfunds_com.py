@@ -30,8 +30,7 @@ class CullenComDetail(FinancialDetailFieldMapSpider):
         items = super().get_items_or_req(response, default_item)
         # items = self.prepare_mapped_items(response, default_item)
         #print(items)
-        dividends_url = "http://www.cullenfunds.com/" + \
-                        response.xpath("//a[@id='subNavIcon-dividends']//@href").extract()[0].replace("..", "")
+        dividends_url = "http://www.cullenfunds.com/" + response.xpath("//a[@id='subNavIcon-dividends']//@href").extract()[0].replace("..", "")
         #print("dividends urllll", dividends_url)
         hit_url = response.xpath('//*[@id="getDividendByYearSelect"]//option//@value').extract()
         meta = response.meta

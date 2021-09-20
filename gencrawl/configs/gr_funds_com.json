@@ -11,10 +11,6 @@
     "detail": {
         "spider": "financial_detail_gr_funds_com",
         "crawl_method": "SELENIUM",
-        "wait_time": 3,
-        "custom_settings": {
-            "HTTPCACHE_ENABLED": false
-        },
         "parsing_type": "xpath",
         "start_urls": [
             "https://www.gr-funds.com/"

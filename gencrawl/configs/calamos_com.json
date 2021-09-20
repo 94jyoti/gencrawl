@@ -147,7 +147,7 @@
                     "(//div[@class='fund-asof-date'])[6]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj[''weighted_average_duration_as_of_date\"].replace(\"As of\",\"\").strip()"
+                    "obj[\"weighted_average_duration_as_of_date\"].replace(\"As of\",\"\").strip()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -164,7 +164,7 @@
                     "//h2[contains(text(),'Fund Facts')]//following::div[1]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj[''average_effective_duration_as_of_date\"].replace(\"As of\",\"\").strip()"
+                    "obj[\"average_effective_duration_as_of_date\"].replace(\"As of\",\"\").strip()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -181,7 +181,7 @@
                     "(//div[@class='fund-asof-date'])[6]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj[''average_weighted_maturity_as_of_date\"].replace(\"As of\",\"\").strip()"
+                    "obj[\"average_weighted_maturity_as_of_date\"].replace(\"As of\",\"\").strip()"
                 ],
                 "return_type": "str",
                 "selector": "root"
@@ -198,7 +198,7 @@
                     "//h2[contains(text(),'Fund Facts')]//following::div[1]/text()"
                 ],
                 "cleanup_functions": [
-                    "obj[''average_weighted_effective_maturity_as_of_date\"].replace(\"As of\",\"\").strip()"
+                    "obj[\"average_weighted_effective_maturity_as_of_date\"].replace(\"As of\",\"\").strip()"
                 ],
                 "return_type": "str",
                 "selector": "root"

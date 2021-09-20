@@ -1,0 +1,244 @@
+{
+    "website": "https://www.lazardassetmanagement.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "lazardassetmanagement.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-developing-markets-equity-portfolio/F147/S108/?shareClass=197",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-developing-markets-equity-portfolio/f147/s108/?shareClass=210",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-core-equity-portfolio/F441/S160/?shareClass=1141",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-core-equity-portfolio/f441/s160/?shareClass=1142",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-core-equity-portfolio/f441/s160/?shareClass=1986",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-equity-advantage-portfolio/F1101/S146/?shareClass=2641",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-equity-advantage-portfolio/f1101/s146/?shareClass=2642",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-equity-portfolio/f156/s8/?shareClass=213",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-equity-portfolio/f156/s8/?shareClass=4",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-equity-portfolio/f156/s8/?shareClass=212",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-strategic-equity-portfolio/F290/S295/?shareClass=498",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-strategic-equity-portfolio/f290/s295/?shareClass=497",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-equity-franchise-portfolio/F2181/S190/?shareClass=5181",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-equity-franchise-portfolio/f2181/s190/?shareClass=5182",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-equity-select-portfolio/F481/S26/?shareClass=1191",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-equity-select-portfolio/f481/s26/?shareClass=1192",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-listed-infrastructure-portfolio/F265/S29/?shareClass=434",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-listed-infrastructure-portfolio/f265/s29/?shareClass=435",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-strategic-equity-portfolio/F804/S170/?shareClass=2023",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-strategic-equity-portfolio/f804/s170/?shareClass=2024",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-advantage-portfolio/F1103/S93/?shareClass=2647",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-advantage-portfolio/f1103/s93/?shareClass=2648",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-portfolio/F108/S36/?shareClass=140",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-portfolio/f108/s36/?shareClass=141",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-concentrated-portfolio/f802/s168/?shareClass=2022",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-concentrated-portfolio/f802/s168/?shareClass=2021",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-select-portfolio/F125/S38/?shareClass=160",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-select-portfolio/f125/s38/?shareClass=161",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-value-portfolio/F2661/S242/?shareClass=6882",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-equity-value-portfolio/f2661/s242/?shareClass=6881",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-quality-growth-portfolio/F2901/S204/?shareClass=7517",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-quality-growth-portfolio/f2901/s204/?shareClass=7518",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-small-cap-equity-portfolio/F127/S39/?shareClass=163",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-small-cap-equity-portfolio/f127/s39/?shareClass=164",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-strategic-equity-portfolio/F123/S40/?shareClass=157",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-strategic-equity-portfolio/f123/s40/?shareClass=158",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-international-strategic-equity-portfolio/f123/s40/?shareClass=6",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-managed-equity-volatility-portfolio/F1102/S112/?shareClass=2644",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-managed-equity-volatility-portfolio/f1102/s112/?shareClass=2645",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-retirement-emerging-markets-equity-portfolio/f157/s8/?shareClass=214",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-retirement-emerging-markets-equity-portfolio/f157/s8/?shareClass=215",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-retirement-international-equity-portfolio/F109/S36/?shareClass=142",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-retirement-us-small-mid-cap-equity-portfolio/F136/S79/?shareClass=176",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-equity-concentrated-portfolio/F131/S81/?shareClass=168",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-equity-concentrated-portfolio/f131/s81/?shareClass=169",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-equity-concentrated-portfolio/f131/s81/?shareClass=1989",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-equity-focus-portfolio/F133/S254/?shareClass=171",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-equity-focus-portfolio/f133/s254/?shareClass=172",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-equity-focus-portfolio/f133/s254/?shareClass=1801",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-small-mid-cap-equity-portfolio/F135/S79/?shareClass=174",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-small-mid-cap-equity-portfolio/f135/s79/?shareClass=175",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-small-mid-cap-equity-portfolio/f135/s79/?shareClass=1988",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-sustainable-equity-portfolio/F3601/S266/?shareClass=9621",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-sustainable-equity-portfolio/f3601/s266/?shareClass=9622",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-debt-portfolio/f274/s138/?shareClass=454",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-debt-portfolio/f274/s138/?shareClass=453",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-emerging-markets-debt-portfolio/f274/s138/?shareClass=2",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-fixed-income-portfolio/F355/S23/?shareClass=585",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-fixed-income-portfolio/f355/s23/?shareClass=586",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-corporate-income-portfolio/F144/S70/?shareClass=191",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-corporate-income-portfolio/f144/s70/?shareClass=192",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-corporate-income-portfolio/f144/s70/?shareClass=1995",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-short-duration-fixed-income-portfolio/F275/S73/?shareClass=455",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-us-short-duration-fixed-income-portfolio/f275/s73/?shareClass=456",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-enhanced-opportunities-portfolio/f961/s183/?shareClass=2362",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-enhanced-opportunities-portfolio/f961/s183/?shareClass=2361",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-dynamic-multi-asset-portfolio/F1681/S205/?shareClass=3861",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-global-dynamic-multi-asset-portfolio/f1681/s205/?shareClass=3862",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-opportunistic-strategies-portfolio/F145/S51/?shareClass=193",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-opportunistic-strategies-portfolio/f145/s51/?shareClass=194",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-opportunistic-strategies-portfolio/f145/s51/?shareClass=193",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-real-assets-portfolio/F1921/S193/?shareClass=4661",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-real-assets-portfolio/f1921/s193/?shareClass=4662",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-retirement-global-dynamic-multi-asset-portfolio/f369/s205/?shareClass=601",
+            "https://www.lazardassetmanagement.com/us/en_us/funds/mutual-funds/lazard-retirement-global-dynamic-multi-asset-portfolio/f369/s205/?shareClass=603"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "(//p[contains(text(),'Ticker')]/following-sibling::p)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "(//p[contains(text(),'CUSIP')]/following-sibling::p)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "(//span[@class='ng-binding ng-scope'])[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['share_class'].split('-')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "isin": {
+                "paths": [
+                    "(//p[contains(text(),'ISIN')]/following-sibling::p)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "(//p[contains(text(),'Fund Net Asset')]/following-sibling::p)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "(//p[@class='mv2 ng-binding'])[1]/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['portfolio_assets_date'].split(':')[-1] "
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "(//p[contains(text(),'Inception')]/following-sibling::p)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "effective_duration": {
+                "paths": [
+                    "(//th[contains(text(),'Effective Duration')]/following-sibling::td[1]/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "effective_duration_date": {
+                "paths": [
+                    "(//div[@class='simple-table__bottom-info']/span/text())[3]"
+                ],
+                "cleanup_functions": [
+                    "obj['effective_duration_date'].split('|')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "average_weighted_maturity": {
+                "paths": [
+                    "(//th[contains(text(),'Average Maturity')]/following-sibling::td[1]/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "average_weighted_maturity_as_of_date": {
+                "paths": [
+                    "(//div[@class='simple-table__bottom-info']/span/text())[3]"
+                ],
+                "cleanup_functions": [
+                    "obj['average_weighted_maturity_as_of_date'].split('|')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "(//p[contains(text(),'Minimum Investment')]/following-sibling::p)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "(//th[contains(text(),'Turnover ')]/following-sibling::td/text())[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate_date": {
+                "paths": [
+                    "(//div[@class='simple-table__bottom-info']/span/text())[3]"
+                ],
+                "cleanup_functions": [
+                    "obj['turnover_rate_date'].split('|')[0] "
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "distribution_frequency": {
+                "paths": [
+                    "(//p[contains(text(),'Distribution Date')]/following-sibling::p)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "(//p[contains(text(),'Primary Benchmark')]/following-sibling::p)[1]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//h2[contains(text(),'Management Team')]/parent::div/div/div[2]/div/p/span"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

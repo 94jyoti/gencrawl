@@ -11,10 +11,6 @@
     "detail": {
         "spider": "financial_detail_barings_com",
         "crawl_method": "SELENIUM",
-        "wait_time": 3,
-        "custom_settings": {
-            "HTTPCACHE_ENABLED": false
-        },
         "parsing_type": "xpath",
         "start_urls": [
             "https://www.barings.com/us/institutional/funds/mutual-funds/barings-active-short-duration-bond-fund",
