@@ -1,0 +1,150 @@
+{
+    "website": "https://www.seafarerfunds.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "seafarerfunds.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail_field_mapping",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.seafarerfunds.com/funds/ogi/overview",
+            "https://www.seafarerfunds.com/funds/ovl/overview"
+        ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1[@data-from=\"/funds/ogi\"]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    ".//td[.='Ticker']//following-sibling::*"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    ".//text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_class_blocks"
+            },
+            "cusip": {
+                "paths": [
+                    ".//td[.='CUSIP']//following-sibling::*//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "(.//td[contains(.,'Net Assets ')]//following-sibling::td)[1]//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "fees_total_12b_1": {
+                "paths": [
+                    ".//td[contains(.,'12b-1 Fee')]//following-sibling::td//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    ".//td[contains(.,'Load')]//following-sibling::td//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_gross": {
+                "paths": [
+                    ".//td[contains(.,'Gross Expense Ratio')]//following-sibling::td//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    ".//td[contains(.,'Net Expense Ratio')]//following-sibling::td//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    ".//*[@data-report-value=\"inceptionDate\"]//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//h2[contains(text(),'Investment Objective')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//h2[contains(text(),'Strategy')]/following-sibling::p[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    ".//td[contains(.,'Minimum Initial Investment \u2013 Regular Account')]//following-sibling::td//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "distribution_frequency": {
+                "paths": [
+                    "(.//td[contains(.,'Distribution Frequency')]//following-sibling::td)[1]//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    ".//td[contains(.,'30-Day SEC Yield')]//following-sibling::td//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "(.//td[contains(.,'Benchmarks')]//following-sibling::td)[1]//text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//section[@id=\"portfolio-management\"]//following-sibling::td/a"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    "./text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

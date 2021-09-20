@@ -124,7 +124,7 @@ if __name__ == "__main__":
             '''
     input_coulmns = ['Fund URL', 'Nasdaq Ticker', 'Share Class']
     # column_list=['Ex Date','Pay Date','Per Share']
-    column_list = ["CG Record Date","Record Date","Long Term (Per Share)","Short Term (Per Share)","Total (Per Share)","Ordinary Income"]
+    column_list = ["Ex Date","Reinvestment Price","Long Term (Per Share)","Short Term (Per Share)","Total (Per Share)","Ordinary Income","Per Share"]
     print(df)
     transpose_df = transpose_column(column_list, df)
     outputdf = transpose_df[input_coulmns + column_list]
@@ -144,4 +144,4 @@ if __name__ == "__main__":
     outputdf1 = outputdf.replace(np.nan, '')
     outputdf1 = outputdf.replace("nan", "")
     # outputdf1 = outputdf.fillna('')
-    outputdf1.to_csv('thornburg_dividend.csv', index=False, )
+    outputdf1.to_csv('seafare.csv', index=False, )
