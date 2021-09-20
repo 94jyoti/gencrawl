@@ -3,6 +3,7 @@ from scrapy import Field
 
 
 class HospitalDetailItem(BaseItem):
+    npi = Field()
     raw_full_name = Field()
     first_name = Field()
     middle_name = Field()
@@ -22,6 +23,7 @@ class HospitalDetailItem(BaseItem):
     state = Field()
     zip = Field()
     phone = Field()
+    fax = Field()
     email = Field()
 
 

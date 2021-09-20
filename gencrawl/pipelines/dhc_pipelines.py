@@ -179,16 +179,16 @@ class DHCPipeline:
                         break
 
             if not item.get("state"):
-                for state in self.us_states:
-                    if state.lower() in address.lower():
-                        item['state'] = state
-                        break
-
-            if not item.get("state"):
                 state = self.state_rgx.search(address.replace(",", ' ').replace(
                     ';', ' ').replace('\n', ' ').replace('\t', ' '), re.S)
                 if state:
                     item['state'] = state.group(1)
+
+            if not item.get("state"):
+                for state in self.us_states:
+                    if state.lower() in address.lower():
+                        item['state'] = state
+                        break
 
             if not item.get("phone"):
                 for rgx in self.phone_rgx:
@@ -200,13 +200,12 @@ class DHCPipeline:
             for key in ['zip', 'phone', 'state']:
                 val = item.get(key) or ''
                 address = address.replace(val, '').strip(" ,\n")
-
             if not item.get("city"):
                 city = self.parse_city(address)
-                if not city:
-                    for city in self.us_cities:
-                        if city.lower() in address.lower():
-                            break
+                # if not city:
+                #     for city in self.us_cities:
+                #         if city.lower() in address.lower():
+                #             break
                 item['city'] = city
 
             if not item.get("address_line_1"):
@@ -220,10 +219,18 @@ class DHCPipeline:
 
         return item
 
+    def parse_list_fields(self, item):
+        for key in ["affiliation", "speciality", "practice_name"]:
+            values = item.get(key)
+            if values and isinstance(values, list):
+                item[key] = [v.strip() for v in values if v and v.strip()]
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
             item = self.parse_fields_from_name(item)
             item = self.parse_phone(item)
             item = self.parse_fields_from_address(item)
             item = self.parse_item(item)
+            item = self.parse_list_fields(item)
         return item
