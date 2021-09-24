@@ -15,6 +15,7 @@ class HospitalDetailItem(BaseItem):
     speciality = Field()
     affiliation = Field()
     practice_name = Field()
+    address_raw = Field()
     address = Field()
     address_line_1 = Field()
     address_line_2 = Field()
