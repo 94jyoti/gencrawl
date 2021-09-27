@@ -279,11 +279,11 @@ class DHCPipeline:
                 item['address_line_1'], item['address_line_2'], item['address_line_3'] = address
             elif len(address) == 2:
                 if ',' in address[0]:
-                    item['address_line_1'], item['address_line_2'], item['address_line_3'] = address[0].rsplit(
-                        ",", 1), address[1]
+                    item['address_line_1'], item['address_line_2'] = address[0].rsplit(",", 1)
+                    item['address_line_3'] = address[1]
                 elif ',' in address[1]:
-                    item['address_line_1'], item['address_line_2'] = address[0], address[1].rsplit(
-                        ",", 1)
+                    item['address_line_1'] = address[0]
+                    item['address_line_2'], item['address_line_3'] = address[1].rsplit(",", 1)
                 else:
                     item['address_line_1'], item['address_line_2'] = address
             elif len(address) == 1:

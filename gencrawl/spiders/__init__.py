@@ -262,7 +262,7 @@ class BaseSpider(Spider):
                 selectors[key] = obj[key]
         return obj, selectors
 
-    def apply_return_strategy(self, main_obj, selectors, selector_values, ext_codes):
+    def apply_child_return_strategy(self, main_obj, selectors, selector_values, ext_codes):
         items = [main_obj]
         if selectors:
             for selector_name in selector_values:
@@ -295,20 +295,21 @@ class BaseSpider(Spider):
                 elif return_strategy == Statics.RETURN_STRATEGY_MULTIPLE_ITEMS:
                     new_items = []
                     for item in items:
-                        for value in values:
+                        for value, sel_value in zip(values, p_values):
                             n_item = deepcopy(item)
+                            # TODO In testing phase, if issues in NFN, replace the next line
+                            n_item[selector_name] = sel_value
                             n_item.update(value)
                             new_items.append(n_item)
                     if new_items:
                         items = new_items
                 else:
                     self.logger.error(f'Invalid return strategy - {return_strategy}')
-
         return items
 
     # if else check that whether it is an xpath or jpath or regex
     def exec_codes(self, response, ext_codes=None, default_obj=None):
-        default_obj = default_obj or dict()
+        default_obj = deepcopy(default_obj) or dict()
         ext_codes = ext_codes or self.ext_codes
         selector_values = defaultdict(list)
         # try-except to handle those cases where response object is still not tied to a meta,
@@ -327,7 +328,7 @@ class BaseSpider(Spider):
                 objs.append(obj)
 
             selector_values[selector_name] = objs
-        items = self.apply_return_strategy(main_obj, selectors, selector_values, ext_codes)
+        items = self.apply_child_return_strategy(main_obj, selectors, selector_values, ext_codes)
         return items
 
     def apply_cleanup_func(self, clean_ups, key, obj):
