@@ -207,10 +207,12 @@ class DHCPipeline:
         regexes = self.phone_rgx
         phones = []
         faxes = []
+        idx_to_remove = set()
         address_extra = address_extra or []
         for index, addr in enumerate(address_extra):
             phone_or_fax = Utility.match_rgx(addr, regexes)
             if phone_or_fax:
+                idx_to_remove.add(index)
                 # variable to store whether field type i.e. phone or fax
                 field_type = get_field_type(addr)
 
@@ -219,7 +221,8 @@ class DHCPipeline:
                     prev_addr = address_extra[index-1]
                     if not Utility.match_rgx(prev_addr, regexes):
                         field_type = get_field_type(prev_addr)
-
+                        if field_type:
+                            idx_to_remove.add(index-1)
                 # by default make field type - phone
                 if not field_type:
                     field_type = 'phone'
@@ -234,7 +237,11 @@ class DHCPipeline:
 
         item['phone'] = Utility.match_rgx(phones, regexes)
         item['fax'] = Utility.match_rgx(faxes, regexes)
-        return item
+        if self.decision_tags.get("phone_at_start"):
+            address_extra = [a for i, a in enumerate(address_extra) if i not in idx_to_remove]
+            return item, address_extra
+        else:
+            return item
 
     def find_state(self, item, address):
         # state should be in last two lines
@@ -302,15 +309,19 @@ class DHCPipeline:
             if pincode:
                 address_raw[address_upto_idx] = address_raw[address_upto_idx].split(pincode)[0]
             address = address_raw[:address_upto_idx+1]
+
+            if self.decision_tags.get("phone_at_start"):
+                item, address = self.find_phone_and_fax(item, address)
+                item = self.find_email(item, address)
+            else:
+                address_extra = address_raw[address_upto_idx + 1:]
+                item = self.find_phone_and_fax(item, address_extra)
+                item = self.find_email(item, address_extra)
+
             item, address = self.find_state(item, address)
             item, address = self.find_city(item, address)
             item, address = self.find_practice_name(item, address)
             item = self.find_address_lines(item, address)
-
-            address_extra = address_raw[address_upto_idx+1:]
-            item = self.find_phone_and_fax(item, address_extra)
-            item = self.find_email(item, address_extra)
-
         else:
             item = self.find_phone_and_fax(item, None)
             item = self.find_email(item, None)
