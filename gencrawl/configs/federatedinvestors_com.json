@@ -1,0 +1,274 @@
+{
+    "website": "https://www.federatedinvestors.com/",
+    "domain": "financial",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "www.federatedinvestors.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "financial_detail",
+        "crawl_method": "SCRAPY_GET",
+        
+        "parsing_type": "xpath",
+        "start_urls": [
+            
+           
+            "https://www.federatedinvestors.com/products/mutual-funds/ultrashort-bond/a.do",
+            "https://www.federatedinvestors.com/products/mutual-funds/ultrashort-bond/is.do",
+            "https://www.federatedinvestors.com/products/mutual-funds/ultrashort-bond/r6.do",
+            "https://www.federatedinvestors.com/products/mutual-funds/ultrashort-bond/ss.do"
+            
+            
+
+            
+            
+            
+
+                       
+            ],
+        "ext_codes": {
+            "instrument_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "temp_class_blocks": {
+                "paths": [
+                    "//td[contains(text(),'Ticker')]/following-sibling::td"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "nasdaq_ticker": {
+                "paths": [
+                    "//span[contains(text(),'Symbol')]/parent::td/following-sibling::td/span[2]/span[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "cusip": {
+                "paths": [
+                    "//abbr[contains(text(),'CUSIP')]/ancestor::td/following-sibling::td/span/span[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_class": {
+                "paths": [
+                    "//select[@id = 'shareClass']/option[@selected]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "asset_class": {
+                "paths": [
+                    "//div[contains(@id,'asset-class')]/strong/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "isin": {
+                "paths": [
+                    "//td[contains(text(),'ISIN')]/following-sibling::td/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "portfolio_management_style": {
+                "paths": [
+                    "//div[@class = 'heading-wrapper']/h2/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets": {
+                "paths": [
+                    "//span[contains(text(),'Portfolio')]/parent::td/following-sibling::td[@headers = 'assets-monthly-header']/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "portfolio_assets_date": {
+                "paths": [
+                    "//span[contains(text(),'MONTHLY')]/time/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "maximum_sales_charge_full_load": {
+                "paths": [
+                    "//div[contains(text(),'Sales Charge')]//preceding-sibling::div/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+
+            "total_expense_gross": {
+                "paths": [
+                    "//strong[contains(text(),'Gross')]/following-sibling::div/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_expense_net": {
+                "paths": [
+                    "//strong[contains(text(),'Net')]/following-sibling::div/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets": {
+                "paths": [
+                    "//span[contains(text(),'Share Class')]/parent::td/following-sibling::td[@headers = 'assets-monthly-header']/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "total_net_assets_date": {
+                "paths": [
+                    "//span[contains(text(),'MONTHLY')]/time/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "share_inception_date": {
+                "paths": [
+                    "//abbr[@title = 'Inception']/following::time[1]/span/text()"
+					
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "investment_objective": {
+                "paths": [
+                    "//th[contains(text(),'Fund Description')]/following-sibling::td/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "investment_strategy": {
+                "paths": [
+                    "//span[contains(text(),'STRATEGY')]/following-sibling::p/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "sec_yield_30_day": {
+                "paths": [
+                    "(//td[contains(@headers,'daily-30-day-net-yield')])[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_30_day": {
+                "paths": [
+                    "(//td[contains(@headers,'performance-returns-yield-table-performance-date')]/time/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_30_day": {
+                "paths": [
+                    "(//td[contains(@headers,'daily-unsub-30-day-net-yield')])[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_without_waivers_date_30_day": {
+                "paths": [
+                    "(//td[contains(@headers,'performance-returns-yield-table-performance-date')]/time/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_7_day": {
+                "paths": [
+                    "(//td[contains(@headers,'daily-7-day-net-yield')])[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "sec_yield_date_7_day": {
+                "paths": [
+                    "(//td[contains(@headers,'performance-returns-yield-table-performance-date')]/time/span)[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "minimum_initial_investment": {
+                "paths": [
+                    "//div[contains(text(),'Minimum Investment')]//preceding-sibling::div/text()"
+                ],
+                
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate": {
+                "paths": [
+                    "//div[contains(text(),'Turnover')]//preceding-sibling::div/text()"
+                ],
+                
+                "return_type": "str",
+                "selector": "root"
+            },
+            "turnover_rate_date": {
+                "paths": [
+                    "//p[@class='asof_date_facts']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "dividend_frequency": {
+                "paths": [
+                    "//th[contains(text(),'Dividend Frequency')]/following-sibling::td/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "benchmarks": {
+                "paths": [
+                    "//span[contains(text(),'Benchmark')]/following::span[1]//text()"
+                ],
+                "cleanup_functions": [
+                    "' '.join(obj['benchmarks'])"],
+                "return_type": "list-map",
+                "selector": "root"
+            },
+            "temp_fund_managers": {
+                "paths": [
+                    "//div[@class = 'person-content']"
+                ],
+                "child_return_strategy": "multiple_objects",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "fund_manager": {
+                "paths": [
+                    ".//a/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_in_industry": {
+                "paths": [
+                    ".//strong[contains(.,'years')]/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            },
+            "fund_manager_years_of_experience_with_fund": {
+                "paths": [
+                    ".//time/text()"
+                ],
+                "return_type": "str",
+                "selector": "temp_fund_managers"
+            }
+        }
+    }
+}

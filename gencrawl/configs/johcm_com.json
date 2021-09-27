@@ -10,7 +10,11 @@
     "language": "ENGLISH",
     "detail": {
         "spider": "financial_detail_field_mapping",
+<<<<<<< Updated upstream
         "crawl_method": "SELENIUM",
+=======
+        "crawl_method": "SCRAPY_GET",
+>>>>>>> Stashed changes
         "parsing_type": "xpath",
         "start_urls": [
             "https://www.johcm.com//us/our-funds/fund-details-AIT-GBX/johcm-global-income-builder-fund-jobix#overview",
