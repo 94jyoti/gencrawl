@@ -312,7 +312,6 @@ class DHCPipeline:
             address_raw = item['address_raw']
             if self.decision_tags.get("address_as_text"):
                 address_raw = address_raw.replace("<br>", "\n").split("\n")
-                print(address_raw)
             else:
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
