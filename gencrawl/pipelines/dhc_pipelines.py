@@ -17,6 +17,7 @@ class DHCPipeline:
                            'address_line_2', 'address_line_3', 'city', 'state', 'zip', 'phone', 'fax', 'email']
         self.redundant_fields = ['temp_fields']
         self.name_separators = [","]
+        self.address_text_to_remove = ['Address']
         pincode_rgx = ['([\d]{5}-[\d]{4})', '([\d]{5})']
         self.pincode_rgx = [re.compile(r) for r in pincode_rgx]
         self.state_rgx = re.compile(r'\b([A-Z]{2})\b', re.I)
@@ -312,6 +313,10 @@ class DHCPipeline:
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
             address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip()]
+            # hardcoded check for franciscanhealth.org
+            # can make it dynamic using decision_tags if needed in future.
+            address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
+
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
             if pincode:

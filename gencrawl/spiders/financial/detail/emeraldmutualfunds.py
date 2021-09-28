@@ -31,7 +31,7 @@ class EmeraldfundsComDetail(FinancialDetailFieldMapSpider):
         url_list=[]
         #for item in items:
          #   temp_ticker=item['nasdaq_ticker']
-          #  headers={'Connection': 'keep-alive',
+        headers={'Connection': 'keep-alive',
                      'Accept': 'application/json, text/javascript, */*; q=0.01',
                     'Authorization': "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MzE3OTExNTUsImp0aSI6IjcxMkMxMTRGLTY5QUEtNDA5OC1BOTI4LUExMTRDNjgyQURDRCIsImlzcyI6Ind3dy5lbWVyYWxkbXV0dWFsZnVuZHMuY29tIiwic3ViIjoiaHR0cHM6XC9cL2Nzc2VjdXJlLmFscHNpbmMuY29tXC9hcGlcL3YxXC8iLCJuYmYiOjE2MzE3OTExNTUsImV4cCI6MTYzMTg3NzU1NX0.gq61J6yljp44U6WZfDYjK9XRIOPwl7IIxkGtnrkhUar9DDKWa9ZN8foRPIR-84YJjFvIYwOlEH7kD6PJvVrUSA",'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36', 'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'}
         url="https://secure.alpsinc.com/MarketingAPI/api/v1/Dividend/HSPCX"
