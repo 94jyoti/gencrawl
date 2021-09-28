@@ -143,6 +143,12 @@ class GoogleConfig:
                 ext_code['child_return_strategy'] = s or Statics.RETURN_STRATEGY_DEFAULT
                 s = None
 
+            # check for DHC
+            if field == 'address_raw' and s in [Statics.RETURN_STRATEGY_MULTIPLE_ITEMS]:
+                rt = 'selector'
+                ext_code['child_return_strategy'] = s or Statics.RETURN_STRATEGY_DEFAULT
+                s = None
+
             ext_code['return_type'] = rt or Statics.RETURN_TYPE_DEFAULT
             ext_code['selector'] = s or Statics.SELECTOR_ROOT
 

@@ -107,3 +107,17 @@ class Utility:
             domain = website.replace("https:", '').replace('http:', '').strip(' /').replace("www.", '')
             allowed_domains.append(domain)
         return allowed_domains
+
+    @staticmethod
+    def match_rgx(line, regxes):
+        if not line:
+            return []
+
+        if not isinstance(line, list):
+            line = [line]
+
+        results = []
+        for l in line:
+            for rgx in regxes:
+                results.extend(rgx.findall(l))
+        return results

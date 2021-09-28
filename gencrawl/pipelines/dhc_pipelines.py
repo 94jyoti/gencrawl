@@ -6,6 +6,7 @@ import csv
 import os
 import re
 from gencrawl.settings import RES_DIR
+from lxml import html
 
 
 class DHCPipeline:
@@ -15,9 +16,18 @@ class DHCPipeline:
         self.name_separators = [","]
         pincode_rgx = ['([\d]{5}-[\d]{4})', '([\d]{5})']
         self.pincode_rgx = [re.compile(r) for r in pincode_rgx]
-        self.state_rgx = re.compile(r'\s([A-Z]{2})\s')
+        self.state_rgx = re.compile(r'\b([A-Z]{2})\b', re.I)
+
+        # formats -
+        # (123)-123-1234, (123) 123 1234, 123-123-1234, 123 123 1234
         phone_rgx = ['(\(\d{3}\)[-\s]\d{3}[-\s]\d{4})', '(\d{3}[-\s]\d{3}[\s-]\d{4})']
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
+        self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
+        self.fax_keywords = ["fax", "fx", "f:", "(f)"]
+
+        email_rgx = ['([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)']
+        self.email_rgx = [re.compile(r) for r in email_rgx]
+
         resp = requests.get(Statics.CITY_STATE_GOOGLE_LINK)
         us_cities = set()
         us_states = set()
@@ -58,6 +68,11 @@ class DHCPipeline:
         parsed_item = dict()
         for key in item.keys():
             value = item[key]
+            if key == 'address_raw':
+                if value:
+                    value = re.sub('\\s+', ' ', value)
+                parsed_item[key] = value
+                continue
             if isinstance(value, str):
                 parsed_item[key] = self.parse_field(value)
             elif isinstance(value, list):
@@ -141,96 +156,202 @@ class DHCPipeline:
             if not item.get("designation"):
                 item = self.parse_designation(item)
             item = self.parse_name(item)
-        if isinstance(item.get('designation'), list):
-            item['designation'] = '___'.join(item['designation'])
-        return item
-
-    def parse_phone(self, item):
-        if item.get("phone"):
-            item['phone'] = item['phone'].replace("tel:", "")
-            for rgx in self.phone_rgx:
-                phone = rgx.search(item['phone'], re.S)
-                if phone:
-                    item['phone'] = phone.group(1)
-                    break
         return item
 
     # Receive a line that have an address + city and separate them
-    def parse_city(self, line):
-        words = line.split()
-        for i in range(1, len(words)):
-            city = ' '.join(words[i:])
-            if city in self.us_cities:
-                return city
+    def find_city(self, item, address_raw):
+        for index, line in reversed(list(enumerate(address_raw))):
+            found = False
+            words = line.split()
+            for i in range(0, len(words)):
+                city = ' '.join(words[i:])
+                if city in self.us_cities:
+                    found = True
+                    if not item.get("city"):
+                        item['city'] = city
+                    address_raw[index] = address_raw[index].replace(city, '')
+            if found:
+                break
+        address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip()]
+        return item, address_raw
 
-    def parse_fields_from_address(self, item):
-        if not item.get("address"):
-            address_keys = ['address_line_1', 'city', 'state', 'zip']
-            address_values = [item[k] for k in address_keys if item.get(k)]
-            item['address'] = ' '.join(address_values)
-
-        if item.get('address'):
-            address = item['address']
-            if not item.get('zip'):
-                for rgx in self.pincode_rgx:
-                    pincode = rgx.search(address, re.S)
-                    if pincode:
+    # return parsed item with zip & index in list where zip is found
+    def find_zip(self, item, address_raw):
+        address_upto_idx = len(address_raw)
+        for i, adr in reversed(list(enumerate(address_raw))):
+            for rgx in self.pincode_rgx:
+                pincode = rgx.search(adr)
+                if pincode:
+                    address_upto_idx = i
+                    if not item.get("zip"):
                         item['zip'] = pincode.group(1)
-                        break
+                    break
+        return item, address_upto_idx
+    
+    def find_email(self, item, address_extra):
+        match_from = item.get("email") or address_extra
+        item['email'] = Utility.match_rgx(match_from, self.email_rgx)
+        return item
+    
+    def find_phone_and_fax(self, item, address_extra):
+        
+        def get_field_type(line):
+            for k in self.phone_keywords:
+                if k in line.lower():
+                    return "phone"
 
+            for k in self.fax_keywords:
+                if k in line.lower():
+                    return "fax"
+
+        regexes = self.phone_rgx
+        phones = []
+        faxes = []
+        idx_to_remove = set()
+        address_extra = address_extra or []
+        for index, addr in enumerate(address_extra):
+            phone_or_fax = Utility.match_rgx(addr, regexes)
+            if phone_or_fax:
+                idx_to_remove.add(index)
+                # variable to store whether field type i.e. phone or fax
+                field_type = get_field_type(addr)
+
+                # if field type not found, check in last line of address
+                if not field_type and index > 0:
+                    prev_addr = address_extra[index-1]
+                    if not Utility.match_rgx(prev_addr, regexes):
+                        field_type = get_field_type(prev_addr)
+                        if field_type:
+                            idx_to_remove.add(index-1)
+                # by default make field type - phone
+                if not field_type:
+                    field_type = 'phone'
+
+                if field_type == 'phone':
+                    phones.extend(phone_or_fax)
+                elif field_type == 'fax':
+                    faxes.extend(phone_or_fax)
+
+        phones = item.get("phone") or phones
+        faxes = item.get("fax") or faxes
+
+        item['phone'] = Utility.match_rgx(phones, regexes)
+        item['fax'] = Utility.match_rgx(faxes, regexes)
+        if self.decision_tags.get("phone_at_start"):
+            address_extra = [a for i, a in enumerate(address_extra) if i not in idx_to_remove]
+            return item, address_extra
+        else:
+            return item
+
+    def find_state(self, item, address):
+        # state should be in last two lines
+        for index, addr in reversed(list(enumerate(address))):
             if not item.get("state"):
-                state = self.state_rgx.search(address.replace(",", ' ').replace(
-                    ';', ' ').replace('\n', ' ').replace('\t', ' '), re.S)
-                if state:
-                    item['state'] = state.group(1)
+                addr = addr.replace(",", " ")
+                states = self.state_rgx.findall(addr)
+                for state in states:
+                    if state in self.us_states:
+                        item['state'] = state
+                        break
+                if item.get("state"):
+                    r = r'\b{}\b'.format(state)
+                    address[index] = re.sub(r, '', addr)
+                    break
 
             if not item.get("state"):
                 for state in self.us_states:
-                    if state.lower() in address.lower():
+                    if state.lower() in addr.lower():
                         item['state'] = state
+                        address[index] = address[index].replace(state, "")
                         break
+                if item.get("state"):
+                    break
 
-            if not item.get("phone"):
-                for rgx in self.phone_rgx:
-                    phone = rgx.search(address, re.S)
-                    if phone:
-                        item['phone'] = phone.group(1)
-                        break
+        address = [a.strip().strip(",").strip() for a in address if a and a.strip()]
+        return item, address
 
-            for key in ['zip', 'phone', 'state']:
-                val = item.get(key) or ''
-                address = address.replace(val, '').strip(" ,\n")
-            if not item.get("city"):
-                city = self.parse_city(address)
-                # if not city:
-                #     for city in self.us_cities:
-                #         if city.lower() in address.lower():
-                #             break
-                item['city'] = city
+    def find_practice_name(self, item, address):
+        if len(address) > 1 and self.decision_tags.get("practice_in_address"):
+            practice_name = address[0]
+            address = address[1:]
+            if not item.get("practice_name"):
+                item['practice_name'] = practice_name
+        return item, address
 
-            if not item.get("address_line_1"):
-                if item.get("city"):
-                    address_lines = item['address'].split(item['city'])[0].strip().split(",", 1)
+    def find_address_lines(self, item, address):
+        if not item.get("address_line_1"):
+            if len(address) == 1:
+                address = address[0].rsplit(",", 2)
+            if len(address) == 3:
+                item['address_line_1'], item['address_line_2'], item['address_line_3'] = address
+            elif len(address) == 2:
+                if ',' in address[0]:
+                    item['address_line_1'], item['address_line_2'] = address[0].rsplit(",", 1)
+                    item['address_line_3'] = address[1]
+                elif ',' in address[1]:
+                    item['address_line_1'] = address[0]
+                    item['address_line_2'], item['address_line_3'] = address[1].rsplit(",", 1)
                 else:
-                    address_lines = address.split(",")
-                item['address_line_1'] = address_lines[0]
-                if len(address_lines) == 2:
-                    item['address_line_2'] = address_lines[1]
+                    item['address_line_1'], item['address_line_2'] = address
+            elif len(address) == 1:
+                item['address_line_1'] = address[0]
+        if item.get('address_line_1') and item['address_line_1'].startswith("at "):
+            item['address_line_1'] = item['address_line_1'].replace("at", "", 1).strip()
+        return item
 
+    def parse_fields_from_address(self, item):
+        if item.get('address_raw'):
+            address_tree = html.fromstring(item['address_raw'])
+            address_raw = address_tree.xpath("//text()")
+            address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip()]
+            item, address_upto_idx = self.find_zip(item, address_raw)
+            pincode = item.get("zip")
+            if pincode:
+                address_raw[address_upto_idx] = address_raw[address_upto_idx].split(pincode)[0]
+            address = address_raw[:address_upto_idx+1]
+
+            if self.decision_tags.get("phone_at_start"):
+                item, address = self.find_phone_and_fax(item, address)
+                item = self.find_email(item, address)
+            else:
+                address_extra = address_raw[address_upto_idx + 1:]
+                item = self.find_phone_and_fax(item, address_extra)
+                item = self.find_email(item, address_extra)
+
+            item, address = self.find_state(item, address)
+            item, address = self.find_city(item, address)
+            item, address = self.find_practice_name(item, address)
+            item = self.find_address_lines(item, address)
+        else:
+            item = self.find_phone_and_fax(item, None)
+            item = self.find_email(item, None)
+        return item
+
+    def combine_address(self, item):
+        if not item.get('address'):
+            address_keys = ['address_line_1', 'address_line_2', 'address_line_3', "city"]
+            address_values = [item[k].strip() for k in address_keys if item.get(k) and item[k].strip()]
+            first_part_address = " ".join(address_values)
+            address_keys = ['state', 'zip']
+            address_values = [item[k].strip() for k in address_keys if item.get(k) and item[k].strip()]
+            second_part_address = " ".join(address_values)
+            if first_part_address or second_part_address:
+                item['address'] = ', '.join([first_part_address, second_part_address])
         return item
 
     def parse_list_fields(self, item):
-        for key in ["affiliation", "speciality", "practice_name"]:
-            values = item.get(key)
-            if values and isinstance(values, list):
+        for key in ["designation", "affiliation", "speciality", "practice_name", "phone", "fax", "email"]:
+            values = item.get(key) or []
+            if isinstance(values, list):
                 item[key] = [v.strip() for v in values if v and v.strip()]
+                item[key] = ", ".join(item[key])
         return item
 
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
             item = self.parse_fields_from_name(item)
-            item = self.parse_phone(item)
             item = self.parse_fields_from_address(item)
+            item = self.combine_address(item)
             item = self.parse_item(item)
             item = self.parse_list_fields(item)
         return item
