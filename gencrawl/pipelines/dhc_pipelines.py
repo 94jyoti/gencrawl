@@ -18,7 +18,6 @@ class DHCPipeline:
                            'email']
         self.redundant_fields = ['temp_fields']
         self.name_separators = [","]
-        self.address_text_to_remove = ['Address']
         pincode_rgx = ['([\d]{5}-[\d]{4})', '([\d]{5})']
         self.pincode_rgx = [re.compile(r) for r in pincode_rgx]
         self.state_rgx = re.compile(r'\b([A-Z]{2})\b', re.I)
@@ -38,8 +37,10 @@ class DHCPipeline:
         us_states = set()
         suffixes = set()
         designations = set()
+        self.address_text_to_remove = set()
         for row in Utility.read_csv_from_response(resp):
             city, state, suffix, designation = row['City'], row['State'], row['Suffix'], row['Designation']
+            text_to_remove = row['Text To Remove']
             if city:
                 us_cities.add(city.strip())
             if state:
@@ -48,6 +49,8 @@ class DHCPipeline:
                 suffixes.add(suffix.strip())
             if designation:
                 designations.add(designation.strip())
+            if text_to_remove:
+                self.address_text_to_remove.add(text_to_remove)
 
         self.us_cities = sorted(us_cities, key=len, reverse=True)
         self.us_states = sorted(us_states, key=len, reverse=True)
