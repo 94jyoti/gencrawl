@@ -12,9 +12,10 @@ from lxml import html
 class DHCPipeline:
 
     def __init__(self):
-        self.all_fields = ['npi', 'raw_full_name', 'first_name', 'middle_name', 'last_name', 'suffix', 'designation',
-                           'speciality', 'affiliation', 'practice_name', 'address_raw', 'address', 'address_line_1',
-                           'address_line_2', 'address_line_3', 'city', 'state', 'zip', 'phone', 'fax', 'email']
+        self.all_fields = ['npi', 'doctor_url','raw_full_name', 'first_name', 'middle_name', 'last_name', 'suffix',
+                           'designation', 'speciality', 'affiliation', 'practice_name', 'address_raw', 'address',
+                           'address_line_1', 'address_line_2', 'address_line_3', 'city', 'state', 'zip', 'phone', 'fax',
+                           'email']
         self.redundant_fields = ['temp_fields']
         self.name_separators = [","]
         self.address_text_to_remove = ['Address']
