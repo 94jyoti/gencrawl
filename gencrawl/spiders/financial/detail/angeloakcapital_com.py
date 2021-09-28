@@ -16,9 +16,7 @@ class AngeloakcapitalComDetail(FinancialDetailFieldMapSpider):
         items = super().get_items_or_req(response, default_item)
 
         try:
-            distributions_url_temp = response.xpath(
-                "//h2[contains(text(),'Distributions')]/following::div[position()=1]//div[contains(@class,'table')][position()=1]/@data-table").extract()[
-                0]
+            distributions_url_temp = response.xpath("//h2[contains(text(),'Distributions')]/following::div[position()=1]//div[contains(@class,'table')][position()=1]/@data-table").extract()[0]
             distributions_url = json.loads(distributions_url_temp)['csvURL']
             meta = response.meta
             meta['items'] = items
