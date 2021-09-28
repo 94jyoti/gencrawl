@@ -78,6 +78,8 @@ class DHCPipeline:
             value = item[key]
             if key == 'address_raw':
                 if value:
+                    if isinstance(value, list):
+                        value = ' '.join(value)
                     value = re.sub('\\s+', ' ', value)
                 parsed_item[key] = value
                 continue
@@ -312,7 +314,7 @@ class DHCPipeline:
             address_raw = item['address_raw']
             if self.decision_tags.get("address_as_text"):
                 address_raw = address_raw.replace("<br>", "\n").split("\n")
-            else:
+            elif not self.decision_tags.get("address_as_list"):
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
             address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip()]
