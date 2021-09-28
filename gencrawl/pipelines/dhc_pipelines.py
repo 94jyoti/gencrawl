@@ -12,6 +12,9 @@ from lxml import html
 class DHCPipeline:
 
     def __init__(self):
+        self.all_fields = ['npi', 'raw_full_name', 'first_name', 'middle_name', 'last_name', 'suffix', 'designation',
+                           'speciality', 'affiliation', 'practice_name', 'address_raw', 'address', 'address_line_1',
+                           'address_line_2', 'address_line_3', 'city', 'state', 'zip', 'phone', 'fax', 'email']
         self.redundant_fields = ['temp_fields']
         self.name_separators = [","]
         pincode_rgx = ['([\d]{5}-[\d]{4})', '([\d]{5})']
@@ -301,8 +304,13 @@ class DHCPipeline:
 
     def parse_fields_from_address(self, item):
         if item.get('address_raw'):
-            address_tree = html.fromstring(item['address_raw'])
-            address_raw = address_tree.xpath("//text()")
+            address_raw = item['address_raw']
+            if self.decision_tags.get("address_as_text"):
+                address_raw = address_raw.replace("<br>", "\n").split("\n")
+                print(address_raw)
+            else:
+                address_tree = html.fromstring(address_raw)
+                address_raw = address_tree.xpath("//text()")
             address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip()]
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
@@ -347,6 +355,11 @@ class DHCPipeline:
                 item[key] = ", ".join(item[key])
         return item
 
+    def replace_none_with_blank_string(self, item):
+        for key in self.all_fields:
+            item[key] = item.get(key) or ''
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
             item = self.parse_fields_from_name(item)
@@ -354,4 +367,5 @@ class DHCPipeline:
             item = self.combine_address(item)
             item = self.parse_item(item)
             item = self.parse_list_fields(item)
+            item = self.replace_none_with_blank_string(item)
         return item
