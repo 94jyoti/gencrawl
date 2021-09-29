@@ -38,9 +38,10 @@ class DHCPipeline:
         suffixes = set()
         designations = set()
         self.address_text_to_remove = set()
+        self.address1_text_to_remove = set()
         for row in Utility.read_csv_from_response(resp):
             city, state, suffix, designation = row['City'], row['State'], row['Suffix'], row['Designation']
-            text_to_remove = row['Text To Remove']
+            text_to_remove, text_to_remove1 = row['Text To Remove'], row['Text To Remove From Address1 Start']
             if city:
                 us_cities.add(city.strip())
             if state:
@@ -50,7 +51,9 @@ class DHCPipeline:
             if designation:
                 designations.add(designation.strip())
             if text_to_remove:
-                self.address_text_to_remove.add(text_to_remove)
+                self.address_text_to_remove.add(text_to_remove.strip())
+            if text_to_remove1:
+                self.address1_text_to_remove.add(text_to_remove1)
 
         self.us_cities = sorted(us_cities, key=len, reverse=True)
         self.us_states = sorted(us_states, key=len, reverse=True)
@@ -305,8 +308,10 @@ class DHCPipeline:
                     item['address_line_1'], item['address_line_2'] = address
             elif len(address) == 1:
                 item['address_line_1'] = address[0]
-        if item.get('address_line_1') and item['address_line_1'].startswith("at "):
-            item['address_line_1'] = item['address_line_1'].replace("at", "", 1).strip()
+        if item.get('address_line_1'):
+            for text in self.address1_text_to_remove:
+                if item['address_line_1'].startswith(text):
+                    item['address_line_1'] = item['address_line_1'].replace(text, "", 1).strip()
         return item
 
     def parse_fields_from_address(self, item):
