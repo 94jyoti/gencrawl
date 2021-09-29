@@ -25,7 +25,7 @@ class DHCPipeline:
 
         # formats -
         # (123)-123-1234, (123) 123 1234, 123-123-1234, 123 123 1234
-        phone_rgx = ['(\(\d{3}\)[-\s]\d{3}[-\s]\d{4})', '(\d{3}[-\s]\d{3}[\s-]\d{4})']
+        phone_rgx = [r'(\(\d{3}\)[\.\-\s]\d{3}[\.\-\s]\d{4})', r'(\d{3}[\.\-\s]\d{3}[\.\s\-]\d{4})']
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
         self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
         self.fax_keywords = ["fax", "fx", "f:", "(f)"]
@@ -252,7 +252,6 @@ class DHCPipeline:
 
         phones = item.get("phone") or phones
         faxes = item.get("fax") or faxes
-
         item['phone'] = Utility.match_rgx(phones, regexes)
         item['fax'] = Utility.match_rgx(faxes, regexes)
         if self.decision_tags.get("phone_at_start"):
