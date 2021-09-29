@@ -18,7 +18,8 @@ class DHCPipeline:
                            'email']
         self.redundant_fields = ['temp_fields']
         self.name_separators = [","]
-        pincode_rgx = ['([\d]{5}-[\d]{4})', '([\d]{5})']
+        # if this rgx is not sufficient, add without \b at end
+        pincode_rgx = [r'\b([\d]{5}-[\d]{4})\b', r'\b([\d]{5})\b']
         self.pincode_rgx = [re.compile(r) for r in pincode_rgx]
         self.state_rgx = re.compile(r'\b([A-Z]{2})\b', re.I)
 
@@ -192,13 +193,17 @@ class DHCPipeline:
     def find_zip(self, item, address_raw):
         address_upto_idx = len(address_raw)
         for i, adr in reversed(list(enumerate(address_raw))):
+            to_break = False
             for rgx in self.pincode_rgx:
                 pincode = rgx.search(adr)
                 if pincode:
                     address_upto_idx = i
                     if not item.get("zip"):
                         item['zip'] = pincode.group(1)
+                    to_break = True
                     break
+            if to_break:
+                break
         return item, address_upto_idx
     
     def find_email(self, item, address_extra):
@@ -322,17 +327,16 @@ class DHCPipeline:
             elif not self.decision_tags.get("address_as_list"):
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
-            address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip()]
+            address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip().strip(",").strip()]
+
             # hardcoded check for franciscanhealth.org
             # can make it dynamic using decision_tags if needed in future.
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
-
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
             if pincode:
                 address_raw[address_upto_idx] = address_raw[address_upto_idx].split(pincode)[0]
             address = address_raw[:address_upto_idx+1]
-
             if self.decision_tags.get("phone_at_start"):
                 item, address = self.find_phone_and_fax(item, address)
                 item = self.find_email(item, address)
