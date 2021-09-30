@@ -105,7 +105,7 @@ if __name__ == "__main__":
                       "Long Term (Per Share)": "LT Cap Gains", "Pay Date": "Payble Date"}
     input_coulmns = ['Fund URL', 'Nasdaq Ticker','Share Class']
     # column_list=['Ex Date','Pay Date','Per Share']
-    column_list = ['CG Ex Date','CG Pay Date','CG Record Date','Ex Date','Long Term (Per Share)','Short Term (Per Share)','Total (Per Share)','CG Reinvestment Price','Per Share','Pay Date','Record Date','Reinvestment Price']
+    column_list = ['Ex Date','Long Term (Per Share)','Short Term (Per Share)','Ordinary Income','Record Date']
 
     #print(df)
     df=df.replace(np.nan, ' ')
@@ -131,5 +131,4 @@ if __name__ == "__main__":
     outputdf1 = outputdf.replace("nan", "")
     outputdf1 = outputdf1.drop_duplicates()
     #outputdf1 = outputdf.fillna('')
-    outputdf1.to_csv('guggenheim_distri.csv', index=False, )
-#import
+    outputdf1.to_csv('cullen_distri.csv', index=False, )
