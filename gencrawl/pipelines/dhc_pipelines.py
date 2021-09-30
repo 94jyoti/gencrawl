@@ -249,7 +249,7 @@ class DHCPipeline:
             if not item.get("state"):
                 addr = addr.replace(",", " ")
                 states = self.state_rgx.findall(addr)
-                for state in states:
+                for state in reversed(states):
                     if state in self.us_states:
                         item['state'] = state
                         break
