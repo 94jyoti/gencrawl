@@ -291,6 +291,7 @@ class DHCPipeline:
         if len(address) > 1 and self.decision_tags.get("practice_in_address"):
             practice_name = address[0]
             address = address[1:]
+            address = [a for a in address if a != practice_name]
             if not item.get("practice_name"):
                 item['practice_name'] = practice_name
         return item, address
