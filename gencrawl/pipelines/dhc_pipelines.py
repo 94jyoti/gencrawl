@@ -12,15 +12,20 @@ from lxml import html
 class DHCPipeline:
 
     def __init__(self):
+        self.all_fields = ['npi', 'doctor_url', 'raw_full_name', 'first_name', 'middle_name', 'last_name', 'suffix',
+                           'designation', 'speciality', 'affiliation', 'practice_name', 'address_raw', 'address',
+                           'address_line_1', 'address_line_2', 'address_line_3', 'city', 'state', 'zip', 'phone', 'fax',
+                           'email']
         self.redundant_fields = ['temp_fields']
         self.name_separators = [","]
-        pincode_rgx = ['([\d]{5}-[\d]{4})', '([\d]{5})']
+        # if this rgx is not sufficient, add without \b at end
+        pincode_rgx = [r'\b([\d]{5}-[\d]{4})\b', r'\b([\d]{5})\b']
         self.pincode_rgx = [re.compile(r) for r in pincode_rgx]
         self.state_rgx = re.compile(r'\b([A-Z]{2})\b', re.I)
 
         # formats -
         # (123)-123-1234, (123) 123 1234, 123-123-1234, 123 123 1234
-        phone_rgx = ['(\(\d{3}\)[-\s]\d{3}[-\s]\d{4})', '(\d{3}[-\s]\d{3}[\s-]\d{4})']
+        phone_rgx = [r'(\(\d{3}\)[\.\-\s]\d{3}[\.\-\s]\d{4})', r'(\d{3}[\.\-\s]\d{3}[\.\s\-]\d{4})']
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
         self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
         self.fax_keywords = ["fax", "fx", "f:", "(f)"]
@@ -33,8 +38,11 @@ class DHCPipeline:
         us_states = set()
         suffixes = set()
         designations = set()
+        self.address_text_to_remove = set()
+        self.address1_text_to_remove = set()
         for row in Utility.read_csv_from_response(resp):
             city, state, suffix, designation = row['City'], row['State'], row['Suffix'], row['Designation']
+            text_to_remove, text_to_remove1 = row['Text To Remove'], row['Text To Remove From Address1 Start']
             if city:
                 us_cities.add(city.strip())
             if state:
@@ -43,6 +51,10 @@ class DHCPipeline:
                 suffixes.add(suffix.strip())
             if designation:
                 designations.add(designation.strip())
+            if text_to_remove:
+                self.address_text_to_remove.add(text_to_remove.strip())
+            if text_to_remove1:
+                self.address1_text_to_remove.add(text_to_remove1)
 
         self.us_cities = sorted(us_cities, key=len, reverse=True)
         self.us_states = sorted(us_states, key=len, reverse=True)
@@ -70,6 +82,8 @@ class DHCPipeline:
             value = item[key]
             if key == 'address_raw':
                 if value:
+                    if isinstance(value, list):
+                        value = ' '.join(value)
                     value = re.sub('\\s+', ' ', value)
                 parsed_item[key] = value
                 continue
@@ -179,22 +193,26 @@ class DHCPipeline:
     def find_zip(self, item, address_raw):
         address_upto_idx = len(address_raw)
         for i, adr in reversed(list(enumerate(address_raw))):
+            to_break = False
             for rgx in self.pincode_rgx:
                 pincode = rgx.search(adr)
                 if pincode:
                     address_upto_idx = i
                     if not item.get("zip"):
                         item['zip'] = pincode.group(1)
+                    to_break = True
                     break
+            if to_break:
+                break
         return item, address_upto_idx
-    
+
     def find_email(self, item, address_extra):
         match_from = item.get("email") or address_extra
         item['email'] = Utility.match_rgx(match_from, self.email_rgx)
         return item
-    
+
     def find_phone_and_fax(self, item, address_extra):
-        
+
         def get_field_type(line):
             for k in self.phone_keywords:
                 if k in line.lower():
@@ -218,11 +236,11 @@ class DHCPipeline:
 
                 # if field type not found, check in last line of address
                 if not field_type and index > 0:
-                    prev_addr = address_extra[index-1]
+                    prev_addr = address_extra[index - 1]
                     if not Utility.match_rgx(prev_addr, regexes):
                         field_type = get_field_type(prev_addr)
                         if field_type:
-                            idx_to_remove.add(index-1)
+                            idx_to_remove.add(index - 1)
                 # by default make field type - phone
                 if not field_type:
                     field_type = 'phone'
@@ -234,7 +252,6 @@ class DHCPipeline:
 
         phones = item.get("phone") or phones
         faxes = item.get("fax") or faxes
-
         item['phone'] = Utility.match_rgx(phones, regexes)
         item['fax'] = Utility.match_rgx(faxes, regexes)
         if self.decision_tags.get("phone_at_start"):
@@ -249,7 +266,7 @@ class DHCPipeline:
             if not item.get("state"):
                 addr = addr.replace(",", " ")
                 states = self.state_rgx.findall(addr)
-                for state in states:
+                for state in reversed(states):
                     if state in self.us_states:
                         item['state'] = state
                         break
@@ -274,6 +291,7 @@ class DHCPipeline:
         if len(address) > 1 and self.decision_tags.get("practice_in_address"):
             practice_name = address[0]
             address = address[1:]
+            address = [a for a in address if a != practice_name]
             if not item.get("practice_name"):
                 item['practice_name'] = practice_name
         return item, address
@@ -295,21 +313,30 @@ class DHCPipeline:
                     item['address_line_1'], item['address_line_2'] = address
             elif len(address) == 1:
                 item['address_line_1'] = address[0]
-        if item.get('address_line_1') and item['address_line_1'].startswith("at "):
-            item['address_line_1'] = item['address_line_1'].replace("at", "", 1).strip()
+        if item.get('address_line_1'):
+            for text in self.address1_text_to_remove:
+                if item['address_line_1'].startswith(text):
+                    item['address_line_1'] = item['address_line_1'].replace(text, "", 1).strip()
         return item
 
     def parse_fields_from_address(self, item):
         if item.get('address_raw'):
-            address_tree = html.fromstring(item['address_raw'])
-            address_raw = address_tree.xpath("//text()")
-            address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip()]
+            address_raw = item['address_raw']
+            if self.decision_tags.get("address_as_text"):
+                address_raw = address_raw.replace("<br>", "\n").split("\n")
+            elif not self.decision_tags.get("address_as_list"):
+                address_tree = html.fromstring(address_raw)
+                address_raw = address_tree.xpath("//text()")
+            address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip().strip(",").strip()]
+
+            # hardcoded check for franciscanhealth.org
+            # can make it dynamic using decision_tags if needed in future.
+            address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
             if pincode:
                 address_raw[address_upto_idx] = address_raw[address_upto_idx].split(pincode)[0]
-            address = address_raw[:address_upto_idx+1]
-
+            address = address_raw[:address_upto_idx + 1]
             if self.decision_tags.get("phone_at_start"):
                 item, address = self.find_phone_and_fax(item, address)
                 item = self.find_email(item, address)
@@ -347,6 +374,11 @@ class DHCPipeline:
                 item[key] = ", ".join(item[key])
         return item
 
+    def replace_none_with_blank_string(self, item):
+        for key in self.all_fields:
+            item[key] = item.get(key) or ''
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
             item = self.parse_fields_from_name(item)
@@ -354,4 +386,5 @@ class DHCPipeline:
             item = self.combine_address(item)
             item = self.parse_item(item)
             item = self.parse_list_fields(item)
+            item = self.replace_none_with_blank_string(item)
         return item
