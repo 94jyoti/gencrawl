@@ -9,15 +9,15 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail_field_mapping",
+        "spider": "financial_detail_bbhfunds_com",
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
+            "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-intermediate-municipal-bond-fund.html",
             "https://www.bbhfunds.com/us/en/our-funds/bbh-equity-funds/bbh-select-series-large-cap-fund.html",
             "https://www.bbhfunds.com/us/en/our-funds/bbh-equity-funds/bbh-select-series-mid-cap-fund.html",
             "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-income-fund.html",
             "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-limited-duration-fund.html",
-            "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-intermediate-municipal-bond-fund.html",
             "https://www.bbhfunds.com/us/en/our-funds/bbh-fixed-income-funds/bbh-us-government-money-market-fund.html",
             "https://www.bbhfunds.com/us/en/our-funds/bbh-partner-funds/bbh-partner-fund---international-equity.html",
             "https://www.bbhfunds.com/us/en/our-funds/bbh-partner-funds/bbh-partner-fund-select-short-term-assets.html",

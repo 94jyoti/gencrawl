@@ -9,7 +9,7 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail",
+        "spider": "financial_detail_payden_com",
         "crawl_method": "SELENIUM",
         
         "parsing_type": "xpath",
@@ -45,10 +45,6 @@
             "https://www.payden.com/gfifrm.aspx",
             "https://www.payden.com/vlfrm.aspx",
             "https://www.payden.com/vlfrm.aspx"
-
-
-
-                       
             ],
         "ext_codes": {
             "instrument_name": {

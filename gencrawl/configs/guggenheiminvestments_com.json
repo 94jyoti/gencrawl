@@ -9,9 +9,8 @@
     "country": "US",
     "language": "ENGLISH",
     "detail": {
-        "spider": "financial_detail",
+        "spider": "financial_detail_guggenheim_com",
         "crawl_method": "SELENIUM",
-        "wait_time": 5,
         "parsing_type": "xpath",
         "start_urls": [
             "https://www.guggenheiminvestments.com/mutual-funds/fund/tvdax-rbp-large-cap-defensive",
