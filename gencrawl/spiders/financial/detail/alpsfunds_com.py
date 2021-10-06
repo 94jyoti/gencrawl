@@ -18,6 +18,7 @@ import traceback
 class AlpsfundsComDetail(FinancialDetailFieldMapSpider):
     name = 'financial_detail_alpsfunds_com'
 
+
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
         url_list=[]

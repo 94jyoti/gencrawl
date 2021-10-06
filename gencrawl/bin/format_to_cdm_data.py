@@ -95,19 +95,18 @@ if __name__ == "__main__":
     print("cdcdcd", column_names)
     # output_columns={"Fund URL":"Domain",'Instrument Name':"Fund Name/Ticker",'Share Class':"Class Name","Total (Per Share)":"Total Distribution","CG Ex Date":"Ex Date","Short Term (Per Share)":"ST Cap Gains","CG Record Date":"Record Date","Long Term (Per Share)":"LT Cap Gains","Ex Date":"Frequency" }
     '''
-    output_columns = {"Fund URL": "Domain", 'Nasdaq Ticker': "Fund Name/Ticker", 'Share Class': "Class Name",
+    output_columns = {"Fund URL": "Domain", 'Nasdaq Ticker 1': "Fund Name/Ticker", 'Share Class': "Class Name",
                       "Total (Per Share)": "Capital Gains","Reinvestment Price": "Reinvest Nav/Price", "Per Share": "Total Distribution", "Short Term (Per Share)": "ST Cap Gains",
                       "Long Term (Per Share)": "LT Cap Gains","Pay Date":"Payble Date"}
     '''
     output_columns = {"Fund URL": "Domain", 'Nasdaq Ticker': "Fund Name/Ticker", 'Share Class': "Class Name",
                       "Total (Per Share)": "Capital Gains", "Reinvestment Price": "Reinvest Nav/Price",
                       "Per Share": "Total Distribution", "Short Term (Per Share)": "ST Cap Gains",
-                      "Long Term (Per Share)": "LT Cap Gains", "Pay Date": "Payble Date"}
+                      "Long Term (Per Share)": "LT Cap Gains", "Pay Date": "Payble Date",'CG Ex Date':"Ex Date","CG Record Date":"Record Date",'CG Pay Date':"Payble Date",'Ordinary Income':'Income/Amount/Share/Dividend'}
     input_coulmns = ['Fund URL', 'Nasdaq Ticker','Share Class']
     # column_list=['Ex Date','Pay Date','Per Share']
-    column_list = ['Ex Date','Long Term (Per Share)','Short Term (Per Share)','Ordinary Income','Record Date']
+    column_list = ['Ex Date','Pay Date','Record Date','Short Term (Per Share)',"Long Term (Per Share)",'Per Share','Ordinary Income']
 
-    #print(df)
     df=df.replace(np.nan, ' ')
     df=df.drop_duplicates()
     transpose_df = transpose_column(column_list, df,73)
@@ -118,8 +117,8 @@ if __name__ == "__main__":
     #outputdf["Reinvest Date"] = outputdf["Ex Date"]
     #outputdf = outputdf.reindex(["Domain", "Page URL", "Fund Name/Ticker", "Record Date","Ex Date", "Payble Date", "Reinvest Date","Ordinary Income", "ST Cap Gains", "LT Cap Gains","CG Record Date",'CG Pay Date','CG Ex Date',"Total Distribution", "Reinvest Nav/Price", "Class Name", "Income/Amount/Share/Dividend", "Frequency", "Annual Distribution Rate* (%)", "Period", "Investment Income","Return of Capital", "Capital Gains", "Rate", "Year End NAV"], axis=1)
     outputdf = outputdf.reindex(
-        ["Domain", "Page URL", "Fund Name/Ticker", "Record Date", "Ex Date", "Payble Date", "Reinvest Date",'CG Ex Date','CG Pay Date','CG Record Date',
-         "Ordinary Income", 'CG Ex Date',"ST Cap Gains", "LT Cap Gains",'CG Reinvestment Price', "Total Distribution", "Reinvest Nav/Price", "Class Name",
+        ["Domain", "Page URL", "Fund Name/Ticker", "Record Date", "Ex Date", "Payble Date", "Reinvest Date",
+         "Ordinary Income","ST Cap Gains", "LT Cap Gains", "Total Distribution", "Reinvest Nav/Price", "Class Name",
          "Income/Amount/Share/Dividend", "Frequency", "Annual Distribution Rate* (%)", "Period", "Investment Income",
          "Return of Capital", "Capital Gains", "Rate", "Year End NAV"], axis=1)
     outputdf["Domain"] = outputdf["Domain"].apply(add_one)
@@ -128,7 +127,7 @@ if __name__ == "__main__":
     # print("knfsklvf",type(outputdf['Ex Date'][54]))
 
     outputdf1 = outputdf.replace(np.nan, '')
-    outputdf1 = outputdf.replace("nan", "")
+    #outputdf1 = outputdf.replace("nan", "")
     outputdf1 = outputdf1.drop_duplicates()
     #outputdf1 = outputdf.fillna('')
-    outputdf1.to_csv('cullen_distri.csv', index=False, )
+    outputdf1.to_csv('schwab_distri.csv', index=False, )

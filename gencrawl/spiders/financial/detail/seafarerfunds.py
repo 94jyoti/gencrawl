@@ -49,8 +49,8 @@ class SeafarefundsComDetail(FinancialDetailFieldMapSpider):
                     data_dict1['ordinary_income']=row.xpath(".//td[3]/text()").extract_first()
                     data_dict2['short_term_per_share']=row.xpath(".//td[4]/text()").extract_first()
                     data_dict2['long_term_per_share'] = row.xpath(".//td[5]/text()").extract_first()
-                    data_dict2['total_per_share']=row.xpath(".//td[6]/text()").extract_first()
-                    data_dict1['per_share']=row.xpath(".//td[7]//text()").extract_first()
+                    data_dict1['per_share']=row.xpath(".//td[6]/text()").extract_first()
+                    #data_dict1['per_share']=row.xpath(".//td[7]//text()").extract_first()
                     capital_gain_list.append(data_dict2)
                     dividend_list.append(data_dict1)
                 item['capital_gains']=capital_gain_list

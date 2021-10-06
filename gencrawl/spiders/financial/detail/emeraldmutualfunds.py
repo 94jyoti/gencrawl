@@ -18,16 +18,24 @@ class EmeraldfundsComDetail(FinancialDetailFieldMapSpider):
     name = 'financial_detail_emeraldfunds_com'
     custom_settings = {
         "RETRY_TIMES": 5,
-        "CRAWLERA_ENABLED": True,
         "COOKIES_ENABLED": True,
         "COOKIES_DEBUG": True,
-        "CRAWLERA_ENABLED": True
+        "CRAWLERA_ENABLED": True,
+        "CONCURRENT_REQUESTS_PER_DOMAIN": 2,
+        "DOWNLOAD_DELAY": 4,
     }
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
+        file=open("emerland.html","w")
+        file.write(response.text)
+        file.close()
+        print(items)
+        print(len(items))
+
         url_list=[]
         #for item in items:
          #   temp_ticker=item['nasdaq_ticker']
+        '''
         headers={'Connection': 'keep-alive',
                      'Accept': 'application/json, text/javascript, */*; q=0.01',
                     'Authorization': "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MzE3OTExNTUsImp0aSI6IjcxMkMxMTRGLTY5QUEtNDA5OC1BOTI4LUExMTRDNjgyQURDRCIsImlzcyI6Ind3dy5lbWVyYWxkbXV0dWFsZnVuZHMuY29tIiwic3ViIjoiaHR0cHM6XC9cL2Nzc2VjdXJlLmFscHNpbmMuY29tXC9hcGlcL3YxXC8iLCJuYmYiOjE2MzE3OTExNTUsImV4cCI6MTYzMTg3NzU1NX0.gq61J6yljp44U6WZfDYjK9XRIOPwl7IIxkGtnrkhUar9DDKWa9ZN8foRPIR-84YJjFvIYwOlEH7kD6PJvVrUSA",'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36', 'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'}
@@ -35,11 +43,15 @@ class EmeraldfundsComDetail(FinancialDetailFieldMapSpider):
             #url_list.append(url)
             #item['capital_gains'] = []
             #item['dividends'] = []
+        '''
         meta = response.meta
         meta['items'] = items
+        #print(items)
+
         for item in items:
+            print(item['nasdaq_ticker'])
             url = "https://secure.alpsinc.com/MarketingAPI/api/v1/Dividend/"+ item['nasdaq_ticker']
-            headers = {"Accept": "application/json, text/javascript, */*; q=0.01", "Accept-Encoding": "gzip, deflate, br", "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8","Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MzIyMTgwNjEsImp0aSI6IjU1QkI4Qzg2LTMxN0UtNDhFRi1BMkU4LTVGM0NBMDFBRkE1RSIsImlzcyI6Ind3dy5lbWVyYWxkbXV0dWFsZnVuZHMuY29tIiwic3ViIjoiaHR0cHM6XC9cL2Nzc2VjdXJlLmFscHNpbmMuY29tXC9hcGlcL3YxXC8iLCJuYmYiOjE2MzIyMTgwNjEsImV4cCI6MTYzMjMwNDQ2MX0.EO0VZMPODtRC4trkCUySsX5cUOW-g6ALc5CtMMu1jtv-9Su8rzYSv-aYhpBjyD8yMMpr4fYNc_kqeeXyGXHnDg","Connection": "keep-alive", "Host": "secure.alpsinc.com", "Origin": "https://www.emeraldmutualfunds.com", "Referer": "https://www.emeraldmutualfunds.com/","User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"}
+            headers = {"Accept": "application/json, text/javascript, */*; q=0.01", "Accept-Encoding": "gzip, deflate, br", "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8","Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MzM1MDQxNDYsImp0aSI6Ijg2RjQ5ODlCLTk4NjYtNDQwRC04QTQ5LUI0N0M3RTg5OTgwOSIsImlzcyI6Ind3dy5lbWVyYWxkbXV0dWFsZnVuZHMuY29tIiwic3ViIjoiaHR0cHM6XC9cL2Nzc2VjdXJlLmFscHNpbmMuY29tXC9hcGlcL3YxXC8iLCJuYmYiOjE2MzM1MDQxNDYsImV4cCI6MTYzMzU5MDU0Nn0.l4oMTHJ4E1jnT0l-FNS21HlL278XQK0XGmPSwJky-ZB6efNwIzyO1KjQ6o6o_4aQBRBb_ehXzeIGOUxo9DQc9A","Connection": "keep-alive", "Host": "secure.alpsinc.com", "Origin": "https://www.emeraldmutualfunds.com", "Referer": "https://www.emeraldmutualfunds.com/","User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"}
             yield scrapy.Request(url, headers=headers, callback=self.parse_dividends, meta=meta,method="GET", dont_filter=True)
 
     def parse_dividends(self, response):
@@ -53,6 +65,10 @@ class EmeraldfundsComDetail(FinancialDetailFieldMapSpider):
         for item in items:
 
             capital_gain_list = []
+            
+            
+            
+            
             dividend_list = []
             if (item['nasdaq_ticker'] == json_data[0]['symbol']):
                 print("isnide ififififiiffifii")
@@ -70,6 +86,7 @@ class EmeraldfundsComDetail(FinancialDetailFieldMapSpider):
                     data_dict1['ordinary_income'] = i['ord']
                     data_dict2['short_term_per_share'] = i['stcg']
                     data_dict2['long_term_per_share'] = i['ltcg']
+                    data_dict1['per_share']=i['total']
                    # data_dict2['total_per_share'] = i['total']
                     capital_gain_list.append(data_dict2)
                     print("capitalllll-------------", capital_gain_list)
