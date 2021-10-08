@@ -19,14 +19,20 @@ class GuggenheimComDetail(FinancialDetailSpider):
                 items[0]['cusip']=row.xpath(".//td[3]//text()").extract()[0]
                 items[0]['share_inception_date']=row.xpath(".//td[4]//text()").extract()[0]
         distribution_url = items[0]['fund_url'] + '/distributions'
+        print(distribution_url)
         meta = response.meta
         meta['items'] = items
-        yield self.make_request(distribution_url, callback=self.parse_distribution, meta=meta, dont_filter=True,method=Statics.CRAWL_METHOD_SELENIUM)
+        url=response.xpath("//a[contains(text(),'Export')]//@href").extract()
+        yield self.make_request(distribution_url, callback=self.parse_distribution, meta=meta, dont_filter=True,method=Statics.CRAWL_METHOD_GET)
         #yield self.generate_item(items[0], FinancialDetailItem)
 
     def parse_distribution(self, response):
         items = response.meta['items']
         ticker = items[0]['nasdaq_ticker']
+        file=open("guggenheim.html","w")
+        file.write(response.text)
+        file.close()
+
         #current_ticker = response.xpath("//h1[contains(@class, 'fund-ticker')]/text()").extract()[0]
         dividends = []
         capital_gains = []

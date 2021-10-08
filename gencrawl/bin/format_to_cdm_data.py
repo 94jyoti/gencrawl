@@ -87,7 +87,8 @@ if __name__ == "__main__":
     # field_mapping_file = os.path.join(RES_DIR, field_mapping_file)
     field_mapping = []
 
-    df = pd.read_csv(input_file,converters={i: str for i in range(0, 100)})
+    #df = pd.read_csv(input_file,converters={i: str for i in range(0, 100)})
+    df = pd.read_csv(input_file, low_memory=False, dtype='unicode')
     df = df.fillna('')
     # df.drop(df.loc[df['CG Record Date 1'] == None].index, inplace=True)
     # df=df.apply(str)
@@ -97,19 +98,20 @@ if __name__ == "__main__":
     '''
     output_columns = {"Fund URL": "Domain", 'Nasdaq Ticker 1': "Fund Name/Ticker", 'Share Class': "Class Name",
                       "Total (Per Share)": "Capital Gains","Reinvestment Price": "Reinvest Nav/Price", "Per Share": "Total Distribution", "Short Term (Per Share)": "ST Cap Gains",
-                      "Long Term (Per Share)": "LT Cap Gains","Pay Date":"Payble Date"}
+                      "Long Term (Per Share)": "LT Cap Gains","Pay Date":"Payble Date",}
     '''
     output_columns = {"Fund URL": "Domain", 'Nasdaq Ticker': "Fund Name/Ticker", 'Share Class': "Class Name",
                       "Total (Per Share)": "Capital Gains", "Reinvestment Price": "Reinvest Nav/Price",
                       "Per Share": "Total Distribution", "Short Term (Per Share)": "ST Cap Gains",
-                      "Long Term (Per Share)": "LT Cap Gains", "Pay Date": "Payble Date",'CG Ex Date':"Ex Date","CG Record Date":"Record Date",'CG Pay Date':"Payble Date",'Ordinary Income':'Income/Amount/Share/Dividend'}
+                      "Long Term (Per Share)": "LT Cap Gains", "Pay Date": "Payble Date",'CG Reinvestment Price':"Reinvest Nav/Price","CG Record Date":"Record Date","CG Ex Date":"Ex Date","CG Pay Date":"Payble Date"}
+        #,'CG Ex Date':"Ex Date","CG Record Date":"Record Date",'CG Pay Date':"Payble Date"}
     input_coulmns = ['Fund URL', 'Nasdaq Ticker','Share Class']
     # column_list=['Ex Date','Pay Date','Per Share']
-    column_list = ['Ex Date','Pay Date','Record Date','Short Term (Per Share)',"Long Term (Per Share)",'Per Share','Ordinary Income']
+    column_list = ['CG Ex Date','CG Pay Date','CG Record Date','Ordinary Income','CG Reinvestment Price','Long Term (Per Share)','Short Term (Per Share)']
 
     df=df.replace(np.nan, ' ')
     df=df.drop_duplicates()
-    transpose_df = transpose_column(column_list, df,73)
+    transpose_df = transpose_column(column_list, df,200)
     outputdf = transpose_df[input_coulmns + column_list]
     outputdf = outputdf.dropna(how='all', axis=0)
     outputdf = outputdf.rename(columns=output_columns, inplace=False)
@@ -130,4 +132,4 @@ if __name__ == "__main__":
     #outputdf1 = outputdf.replace("nan", "")
     outputdf1 = outputdf1.drop_duplicates()
     #outputdf1 = outputdf.fillna('')
-    outputdf1.to_csv('schwab_distri.csv', index=False, )
+    outputdf1.to_csv('lazard_distri.csv', index=False, )
