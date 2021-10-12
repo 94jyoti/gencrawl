@@ -11,6 +11,15 @@ import requests
 
 class GabelliComDetail(FinancialDetailSpider):
     name = 'financial_detail_gabelli_com'
+    allowed_domains = ['gabdotcom-api.com']
+    custom_settings = {
+        "RETRY_TIMES": 5,
+        "COOKIES_ENABLED": True,
+        "COOKIES_DEBUG": True,
+        "CRAWLERA_ENABLED": True,
+        "CONCURRENT_REQUESTS_PER_DOMAIN": 2,
+        "DOWNLOAD_DELAY": 4,
+    }
 
     def get_items_or_req(self, response, default_item={}):
         items = self.prepare_items(response, default_item)
@@ -18,7 +27,9 @@ class GabelliComDetail(FinancialDetailSpider):
         file.write(response.text)
         file.close()
         api_url="https://gabdotcom-api.com/api/v1/tax_info/"+items[0]['fund_url'].rsplit("/")[-1]
+        print(api_url)
         resp = requests.get(api_url)
+        print("heree")
         json_resp = json.loads(resp.text)
         print(json_resp)
         year_list=[]
@@ -34,7 +45,7 @@ class GabelliComDetail(FinancialDetailSpider):
                 data_dict1['pay_date']=j['pay_date'].split("T")[0]
                 data_dict2['long_term_per_share']=j['lt_gains']
                 data_dict2['short_term_per_share']=j['st_gains']
-                data_dict2['total_per_share']=j['total_dist']
+                data_dict1['per_share']=j['total_dist']
                 data_dict1['ordinary_income']=j['inv_income']
                 capital_gain_list.append(data_dict2)
                 dividends_list.append(data_dict1)

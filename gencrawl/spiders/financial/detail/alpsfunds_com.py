@@ -17,11 +17,34 @@ import traceback
 
 class AlpsfundsComDetail(FinancialDetailFieldMapSpider):
     name = 'financial_detail_alpsfunds_com'
+    custom_settings = {
+        "RETRY_TIMES": 5,
+        "COOKIES_ENABLED": True,
+        "COOKIES_DEBUG": True,
+        "CRAWLERA_ENABLED": True,
+        "CONCURRENT_REQUESTS_PER_DOMAIN": 2,
+        "DOWNLOAD_DELAY": 4,
+    }
 
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
         url_list=[]
+        print(items)
+        file=open("alps.html","w")
+        file.write(response.text)
+        file.close()
+        
+        
+        
+        
+        
+        
+        
         for item in items:
+
+            #temp_ticker=item['nasdaq_ticker']
+            #if(temp_ticker==""):
+            item['nasdaq_ticker']=item['fund_url'].split("/")[-1]
             temp_ticker=item['nasdaq_ticker']
             url="https://www.alpsfunds.com/api/dbws/v1/distributions?identifier="+temp_ticker+"&limit=2000&_type=json"
             url_list.append(url)
@@ -80,6 +103,7 @@ class AlpsfundsComDetail(FinancialDetailFieldMapSpider):
                         data_dict2['long_term_per_share'] = row['capitalGain']['longTermCapitalGain']
                     else:
                         data_dict2['long_term_per_share'] = "-"
+
                     #print(data_dict1)
                     #print(data_dict2)
                     dividend_history.append(data_dict1)

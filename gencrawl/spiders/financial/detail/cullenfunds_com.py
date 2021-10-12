@@ -73,19 +73,18 @@ class CullenComDetail(FinancialDetailFieldMapSpider):
         '''
         cookies = {
             "csrftoken": response.xpath("//input[@name='csrfmiddlewaretoken']/@value").extract_first(),
-            "sessionid": "9ys0deg6y6w7wh0n4nmptjlvfogluabc",
-            "_ga_86NWGFJN3V": "GS1.1.1632889625.1.0.1632889625.0",
-            "_ga_26HLM6RH2Z": "GS1.1.1632889625.1.0.1632889625.0",
-            "_ga": "GA1.2.444064047.1632889627",
-            "_gid": "GA1.2.767073441.1632889628",
-            "_gat_gtag_UA_22277837_4": "1",
-            "__hstc": "136834799.e051091021f43b9c34a9f0c995682c18.1632889640905.1632889640905.1632889640905.1",
-            "hubspotutk": "e051091021f43b9c34a9f0c995682c18",
+            "sessionid": "m2hbrgcu2f6eum4m66wokkh6j0z3l8k9",
+            "_gid": "GA1.2.191575997.1632982542",
+            "_ga_26HLM6RH2Z": "GS1.1.1632982533.1.1.1632982573.0",
+            "_ga_86NWGFJN3V": "GS1.1.1632982535.1.1.1632982573.0",
+            "_ga": "GA1.1.1399275201.1632982539",
+            "__hstc": "136834799.43e875dc6b7744594a2a660c108369bd.1632982577137.1632982577137.1632982577137.1",
+            "hubspotutk": "43e875dc6b7744594a2a660c108369bd",
             "__hssrc": "1",
-            "__hssc": "136834799.1.1632889640905",
+            "__hssc": "136834799.1.1632982577137",
             "__hs_opt_out": "no",
             "__hs_initial_opt_in": "true",
-            "srpperm": "\"UT=A&JR=US&timestamp=2021-09-29T04%3A27%3A26.373620%2B00%3A00\""
+            "srpperm": "\"UT=A&JR=US&timestamp=2021-09-30T06%3A16%3A21.217772%2B00%3A00\""
         }
         yield scrapy.Request(items[0]['fund_url'], headers=headers,cookies=cookies,meta=meta, method="GET",
                              callback=self.dividends, dont_filter=True)
@@ -120,6 +119,7 @@ class CullenComDetail(FinancialDetailFieldMapSpider):
             data_dict1['ordinary_income']=final_data[2].strip()
             data_dict2['short_term_per_share']=final_data[3].strip()
             data_dict2['long_term_per_share']=final_data[4].replace("]","").strip()
+            data_dict1['reinvestment_price']=final_data[5].replace("]","").strip()
             capital_gain_list.append(data_dict2)
             dividends_list.append(data_dict1)
 

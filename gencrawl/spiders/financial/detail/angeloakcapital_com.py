@@ -68,3 +68,6 @@ class AngeloakcapitalComDetail(FinancialDetailFieldMapSpider):
         item['capital_gains'] = capital_gains_list
         item['dividends'] = dividend_history
         yield self.generate_item(item, FinancialDetailItem)
+        
+        
+        
