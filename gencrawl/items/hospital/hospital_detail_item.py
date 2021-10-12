@@ -26,5 +26,7 @@ class HospitalDetailItem(BaseItem):
     phone = Field()
     fax = Field()
     email = Field()
+    phone_as_item = Field()
+
 
 
