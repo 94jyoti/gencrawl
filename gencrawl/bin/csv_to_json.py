@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import sys
+
 def convert_to_json(file_path):
     """
     :param file_path: csv file in std nfn format
@@ -19,16 +20,18 @@ def convert_to_json(file_path):
     for i in range(len(domains)):
         domain = domains[i]
         domain_data = df[df['Domain'] == domain]
+        domain_data.reset_index(drop=True, inplace=True)
         # get the list of unique fund names
         fund_names = domain_data['Fund Name/Ticker'].unique()
         for j in range(len(fund_names)):
             fund_name = fund_names[j]
-            fund_data = df[domain_data['Fund Name/Ticker'] == fund_name]
+            fund_data = df[(df['Domain'] == domain) & (df['Fund Name/Ticker'] == fund_name)]
             class_names = fund_data['Class Name'].unique()
             for k in range(len(class_names)):
                 class_name = class_names[k]
                 if str(class_name) != 'NULL':
-                    class_data = df[(domain_data['Class Name'] == class_name) & (domain_data['Fund Name/Ticker'] == fund_name)]
+                    class_data = df[
+                        (domain_data['Class Name'] == class_name) & (domain_data['Fund Name/Ticker'] == fund_name)]
                 else:
                     class_data = fund_data.copy()
                 for key in class_data.keys():
@@ -45,6 +48,8 @@ def convert_to_json(file_path):
 
     with open(file_name, "w") as outfile:
         json.dump(final_data, outfile)
+
+
 if __name__ == '__main__':
     filepath = sys.argv[1]
     convert_to_json(filepath)
