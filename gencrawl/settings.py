@@ -71,9 +71,14 @@ else:
     ENVIRONMENT = Statics.ENV_DEV
 
 # db settings
-DB_USER = 'postgres'
-DB_PASS = 'kapow123'
-DB_HOST = '65.2.58.32'
+# DB_USER = 'postgres'
+# DB_PASS = 'kapow123'
+# DB_HOST = '65.2.58.32'
+# DB_PORT = '5432'
+# DB_NAME = 'postgres'
+DB_USER = 'devuser'
+DB_HOST = 'forage-dev-db.cod4levdfbtz.ap-south-1.rds.amazonaws.com'
+DB_NAME = 'dhc'
 DB_PORT = '5432'
-DB_NAME = 'postgres'
+DB_PASS = 'Dev#forage!2021'
 
