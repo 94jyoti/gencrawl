@@ -145,6 +145,8 @@ class harvestglobalDetail(FinancialDetailSpider):
                         print(distribution)
                         for j in distribution:
                             print(j)
+                            if("ex_dividend_date" in j):
+                                data_dict1['ex_date'] = j.split(":")[-1]
 
                             if("payment_date" in j):
                                 data_dict1['pay_date']=j.split(":")[-1]
@@ -152,6 +154,7 @@ class harvestglobalDetail(FinancialDetailSpider):
                                 data_dict1['per_share']=j.split(":")[-1].replace("}","")
                             if("record_date" in j):
                                 data_dict1['record_date']=j.split(":")[-1]
+
                         dividend_list.append(data_dict1)
                         #break
                         
