@@ -6,6 +6,7 @@ __pycache__/
 # pycharm
 .idea/
 .DS_Store
+project.egg-info
 
 # C extensions
 *.so
