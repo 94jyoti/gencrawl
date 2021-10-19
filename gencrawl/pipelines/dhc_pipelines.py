@@ -272,18 +272,26 @@ class DHCPipeline:
                         break
                 if item.get("state"):
                     r = r'\b{}\b'.format(state)
-                    address[index] = re.sub(r, '', addr)
+                    if item.get("zip"):
+                        address[index] = re.sub(r, '', addr)
+                    else:
+                        address[index] = address[index].split(f" {state}")[0]
                     break
 
             if not item.get("state"):
                 for state in self.us_states:
                     if state.lower() in addr.lower():
                         item['state'] = state
-                        address[index] = address[index].replace(state, "")
+                        if item.get("zip"):
+                            address[index] = address[index].replace(state, "")
+                        else:
+                            address[index] = address[index].split(f" {state}")[0]
                         break
                 if item.get("state"):
                     break
-
+        # if zip is not in address
+        if not item.get("zip"):
+            address = address[:index+1]
         address = [a.strip().strip(",").strip() for a in address if a and a.strip()]
         return item, address
 
