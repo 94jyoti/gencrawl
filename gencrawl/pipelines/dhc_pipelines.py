@@ -65,6 +65,12 @@ class DHCPipeline:
 
     def open_spider(self, spider):
         self.decision_tags = spider.config.get("decision_tags") or {}
+        if self.decision_tags.get("pincode_rgx"):
+            for r in self.decision_tags['pincode_rgx']:
+                self.pincode_rgx.append(re.compile(r'{}'.format(r)))
+        if self.decision_tags.get("phone_rgx"):
+            for r in self.decision_tags['phone_rgx']:
+                self.phone_rgx.append(re.compile(r'{}'.format(r)))
 
     def parse_field(self, field):
         if isinstance(field, bool):
@@ -340,7 +346,7 @@ class DHCPipeline:
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
             address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip().strip(",").strip()]
-
+            
             # hardcoded check for franciscanhealth.org
             # can make it dynamic using decision_tags if needed in future.
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
