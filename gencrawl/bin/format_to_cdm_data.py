@@ -23,7 +23,7 @@ def explode(df, lst_cols, fill_value='', preserve_index=False):
     idx_cols = df.columns.difference(lst_cols)
     # calculate lengths of lists
     lens = df[lst_cols[0]].str.len()
-    # preserve original index values    
+    # preserve original index values
     idx = np.repeat(df.index.values, lens)
     # create "exploded" DF
     res = (pd.DataFrame({col: np.repeat(df[col].values, lens) for col in idx_cols}, index=idx).assign(
@@ -87,8 +87,8 @@ if __name__ == "__main__":
     # field_mapping_file = os.path.join(RES_DIR, field_mapping_file)
     field_mapping = []
 
-    #df = pd.read_csv(input_file,converters={i: str for i in range(0, 100)})
-    df = pd.read_csv(input_file, low_memory=False, dtype='unicode')
+    df = pd.read_csv(input_file,converters={i: str for i in range(0, 100)})
+    #df = pd.read_csv(input_file, low_memory=False, dtype='unicode')
     df = df.fillna('')
     # df.drop(df.loc[df['CG Record Date 1'] == None].index, inplace=True)
     # df=df.apply(str)
@@ -103,15 +103,15 @@ if __name__ == "__main__":
     output_columns = {"Fund URL": "Domain", 'Nasdaq Ticker': "Fund Name/Ticker", 'Share Class': "Class Name",
                       "Total (Per Share)": "Capital Gains", "Reinvestment Price": "Reinvest Nav/Price",
                       "Per Share": "Total Distribution", "Short Term (Per Share)": "ST Cap Gains",
-                      "Long Term (Per Share)": "LT Cap Gains", "Pay Date": "Payble Date",'CG Reinvestment Price':"Reinvest Nav/Price","CG Record Date":"Record Date","CG Ex Date":"Ex Date","CG Pay Date":"Payble Date"}
+                      "Long Term (Per Share)": "LT Cap Gains", "Pay Date": "Payble Date","CG Reinvestment Price":"Income/Amount/Share/Dividend"}
         #,'CG Ex Date':"Ex Date","CG Record Date":"Record Date",'CG Pay Date':"Payble Date"}
-    input_coulmns = ['Fund URL', 'Nasdaq Ticker','Share Class']
+    input_coulmns = ['Fund URL', 'Nasdaq Ticker']
     # column_list=['Ex Date','Pay Date','Per Share']
-    column_list = ['CG Ex Date','CG Pay Date','CG Record Date','Ordinary Income','CG Reinvestment Price','Long Term (Per Share)','Short Term (Per Share)']
+    column_list = ['Long Term (Per Share)','CG Ex Date','CG Record Date','CG Pay Date','Short Term (Per Share)','Total (Per Share)','CG Reinvestment Price','Record Date','Ex Date','Pay Date','Per Share','Reinvestment Price']
 
     df=df.replace(np.nan, ' ')
     df=df.drop_duplicates()
-    transpose_df = transpose_column(column_list, df,200)
+    transpose_df = transpose_column(column_list, df,700)
     outputdf = transpose_df[input_coulmns + column_list]
     outputdf = outputdf.dropna(how='all', axis=0)
     outputdf = outputdf.rename(columns=output_columns, inplace=False)
@@ -120,16 +120,16 @@ if __name__ == "__main__":
     #outputdf = outputdf.reindex(["Domain", "Page URL", "Fund Name/Ticker", "Record Date","Ex Date", "Payble Date", "Reinvest Date","Ordinary Income", "ST Cap Gains", "LT Cap Gains","CG Record Date",'CG Pay Date','CG Ex Date',"Total Distribution", "Reinvest Nav/Price", "Class Name", "Income/Amount/Share/Dividend", "Frequency", "Annual Distribution Rate* (%)", "Period", "Investment Income","Return of Capital", "Capital Gains", "Rate", "Year End NAV"], axis=1)
     outputdf = outputdf.reindex(
         ["Domain", "Page URL", "Fund Name/Ticker", "Record Date", "Ex Date", "Payble Date", "Reinvest Date",
-         "Ordinary Income","ST Cap Gains", "LT Cap Gains", "Total Distribution", "Reinvest Nav/Price", "Class Name",
+         "Ordinary Income",'CG Record Date','CG Ex Date','CG Pay Date',"ST Cap Gains", "LT Cap Gains", "Total Distribution", "Reinvest Nav/Price", "Class Name",
          "Income/Amount/Share/Dividend", "Frequency", "Annual Distribution Rate* (%)", "Period", "Investment Income",
          "Return of Capital", "Capital Gains", "Rate", "Year End NAV"], axis=1)
-    outputdf["Domain"] = outputdf["Domain"].apply(add_one)
     print(outputdf["Domain"])
-    outputdf = outputdf[outputdf['Ex Date'] !='nan']
+    #outputdf = outputdf[outputdf['Ex Date'] !='nan']
     # print("knfsklvf",type(outputdf['Ex Date'][54]))
 
     outputdf1 = outputdf.replace(np.nan, '')
     #outputdf1 = outputdf.replace("nan", "")
     outputdf1 = outputdf1.drop_duplicates()
+    outputdf1= outputdf1.dropna(how='all', axis=0)
     #outputdf1 = outputdf.fillna('')
-    outputdf1.to_csv('lazard_distri.csv', index=False, )
+    outputdf1.to_csv('FIEMsingle_distri.csv', index=False, )

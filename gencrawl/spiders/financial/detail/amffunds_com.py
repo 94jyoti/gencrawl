@@ -61,15 +61,27 @@ class AmffundsComDetail(FinancialDetailSpider):
             print(i)
         print(rows_data)
         distribution_list=[]
+        capital_gains_list=[]
         for rows in rows_data:
             data_dict1 = {"ex_date": "", "pay_date": "", "ordinary_income": "", "qualified_income": "",
                           "record_date": "", "per_share": "", "reinvestment_price": ""}
+            data_dict2 = {'long_term_per_share': "", 'cg_ex_date': "", 'cg_record_date': "", 'cg_pay_date': "",
+                          'short_term_per_share': "", 'total_per_share': "", 'cg_reinvestment_price': ""}
+            if(rows[-1].strip()=="Dividend Income"):
+                data_dict1['per_share']=rows[2]
+            if (rows[-1].strip() == "Long-Term Capital Gain"):
+
+                data_dict2['long_term_per_share'] = rows[2]
+            if (rows[-1].strip() == "Short-Term Capital Gain"):
+                data_dict2['short_term_per_share'] = rows[2]
             data_dict1['record_date'] = rows[0]
             data_dict1['pay_date'] = rows[1]
-            data_dict1['per_share'] = rows[2]
+            #data_dict1['per_share'] = rows[2]
             data_dict1['reinvestment_price'] = rows[3]
             distribution_list.append(data_dict1)
+            capital_gains_list.append(data_dict2)
         items[0]['dividends'] = distribution_list
+        items[0]['capital_gains']=capital_gains_list
         yield self.generate_item(items[0], FinancialDetailItem)
 
 

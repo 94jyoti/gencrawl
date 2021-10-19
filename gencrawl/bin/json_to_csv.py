@@ -4,10 +4,11 @@ import os
 # adding path to env variable
 cdir = os.path.join(os.getcwd().split("gencrawl")[0], 'gencrawl')
 sys.path.append(cdir)
-from gencrawl.settings import RES_DIR
+RES_DIR="/Users/sumitagrawal/Documents/GitHub/gencrawl/Untitled/gencrawl/res"
+#from gencrawl.settings import RES_DIR
 from collections import OrderedDict
-from gencrawl.util.statics import Statics
-from gencrawl.util.utility import Utility
+from Untitled.gencrawl.util.statics import Statics
+from Untitled.gencrawl.util.utility import Utility
 
 field_mapping_file = "nfn_field_mapping.csv"
 

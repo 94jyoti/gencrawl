@@ -65,7 +65,7 @@ class BbhfundsfundsComDetail(FinancialDetailFieldMapSpider):
                             cg_short_term_per_share = tree.xpath("//thead[tr[th[contains(text(),'Share Class/ Ticker')]]]/following-sibling::tbody/tr[1]/td[3]/text()")[0].replace('\n','').strip()
 
                     divident_dict = {'ex_date':ex_date, 'pay_date':pay_date,\
-                                            'per_share':per_share,
+                                            'per_share':total_per_share,
                                             'reinvestment_price':reinvestment_price,\
                                             'record_date':record_date}
 
@@ -76,6 +76,7 @@ class BbhfundsfundsComDetail(FinancialDetailFieldMapSpider):
                                         'cg_reinvestment_price':cg_reinvestment_price,\
                                         'cg_record_date':cg_record_date}
                     
+
                     dividends.append(divident_dict)
                     capital_gains.append(capital_gains_dict)
                     items[i]['dividends'] = dividends
