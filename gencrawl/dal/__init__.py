@@ -12,7 +12,7 @@ class DAL:
 		self.client_input_queries = {
 			"NFN": "select fund_url FROM public.nfn_fundlist where fund_domain like '%%{}'",
 			"DHC": """
-				SELECT distinct("DoctorUrl") FROM public.dhc_master_input_table where "DoctorUrl"!='' and "DoctorUrl" like '%{}%'
+				SELECT distinct("DoctorUrl") FROM public.dhc_master_input_table where "DoctorUrl"!='' and "DoctorUrl" like '%.{}%'
 				"""
 		}
 
