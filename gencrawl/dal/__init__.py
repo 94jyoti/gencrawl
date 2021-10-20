@@ -10,9 +10,11 @@ class DAL:
 			f'postgresql+psycopg2://{settings["DB_USER"]}:{settings["DB_PASS"]}@{settings["DB_HOST"]}:{settings["DB_PORT"]}/{settings["DB_NAME"]}',
 			pool_use_lifo=True, pool_pre_ping=True, pool_recycle=3600)
 		self.client_input_queries = {
-			"NFN": "select fund_url FROM public.nfn_fundlist where fund_domain like '%%{}'",
+			"NFN": """select fund_url FROM public.nfn_fundlist where (fund_domain like '%www.{}%'
+					or fund_domain like '%//{}%' or fund_domain like '{}%')""",
 			"DHC": """
-				SELECT distinct("DoctorUrl") FROM public.dhc_master_input_table where "DoctorUrl"!='' and "DoctorUrl" like '%{}%'
+				SELECT distinct("DoctorUrl") FROM public.dhc_master_input_table where "DoctorUrl"!='' and 
+				("DoctorUrl" like '%www.{}%' or "DoctorUrl" like '%//{}%' or "DoctorUrl" like '{}%') 
 				"""
 		}
 
@@ -26,7 +28,7 @@ class DAL:
 	def get_db_urls(self, domain, limit):
 		limit = int(limit)
 		pg_session = self.create_session(self.engine)
-		query = self.client_input_queries[self.client].format(domain)
+		query = self.client_input_queries[self.client].format(domain, domain, domain)
 		if limit > 0:
 			query = query + f"LIMIT {limit}"
 		print(query)
