@@ -25,7 +25,8 @@ class DHCPipeline:
 
         # formats -
         # (123)-123-1234, (123) 123 1234, 123-123-1234, 123 123 1234
-        phone_rgx = [r'(\(\d{3}\)[\.\-\s]\d{3}[\.\-\s]\d{4})', r'(\d{3}[\.\-\s]\d{3}[\.\s\-]\d{4})']
+        phone_rgx = [r'(\(\d{3}\)[\.\-\s]\d{3}[\.\-\s]\d{4})', r'(\d{3}[\.\-\s]\d{3}[\.\s\-]\d{4})',
+                     r'(\(\d{3}\)\d{3}[\.\-\s]\d{4})']
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
         self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
         self.fax_keywords = ["fax", "fx", "f:", "(f)"]

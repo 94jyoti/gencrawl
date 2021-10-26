@@ -1,0 +1,58 @@
+{
+    "website": "https://doctors.oloah.org/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "doctors.oloah.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h2[@id='provider-name']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//span[@itemprop='medicalSpecialty']/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "//div[@itemprop='address']"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    ".//*[@class='location-phone-link']/text()"
+                ],
+                "return_type": "str",
+                "selector": "address_raw"
+            },
+            "fax": {
+                "paths": [
+                    ".//*[contains(@class, 'icon-print')]/parent::div/following-sibling::div[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "address_raw"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

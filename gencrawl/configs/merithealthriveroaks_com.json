@@ -1,0 +1,71 @@
+{
+    "website": "https://www.merithealthriveroaks.com",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "merithealthriveroaks.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.merithealthriveroaks.com/find-a-doctor/abai-aja-md-10226",
+            "https://www.merithealthriveroaks.com/find-a-doctor/abston-timothy-md-229",
+            "https://www.merithealthriveroaks.com/find-a-doctor/adams-john-md-10150",
+            "https://www.merithealthriveroaks.com/find-a-doctor/adepoju-oluwarotimi-md-19863",
+            "https://www.merithealthriveroaks.com/find-a-doctor/ahuja-brian-md-26448",
+            "https://www.merithealthriveroaks.com/find-a-doctor/allred-lindsey-md-15775",
+            "https://www.merithealthriveroaks.com/find-a-doctor/almand-jeff-md-9945",
+            "https://www.merithealthriveroaks.com/find-a-doctor/allen-bridger-dmd-27051"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[@class='primary-info']/h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[@class='specialty-info']/h3/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "//li[@id='physicianLocations']/ul"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "practice_name": {
+                "paths": [
+                    "//span[@class='addr'][1]/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "address_raw"
+            },
+            "phone": {
+                "paths": [
+                    "//li[@id='physicianLocations']/ul/li//span[@class='addr'][1]/following::span[@class='number']/strong/a/text()|//*[contains(text(), 'Phone')]/following::strong/a/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "address_raw"
+            },
+            "fax": {
+                "paths": [
+                    "//li[@id='physicianLocations']/ul/li//span[@class='addr'][1]/following::span[@class='number'][2]/strong/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "address_raw"
+            }
+        }
+    }
+}

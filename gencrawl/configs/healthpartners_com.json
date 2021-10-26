@@ -1,0 +1,64 @@
+{
+    "website": "https://www.healthpartners.com",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "healthpartners.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.healthpartners.com/care/find/doctor/30907/",
+            "https://www.healthpartners.com/care/find/doctor/79847/",
+            "https://www.healthpartners.com/care/find/doctor/98385/",
+            "https://www.healthpartners.com/care/find/doctor/82246/",
+            "https://www.healthpartners.com/care/find/doctor/109216/",
+            "https://www.healthpartners.com/care/find/doctor/22830/",
+            "https://www.healthpartners.com/care/find/doctor/81426/",
+            "https://www.healthpartners.com/care/find/doctor/24053/",
+            "https://www.healthpartners.com/care/find/doctor/203631/",
+            "https://www.healthpartners.com/care/find/doctor/169524/",
+            "https://www.healthpartners.com/care/find/doctor/80857/",
+            "https://www.healthpartners.com/care/find/doctor/32711/",
+            "https://www.healthpartners.com/care/find/doctor/206978/",
+            "https://www.healthpartners.com/care/find/doctor/32712/",
+            "https://www.healthpartners.com/care/find/doctor/211051/",
+            "https://www.healthpartners.com/care/find/doctor/167329/",
+            "https://www.healthpartners.com/care/find/doctor/115484/",
+            "https://www.healthpartners.com/care/find/doctor/186967/",
+            "https://www.healthpartners.com/care/find/doctor/89860/"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1/div[@class='doctor-header-width']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[@class='specialty-container']//none[@class='lg']/div/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "//div[@class='location-card']"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}
