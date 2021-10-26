@@ -1,0 +1,48 @@
+{
+    "website": "https://www.frederickhealth.org/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "frederickhealth.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1[@class='hide-1024']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//strong[contains(text(),'Specialt')]/following-sibling::span/a/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "//ul[contains(@class,'system-cards items')]/li/address"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "practice_name": {
+                "paths": [
+                    "//ul[contains(@class,'system-cards items')]/li/strong/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            }
+        }
+    }
+}

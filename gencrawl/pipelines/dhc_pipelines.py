@@ -287,6 +287,8 @@ class DHCPipeline:
 
             if not item.get("state"):
                 for state in self.us_states:
+                    if len(state) == 2:
+                        continue
                     if state.lower() in addr.lower():
                         item['state'] = state
                         if item.get("zip"):
