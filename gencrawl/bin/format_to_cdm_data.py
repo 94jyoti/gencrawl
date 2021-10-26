@@ -101,13 +101,13 @@ if __name__ == "__main__":
                       "Long Term (Per Share)": "LT Cap Gains","Pay Date":"Payble Date",}
     '''
     output_columns = {"Fund URL": "Domain", 'Nasdaq Ticker': "Fund Name/Ticker", 'Share Class': "Class Name",
-                      "Total (Per Share)": "Capital Gains", "Reinvestment Price": "Reinvest Nav/Price",
+                      "Total (Per Share)": "Capital Gains", "CG Reinvestment Price": "Reinvest Nav/Price",
                       "Per Share": "Total Distribution", "Short Term (Per Share)": "ST Cap Gains",
-                      "Long Term (Per Share)": "LT Cap Gains", "Pay Date": "Payble Date","CG Reinvestment Price":"Income/Amount/Share/Dividend"}
+                      "Long Term (Per Share)": "LT Cap Gains", "CG Pay Date": "Payble Date","CG Record Date":"Record Date","CG Ex Date":"Ex Date"}
         #,'CG Ex Date':"Ex Date","CG Record Date":"Record Date",'CG Pay Date':"Payble Date"}
     input_coulmns = ['Fund URL', 'Nasdaq Ticker']
     # column_list=['Ex Date','Pay Date','Per Share']
-    column_list = ['Long Term (Per Share)','CG Ex Date','CG Record Date','CG Pay Date','Short Term (Per Share)','Total (Per Share)','CG Reinvestment Price','Record Date','Ex Date','Pay Date','Per Share','Reinvestment Price']
+    column_list = ['CG Record Date','CG Ex Date','CG Pay Date','Long Term (Per Share)','Short Term (Per Share)','Per Share','CG Reinvestment Price']
 
     df=df.replace(np.nan, ' ')
     df=df.drop_duplicates()
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     #outputdf = outputdf.reindex(["Domain", "Page URL", "Fund Name/Ticker", "Record Date","Ex Date", "Payble Date", "Reinvest Date","Ordinary Income", "ST Cap Gains", "LT Cap Gains","CG Record Date",'CG Pay Date','CG Ex Date',"Total Distribution", "Reinvest Nav/Price", "Class Name", "Income/Amount/Share/Dividend", "Frequency", "Annual Distribution Rate* (%)", "Period", "Investment Income","Return of Capital", "Capital Gains", "Rate", "Year End NAV"], axis=1)
     outputdf = outputdf.reindex(
         ["Domain", "Page URL", "Fund Name/Ticker", "Record Date", "Ex Date", "Payble Date", "Reinvest Date",
-         "Ordinary Income",'CG Record Date','CG Ex Date','CG Pay Date',"ST Cap Gains", "LT Cap Gains", "Total Distribution", "Reinvest Nav/Price", "Class Name",
+         "Ordinary Income","ST Cap Gains", "LT Cap Gains", "Total Distribution", "Reinvest Nav/Price", "Class Name",
          "Income/Amount/Share/Dividend", "Frequency", "Annual Distribution Rate* (%)", "Period", "Investment Income",
          "Return of Capital", "Capital Gains", "Rate", "Year End NAV"], axis=1)
     print(outputdf["Domain"])
@@ -130,6 +130,5 @@ if __name__ == "__main__":
     outputdf1 = outputdf.replace(np.nan, '')
     #outputdf1 = outputdf.replace("nan", "")
     outputdf1 = outputdf1.drop_duplicates()
-    outputdf1= outputdf1.dropna(how='all', axis=0)
     #outputdf1 = outputdf.fillna('')
-    outputdf1.to_csv('FIEMsingle_distri.csv', index=False, )
+    outputdf1.to_csv('payden.csv', index=False, )
