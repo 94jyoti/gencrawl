@@ -287,6 +287,8 @@ class DHCPipeline:
 
             if not item.get("state"):
                 for state in self.us_states:
+                    if len(state) == 2:
+                        continue
                     if state.lower() in addr.lower():
                         item['state'] = state
                         if item.get("zip"):
@@ -297,7 +299,7 @@ class DHCPipeline:
                 if item.get("state"):
                     break
         # if zip is not in address
-        if not item.get("zip"):
+        if not item.get("zip") and address:
             address = address[:index+1]
         address = [a.strip().strip(",").strip() for a in address if a and a.strip()]
         return item, address
@@ -351,11 +353,13 @@ class DHCPipeline:
             # hardcoded check for franciscanhealth.org
             # can make it dynamic using decision_tags if needed in future.
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
+            item['address_raw_1'] = "___".join(address_raw)
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
             if pincode:
                 address_raw[address_upto_idx] = address_raw[address_upto_idx].split(pincode)[0]
             address = address_raw[:address_upto_idx + 1]
+
             if self.decision_tags.get("phone_at_start"):
                 item, address = self.find_phone_and_fax(item, address)
                 item = self.find_email(item, address)
