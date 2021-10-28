@@ -39,11 +39,15 @@ class DHCPipeline:
         us_states = set()
         suffixes = set()
         designations = set()
+        self.practice_tags = set()
+        self.address_tags = set()
         self.address_text_to_remove = set()
         self.address1_text_to_remove = set()
         for row in Utility.read_csv_from_response(resp):
             city, state, suffix, designation = row['City'], row['State'], row['Suffix'], row['Designation']
             text_to_remove, text_to_remove1 = row['Text To Remove'], row['Text To Remove From Address1 Start']
+            practice_tag = row['Practice Tags']
+            address_tag = row['Address Tags']
             if city:
                 us_cities.add(city.strip())
             if state:
@@ -56,6 +60,10 @@ class DHCPipeline:
                 self.address_text_to_remove.add(text_to_remove.strip())
             if text_to_remove1:
                 self.address1_text_to_remove.add(text_to_remove1)
+            if practice_tag:
+                self.practice_tags.add(practice_tag.strip())
+            if address_tag:
+                self.address_tags.add(address_tag.strip())
 
         self.us_cities = sorted(us_cities, key=len, reverse=True)
         self.us_states = sorted(us_states, key=len, reverse=True)
@@ -72,6 +80,9 @@ class DHCPipeline:
         if self.decision_tags.get("phone_rgx"):
             for r in self.decision_tags['phone_rgx']:
                 self.phone_rgx.append(re.compile(r'{}'.format(r)))
+        if self.decision_tags.get("ignore_cities"):
+            for city in self.decision_tags.get("ignore_cities"):
+                self.us_cities.remove(city)
 
     def parse_field(self, field):
         if isinstance(field, bool):
@@ -141,6 +152,10 @@ class DHCPipeline:
     # default implementation takes designation after first comma
     def parse_designation(self, item):
         raw_name = item['raw_full_name']
+        ignore_designations = []
+        for key in ['first_name', 'middle_name', 'last_name']:
+            if item.get(key):
+                ignore_designations.append(item[key])
         # parse the designations after first comma
         if ',' in raw_name:
             designation = raw_name.split(",", 1)[-1]
@@ -150,6 +165,8 @@ class DHCPipeline:
             item['designation'] = designation
         else:
             item = self.parse_designation_backup(item)
+        if item.get("designation"):
+            item['designation'] = [d for d in item['designation'] if d not in ignore_designations]
         return item
 
     def parse_name(self, item):
@@ -299,12 +316,31 @@ class DHCPipeline:
                 if item.get("state"):
                     break
         # if zip is not in address
-        if not item.get("zip") and address:
+        if not item.get("zip") and item.get("state") and address:
             address = address[:index+1]
         address = [a.strip().strip(",").strip() for a in address if a and a.strip()]
         return item, address
 
+    def check_practice_name(self, text):
+        if text.split(" ")[0].isdigit():
+            return False
+        for tag in self.practice_tags:
+            if tag in text.split():
+                return True
+        for tag in self.address_tags:
+            if tag in text:
+                return False
+        for t in text.split():
+            if t.isdigit():
+                return True
+        return False
+
     def find_practice_name(self, item, address):
+        if self.decision_tags.get("practice_may_in_address"):
+            is_practice_name = self.check_practice_name((address[0]))
+            if is_practice_name:
+                self.decision_tags['practice_in_address'] = True
+
         if self.decision_tags.get("practice_in_address"):
             practice_name = address[0]
             address = address[1:]
@@ -386,7 +422,7 @@ class DHCPipeline:
             address_values = [item[k].strip() for k in address_keys if item.get(k) and item[k].strip()]
             second_part_address = " ".join(address_values)
             if first_part_address or second_part_address:
-                item['address'] = ', '.join([first_part_address, second_part_address])
+                item['address'] = ', '.join([first_part_address, second_part_address]).strip(", ")
         return item
 
     def parse_list_fields(self, item):

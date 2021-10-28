@@ -18,32 +18,15 @@ class partnerselectfundsDetail(FinancialDetailFieldMapSpider):
 
         items = self.prepare_items(response, default_item)
 
-        
         meta['items']=items
 
+        tickers = response.xpath("//h1/span/text()").get().split(',')
+        #print("aa:",tickers)
 
-        tickers = response.xpath("//th[contains(text(),'Expense Ratios')]/following-sibling::th/text()[not(contains(.,'Ratio'))]").getall()
+        for c,i in enumerate(items):
+            items[c]['nasdaq_ticker']=tickers[c]
 
-       
-        count=0
-        for i in items:
-
-            if i['nasdaq_ticker']=="":
-
-
-                ticker_value = response.xpath("//td[contains(text(),'Symbol')]/following-sibling::td/text()").get()
-       
-
-            print("ticker_value:",i['nasdaq_ticker'])
-
-
-            #count = count+1
-            #print("count:",count)
-
-            
-            #print("hello:",i['nasdaq_ticker'])
-
-            meta['items'] = items
+            meta['item'] = i
 
                 
 
@@ -73,13 +56,7 @@ class partnerselectfundsDetail(FinancialDetailFieldMapSpider):
 
         meta = response.meta
 
-        items = meta['items']
-
-        nasdaq_ticker = items[0]['nasdaq_ticker']
-
-
-
-        #print("items:",items[0])
+        item = meta['item']
 
         temp_distribution_data_all = re.findall('var visualizer = (.*);', response.text)
 
@@ -89,31 +66,10 @@ class partnerselectfundsDetail(FinancialDetailFieldMapSpider):
         dist_data_final=[]
         for d in temp_distribution_data_all:
             count=count+1
-
-            #print("dd:",d)
-
-
-
             json_data = json.loads(d)['charts']
-
-            #print("count...",count,"....json_data:",json_data['charts'])
-
-            #open('partnerselectfunds11.txt','w',encoding='utf-8').write(json.dumps(json_data))
-
-
-            #json_data = json.loads(temp_distribution_data_all[0])['charts']
-            #print("json_data:",json_data)
-            
-
-           
             dist_data_final.append(json_data) 
 
         xx = dist_data_final[-1]
-        #print("dist_data_final:",xx,type(xx))
-
-        #print(list(xx.keys()))
-
-       
         final_data = []
         for x in list(xx.keys()):
             series_list = []
@@ -135,191 +91,179 @@ class partnerselectfundsDetail(FinancialDetailFieldMapSpider):
         #final_data.append(fund_block_data)
         print("final_data:",final_data)
 
+        capital_gain_list=[]
+        dividends_list=[]
         
-
-
-        #for data in dist_data_final[-1]:
-
-            #print("Keys:",data.keys())
-            #keys_value = data.keys()
-            #print(keys_value)
-
-        #for k in keys_value:
-        #    print(k)
-
-            #for j in dist_data_final:
-
-                #print("jjj:",j[k])
-
-
-
-
-
-
+        
+        
+        for d in final_data:
        
-        
-        #print("Items:",items)
+            # For Capital Gains
+            if 'Gain' in ' | '.join(d[0]):
+                print("inside gain")
+                #print("Here...",d[0],len(d[0]))
+                record_date_loc=""
+                ST_gain_loc=""
+                LT_gain_loc=""
+                ticker_loc=""
+                Net_Investment_Income_loc=""
+                Total_Distribution_loc=""
+                Ex_Div_Date_loc=""
+                Reinvestment_Price_loc=""
 
-        for i in items:
-
-
-
-            capital_gain_list=[]
-            dividends_list=[]
-            
-            
-            
-            for d in final_data:
-           
-                # For Capital Gains
-                if 'Gain' in ' | '.join(d[0]):
-                    print("Here...",d[0],len(d[0]))
-                    record_date_loc=""
-                    ST_gain_loc=""
-                    LT_gain_loc=""
-                    ticker_loc=""
-                    Net_Investment_Income_loc=""
-                    Total_Distribution_loc=""
-                    Ex_Div_Date_loc=""
-                    Reinvestment_Price_loc=""
-
-                    for index,col_name in enumerate(d[0]):
-                        if 'Record' in col_name:
-                            print(index,col_name)
-                            record_date_loc = index
-                        if 'Short-Term Capital Gain' in col_name or 'ST Cap Gains' in col_name:
-                            print(index,col_name)
-                            ST_gain_loc = index
-                        if 'Long-Term Capital Gain' in col_name:
-                            print(index,col_name)
-                            LT_gain_loc = index
-                        if 'Ticker' in col_name:
-                            print(index,col_name)
-                            ticker_loc = index
-                        if 'Net Investment Income' in col_name:
-                            print(index,col_name)
-                            Net_Investment_Income_loc = index
-                        if 'Total Distribution' in col_name:
-                            print(index,col_name)
-                            Total_Distribution_loc = index
-                        if 'Ex-Div Date' in col_name:
-                            print(index,col_name)
-                            Ex_Div_Date_loc = index
-                        if 'Reinvestment Price' in col_name:
-                            print(index,col_name)
-                            Reinvestment_Price_loc = index
+                for index,col_name in enumerate(d[0]):
+                    if 'Record' in col_name:
+                        #print(index,col_name)
+                        record_date_loc = index
+                    if 'Short-Term Capital Gain' in col_name or 'ST Cap Gains' in col_name:
+                        #print(index,col_name)
+                        ST_gain_loc = index
+                    if 'Long-Term Capital Gain' in col_name:
+                        #print(index,col_name)
+                        LT_gain_loc = index
+                    if 'Ticker' in col_name:
+                        #print(index,col_name)
+                        ticker_loc = index
+                    if 'Net Investment Income' in col_name:
+                        #print(index,col_name)
+                        Net_Investment_Income_loc = index
+                    if 'Total Distribution' in col_name:
+                        #print(index,col_name)
+                        Total_Distribution_loc = index
+                    if 'Ex-Div Date' in col_name:
+                        #print(index,col_name)
+                        Ex_Div_Date_loc = index
+                    if 'Reinvestment Price' in col_name:
+                        #print(index,col_name)
+                        Reinvestment_Price_loc = index
 
 
-                    for all_row in range(1,len(d)):
-                       print("hhh:",d[all_row])
-                       for row in d[all_row]:
-                        print("row:",row)
+                for all_row in range(1,len(d)):
+                   print("hhh:",d[all_row])
+                   for row in d[all_row]:
+                    print("row:",row)
 
 
-                        dist_ticker = row[1].strip()
-                        if i['nasdaq_ticker']==dist_ticker:
-                            #print("here...",dist_ticker)
-                            
-                            cg_record_date =row[record_date_loc]
-                            cg_ex_date =row[Ex_Div_Date_loc]
-                            cg_pay_date =""
-                            if LT_gain_loc=="":
-                                long_term_per_share =""
+                    dist_ticker = row[1].strip()
+                    print([item['nasdaq_ticker'],dist_ticker])
+                    if item['nasdaq_ticker'].strip()==dist_ticker:
+                        print("here...",dist_ticker)
+                        
+                        cg_record_date =row[record_date_loc]
+                        cg_ex_date =row[Ex_Div_Date_loc]
+                        cg_pay_date =""
+                        if LT_gain_loc=="":
+                            long_term_per_share =""
 
-                            else:
-                                long_term_per_share =row[LT_gain_loc]
+                        else:
+                            long_term_per_share =row[LT_gain_loc]
 
-                            if ST_gain_loc=="":
-                                short_term_per_share=""
-                            else:
-                                short_term_per_share=row[ST_gain_loc]
+                        if ST_gain_loc=="":
+                            short_term_per_share=""
+                        else:
+                            short_term_per_share=row[ST_gain_loc]
 
-                            reinvestment_price =row[Reinvestment_Price_loc]
+                        reinvestment_price =row[Reinvestment_Price_loc]
 
-                            total_per_share = row[Total_Distribution_loc]
+                        total_distribution = row[Total_Distribution_loc]
 
-
-                            data_dict1={"cg_ex_date": cg_ex_date, "cg_record_date": cg_record_date, "cg_pay_date": cg_pay_date, "short_term_per_share": short_term_per_share,"long_term_per_share": long_term_per_share, "total_per_share": total_per_share, "cg_reinvestment_price": reinvestment_price}
-                            #data_dict2={"ex_date": ex_date, "pay_date": pay_date, "ordinary_income": "", "qualified_income": "", "record_date": record_date,"per_share": per_share, "reinvestment_price": ""}
-                            #data_dict2['ex_date']=year[i]
-                            #data_dict1['total_per_share']=capital_gains[i]
-                            #data_dict2['ordinary_income']=dividends[i]
-                            capital_gain_list.append(data_dict1)
-                            #dividends_list.append(data_dict2)
-                else:
-                    print("No_gains")
-                    print("else Here...",d[0],len(d[0]))
-                    record_date_loc=""
-                    ST_gain_loc=""
-                    LT_gain_loc=""
-                    ticker_loc=""
-                    Net_Investment_Income_loc=""
-                    Total_Distribution_loc=""
-                    Ex_Div_Date_loc=""
-                    Reinvestment_Price_loc=""
-
-                    for index,col_name in enumerate(d[0]):
-                        if 'Record' in col_name:
-                            print(index,col_name)
-                            record_date_loc = index
-                        if 'Short-Term Capital Gain' in col_name or 'ST Cap Gains' in col_name:
-                            print(index,col_name)
-                            ST_gain_loc = index
-                        if 'Long-Term Capital Gain' in col_name:
-                            print(index,col_name)
-                            LT_gain_loc = index
-                        if 'Ticker' in col_name:
-                            print(index,col_name)
-                            ticker_loc = index
-                        if 'Net Investment Income' in col_name:
-                            print(index,col_name)
-                            Net_Investment_Income_loc = index
-                        if 'Total Distribution' in col_name:
-                            print(index,col_name)
-                            Total_Distribution_loc = index
-                        if 'Ex-Div Date' in col_name:
-                            print(index,col_name)
-                            Ex_Div_Date_loc = index
-                        if 'Reinvestment Price' in col_name:
-                            print(index,col_name)
-                            Reinvestment_Price_loc = index
-
-                    for all_row in range(1,len(d)):
-                       print("hhh:",d[all_row])
-                       for row in d[all_row]:
-                        print("row:",row)
-
-
-                        dist_ticker = row[1].strip()
-                        if i['nasdaq_ticker']==dist_ticker:
-                            #print("here...",dist_ticker)
-                            
-                            record_date =row[record_date_loc]
-                            ex_date =row[Ex_Div_Date_loc]
-                            pay_date =""
-                            
-
-                            reinvestment_price =row[Reinvestment_Price_loc]
-
-                            total_per_share = row[Total_Distribution_loc]
-
-                            ordinary_income = row[Net_Investment_Income_loc]
-
-                            per_share = row[Net_Investment_Income_loc]
+                        Net_Investment_Income = row[Net_Investment_Income_loc]
 
 
 
 
-                            #data_dict1={"cg_ex_date": cg_ex_date, "cg_record_date": cg_record_date, "cg_pay_date": cg_pay_date, "short_term_per_share": short_term_per_share,"long_term_per_share": long_term_per_share, "total_per_share": total_per_share, "cg_reinvestment_price": reinvestment_price}
-                            data_dict2={"ex_date": ex_date, "pay_date": pay_date, "ordinary_income": ordinary_income, "qualified_income": "", "record_date": record_date,"per_share": per_share, "reinvestment_price": reinvestment_price}
-                            #data_dict2['ex_date']=year[i]
-                            #data_dict1['total_per_share']=capital_gains[i]
-                            #data_dict2['ordinary_income']=dividends[i]
-                            #capital_gain_list.append(data_dict1)
-                            dividends_list.append(data_dict2)
+
+                        data_dict1={"cg_ex_date": cg_ex_date, "cg_record_date": cg_record_date, "cg_pay_date": cg_pay_date, "short_term_per_share": short_term_per_share,"long_term_per_share": long_term_per_share, "total_per_share": total_distribution, "cg_reinvestment_price": reinvestment_price}
+                        #print(data_dict1)
+
+                        data_dict2={"ex_date": cg_ex_date, "pay_date": cg_pay_date, "ordinary_income": Net_Investment_Income, "qualified_income": "", "record_date": cg_record_date,"per_share": "", "reinvestment_price": reinvestment_price}
+                        
 
 
-                    
-            i['capital_gains']=capital_gain_list
-            i['dividends']=dividends_list
-            yield self.generate_item(i, FinancialDetailItem)
+                        #data_dict2={"ex_date": ex_date, "pay_date": pay_date, "ordinary_income": "", "qualified_income": "", "record_date": record_date,"per_share": per_share, "reinvestment_price": ""}
+                        #data_dict2['ex_date']=year[i]
+                        #data_dict1['total_per_share']=capital_gains[i]
+                        #data_dict2['ordinary_income']=dividends[i]
+                        capital_gain_list.append(data_dict1)
+                        dividends_list.append(data_dict2)
+            else:
+                print("No_gains")
+                #print("else Here...",d[0],len(d[0]))
+                record_date_loc=""
+                ST_gain_loc=""
+                LT_gain_loc=""
+                ticker_loc=""
+                Net_Investment_Income_loc=""
+                Total_Distribution_loc=""
+                Ex_Div_Date_loc=""
+                Reinvestment_Price_loc=""
+
+                for index,col_name in enumerate(d[0]):
+                    if 'Record' in col_name:
+                        #print(index,col_name)
+                        record_date_loc = index
+                    if 'Short-Term Capital Gain' in col_name or 'ST Cap Gains' in col_name:
+                        #print(index,col_name)
+                        ST_gain_loc = index
+                    if 'Long-Term Capital Gain' in col_name:
+                        #print(index,col_name)
+                        LT_gain_loc = index
+                    if 'Ticker' in col_name:
+                        #print(index,col_name)
+                        ticker_loc = index
+                    if 'Net Investment Income' in col_name:
+                        #print(index,col_name)
+                        Net_Investment_Income_loc = index
+                    if 'Total Distribution' in col_name:
+                        #print(index,col_name)
+                        Total_Distribution_loc = index
+                    if 'Ex-Div Date' in col_name:
+                        #print(index,col_name)
+                        Ex_Div_Date_loc = index
+                    if 'Reinvestment Price' in col_name:
+                        #print(index,col_name)
+                        Reinvestment_Price_loc = index
+
+                for all_row in range(1,len(d)):
+                   #print("hhh:",d[all_row])
+                   for row in d[all_row]:
+                    #print("row:",row)
+
+
+                    dist_ticker = row[1].strip()
+                    if item['nasdaq_ticker'].strip()==dist_ticker:
+                        print("here...",dist_ticker)
+                        
+                        record_date =row[record_date_loc]
+                        ex_date =row[Ex_Div_Date_loc]
+                        pay_date =""
+                        
+
+                        reinvestment_price =row[Reinvestment_Price_loc]
+
+                        total_distribution = row[Total_Distribution_loc]
+
+                        ordinary_income = row[Net_Investment_Income_loc]
+
+                        per_share = row[Net_Investment_Income_loc]
+
+
+
+                        data_dict1={"cg_ex_date": ex_date, "cg_record_date": record_date, "cg_pay_date": pay_date, "short_term_per_share": short_term_per_share,"long_term_per_share": long_term_per_share, "total_per_share": total_distribution, "cg_reinvestment_price": reinvestment_price}
+                        
+                        #data_dict1={"cg_ex_date": cg_ex_date, "cg_record_date": cg_record_date, "cg_pay_date": cg_pay_date, "short_term_per_share": short_term_per_share,"long_term_per_share": long_term_per_share, "total_per_share": total_per_share, "cg_reinvestment_price": reinvestment_price}
+                        data_dict2={"ex_date": ex_date, "pay_date": pay_date, "ordinary_income": ordinary_income, "qualified_income": "", "record_date": record_date,"per_share": total_distribution, "reinvestment_price": reinvestment_price}
+                        print(data_dict2)
+                        #data_dict2['ex_date']=year[i]
+                        #data_dict1['total_per_share']=capital_gains[i]
+                        #data_dict2['ordinary_income']=dividends[i]
+                        capital_gain_list.append(data_dict1)
+                        dividends_list.append(data_dict2)
+
+
+                
+        item['capital_gains']=capital_gain_list
+        item['dividends']=dividends_list
+
+        yield self.generate_item(item, FinancialDetailItem)
+
