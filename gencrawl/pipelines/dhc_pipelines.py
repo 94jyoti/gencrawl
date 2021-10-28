@@ -385,10 +385,15 @@ class DHCPipeline:
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
             address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip().strip(",").strip()]
-            
-            # hardcoded check for franciscanhealth.org
-            # can make it dynamic using decision_tags if needed in future.
+
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
+
+            if self.decision_tags.get("split_address_1_by_comma"):
+                a1 = address_raw[0]
+                address_raw = address_raw[1:]
+                for a in reversed(a1.split(",")):
+                    address_raw.insert(0, a.strip())
+
             item['address_raw_1'] = "___".join(address_raw)
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
