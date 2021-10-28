@@ -7,7 +7,7 @@ from gencrawl.util.statics import Statics
 
 class CarlecomhospitalDetail(HospitalDetailSpider):
 
-    name = 'carle_com'
+    name = 'hospital_detail_carle_com'
 
     def get_items_or_req(self, response, default_item={}):
 
