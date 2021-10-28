@@ -15,18 +15,18 @@ class HospitalDetailPhoneAsAddressSpider(HospitalDetailSpider):
     # will create a new item for each phones found in phone_as_address
     def get_field_as_item(self, items):
         item = items[0]
-        field_map = {"phone_as_item": "phone", "practice_as_item": "practice_name"}
+        field_map = {"phone_as_item": "phone", "practice_as_item": "practice_name", "fax_as_item": "fax"}
         for field in field_map:
             field_values = item.get(field)
             if field_values:
                 if isinstance(field_values, str):
                     field_values = [field_values]
-                    for val in field_values:
-                        item_replica = deepcopy(item)
-                        for key in self.address_fields:
-                            item_replica[key] = None
-                        item_replica[field_map[field]] = val
-                        items.append(item_replica)
+                for val in field_values:
+                    item_replica = deepcopy(item)
+                    for key in self.address_fields:
+                        item_replica[key] = None
+                    item_replica[field_map[field]] = val
+                    items.append(item_replica)
         return items
 
     def get_items_or_req(self, response, default_item=None):

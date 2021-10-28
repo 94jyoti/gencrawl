@@ -1,0 +1,68 @@
+{
+    "website": "https://providers.inspirahealthnetwork.org",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "providers.inspirahealthnetwork.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://providers.inspirahealthnetwork.org/provider/Azza+Abdel+Hak/1442756?sort=name#provider-details-about",
+            "https://providers.inspirahealthnetwork.org/provider/Hamid+Abdollahi/1466440?sort=name",
+            "https://providers.inspirahealthnetwork.org/provider/Jeffrey+A.+Abrams/1442857?sort=name",
+            "https://providers.inspirahealthnetwork.org/provider/Randy+Ackerman/1442630?sort=name",
+            "https://providers.inspirahealthnetwork.org/provider/Raymond+A.+Adelizzi/1859374?sort=name",
+            "https://providers.inspirahealthnetwork.org/provider/David+G.+Aderholdt/1442668?sort=name",
+            "https://providers.inspirahealthnetwork.org/provider/Shabani+Ahluwalia/1998348?sort=name",
+            "https://providers.inspirahealthnetwork.org/provider/Ilyas+Ahmed/1442979?sort=name",
+            "https://providers.inspirahealthnetwork.org/provider/John+C.+Ahrens/1442917?sort=name"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div/h2[@id='provider-name']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//span[@itemprop='medicalSpecialty']/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "affiliation": {
+                "paths": [
+                    "//*[contains(text(), 'Hospital Affiliations')]/parent::div/following-sibling::div/div"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "//div[@id='provider-details-locations']//div[@itemprop='address']/div[position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div/a[@class='location-phone-link']/text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

@@ -1,0 +1,96 @@
+{
+    "website": "https://www.virtua.org/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "virtua.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={0DCB2C28-047D-4515-96BB-182AF18803E0}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={7EE9E900-BBA6-433C-BC81-6E22C9677932}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={A3A445DD-18D6-444F-A7DC-D9737DA9C738}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={A672E7E2-3891-495D-9284-ABBEEDA059CF}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={742784C5-D769-4183-B0BC-284CDCF37813}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={63D91263-E822-41F9-B4D4-DD16F3279041}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={13A87839-BEFB-4A55-A36D-B97ED0609D12}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={217E9956-261E-463C-B52E-3D8D6F1F0B38}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={D8482B71-452E-44E5-BA37-1AC74701726F}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={2F36DC21-E9E2-40B8-B3DC-75ADF3E4A784}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={4924D339-BAB8-4B26-B8A3-BDEC95FA0316}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={20E8B1C0-7DE8-4752-9CAA-9C778284D215}",
+            "https://www.virtua.org/find-a-doctor/physician-detail?id={7CAD6D87-A0AB-4DC8-9551-01592002C119}"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[@class='title-wrapper']/h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//*[contains(text(), 'Specialties')]/following::dd/ul/li/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "affiliation": {
+                "paths": [
+                    "//*[contains(text(), 'Affiliations')]//parent::dt/following-sibling::dd[1]//text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "practice_name": {
+                "paths": [
+                    "//div[@class='practices']/ul/li/p[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_line_1": {
+                "paths": [
+                    "//p/span[@itemprop='streetAddress']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "city": {
+                "paths": [
+                    "//p/span[@itemprop='addressLocality']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "state": {
+                "paths": [
+                    "//p/span[@itemprop='addressRegion']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "zip": {
+                "paths": [
+                    "//p/span[@itemprop='postalCode']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//a/span[@itemprop='telephone']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}

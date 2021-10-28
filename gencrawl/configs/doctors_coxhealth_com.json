@@ -1,0 +1,105 @@
+{
+    "website": "doctors.coxhealth.com",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "doctors.coxhealth.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://doctors.coxhealth.com/provider/Ibrahim+I+Abdalla/913054?sort=name&filter%5B%5D=show_in_pmc%3AYes",
+            "https://doctors.coxhealth.com/provider/Melissa+Ann+Abramovitz/913188?sort=name&filter%5B%5D=show_in_pmc%3AYes",
+            "https://doctors.coxhealth.com/provider/Jennifer+Lynn+Acosta/913780?sort=name&filter%5B%5D=show_in_pmc%3AYes",
+            "https://doctors.coxhealth.com/provider/Stephen+R.+Adams/913168?sort=name&filter%5B%5D=show_in_pmc%3AYes",
+            "https://doctors.coxhealth.com/provider/Ryan+Kevin+Adkins/913955?sort=name&filter%5B%5D=show_in_pmc%3AYes",
+            "https://doctors.coxhealth.com/provider/Dusit+Adstamongkonkul/914113?sort=name&filter%5B%5D=show_in_pmc%3AYes",
+            "https://doctors.coxhealth.com/provider/Anees+Fatima+Afroze/913968?sort=name&filter%5B%5D=show_in_pmc%3AYes",
+            "https://doctors.coxhealth.com/provider/Dustan+Arya+Afshar/2009255?sort=name&filter%5B%5D=show_in_pmc%3AYes",
+            "https://doctors.coxhealth.com/provider/Mohammed+Arif+Ahmed/1209196?sort=name&filter%5B%5D=show_in_pmc%3AYes"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div/h2[@id='provider-name']/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['raw_full_name'].split(',')[0]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "suffix": {
+                "paths": [
+                    "//div/h2[@id='provider-name']/text()"
+                ],
+                "cleanup_functions": [
+                    "obj['suffix'].split(',')[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "designation": {
+                "paths": [
+                    "//*[contains(text(), 'Leadership Position')]//following::div[1]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//span[@itemprop='medicalSpecialty']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "practice_name": {
+                "paths": [
+                    "//div[@id='provider-details-locations']//h2[@class='fw-6 fs-s location-title']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_line_1": {
+                "paths": [
+                    "//span[@itemprop='streetAddress']/span/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "city": {
+                "paths": [
+                    "//span[@itemprop='addressLocality']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "state": {
+                "paths": [
+                    "//span[@itemprop='addressRegion']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "zip": {
+                "paths": [
+                    "//span[@itemprop='postalCode']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div/a[@class='location-phone-link']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    }
+}

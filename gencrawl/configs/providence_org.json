@@ -1,0 +1,51 @@
+{
+    "website": "https://www.providence.org/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "providence.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1[@class='doctor-name']/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[@class='all-specialties']/a/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "affiliation": {
+                "paths": [
+                    "//*[contains(text(), 'Affiliated Locations')]/parent::div/following-sibling::p/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "//div[@class='location-cards all-locations']/div"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}
