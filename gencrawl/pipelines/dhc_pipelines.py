@@ -336,6 +336,9 @@ class DHCPipeline:
         return False
 
     def find_practice_name(self, item, address):
+        if not address:
+            return item, address
+
         if self.decision_tags.get("practice_may_in_address"):
             is_practice_name = self.check_practice_name((address[0]))
             if is_practice_name:
