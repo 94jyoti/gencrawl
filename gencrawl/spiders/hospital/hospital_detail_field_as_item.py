@@ -21,12 +21,12 @@ class HospitalDetailPhoneAsAddressSpider(HospitalDetailSpider):
             if field_values:
                 if isinstance(field_values, str):
                     field_values = [field_values]
-                    for val in field_values:
-                        item_replica = deepcopy(item)
-                        for key in self.address_fields:
-                            item_replica[key] = None
-                        item_replica[field_map[field]] = val
-                        items.append(item_replica)
+                for val in field_values:
+                    item_replica = deepcopy(item)
+                    for key in self.address_fields:
+                        item_replica[key] = None
+                    item_replica[field_map[field]] = val
+                    items.append(item_replica)
         return items
 
     def get_items_or_req(self, response, default_item=None):
