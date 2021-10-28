@@ -22,11 +22,37 @@ import copy
 class yorktownfundsDetail(FinancialDetailFieldMapSpider):
     name = 'yorktownfunds_com'
 
+    custom_settings = {
+        "HTTPCACHE_ENABLED": False,
+        "CONCURRENT_REQUESTS_PER_DOMAIN": 2,
+        "DOWNLOAD_DELAY": 4,
+        "COOKIES_ENABLED": True,
+        "COOKIES_DEBUG": True,
+        "CRAWLERA_ENABLED":True
+    }
+
     def get_items_or_req(self, response, default_item={}):
         items = super().get_items_or_req(response, default_item)
        
         meta = response.meta
-        meta['items'] = items
+        
+        #print("fff:",items)
+
+        temp_ticker_list = ['YOVAX','YOVLX','YOVIX']
+        temp_class_list = ['A','L','I']
+
+        if items[0]['fund_url']=="https://yorktownfunds.com/funds-performance/small-cap-fund-2/":
+                item_copy = copy.deepcopy(items[0])
+                item_copy['nasdaq_ticker']='YOVIX'
+                items.append(item_copy)
+                items[0]['share_class']='A'
+                items[1]['share_class']='L'
+                items[2]['share_class']='I'
+                
+                
+        meta['items'] = items  
+
+        #open('yorktownfunds.html','w',encoding='utf-8').write(response.text)
 
         url ="https://yorktownfunds.com/funds-performance/distributions/"
 
@@ -37,11 +63,14 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
 
         items = meta['items']
 
+        
+        
+
         #open('yorktownfunds.html','w',encoding='utf-8').write(response.text)
 
         final_data =[]
 
-        for dist_years_block in response.xpath("//div[@class='tb-heading']"):
+        for dist_years_block in response.xpath("//div[@class='tb-heading' and contains(text(),'Monthly')]"):
             main_data_block=[]
             #dist_year = dist_years_block.xpath("@id").get()
             #print("dist_year:",dist_year.split('-')[0])
@@ -62,7 +91,7 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
                         td_value =t.xpath("text()").get()
 
                         if td_value=='\n':
-                            print("inside...")
+                            #print("inside...")
                             td_value =t.xpath("p/text()").get()
 
                         
@@ -82,14 +111,17 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
 
             final_data.append(main_data_block)
         
-        #print("final_data:",final_data)
+        print("final_data:",final_data)
 
+        
 
         for i in items:
             #print(i)
+
+                
             capital_gain_list=[]
             dividends_list=[]
-            print("fff:",'CLASS '+i['share_class'],i['nasdaq_ticker'],i['instrument_name'])
+            #print("fff:",'CLASS '+i['share_class'],i['nasdaq_ticker'],i['instrument_name'])
             #print(i['dividends'])
 
             for d in final_data:
@@ -101,7 +133,7 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
                     #if d[0][0]=='2013 Quarterly Capital Income Fund Distributions':
                     #    break
                     if 'Capital Gains' in d[0][0] and i['instrument_name'] in d[0][0]:
-                        #print("yipee")
+                        print("yipee")
                         #print(d[0])
                         for class_loc,t in enumerate(d[0]):
                             
@@ -113,7 +145,14 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
                                 #print(t[0],t[1])
                                 #if len(t)==2:
                                     #if 'CLASS '+i['share_class']==t[0] and i['nasdaq_ticker'] in t[1]:
-                            if 'CLASS '+i['share_class']==t:
+                            
+                            temp = i['share_class']
+                            if temp=='I':
+                                temp='INST.'
+                            else:
+                                temp = 'CLASS '+temp
+
+                            if temp==t:
                                 #print("hurray !!!")
                                 #print(d,class_loc,len(d))
 
@@ -166,8 +205,15 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
                                 #print(t[0],t[1])
                                 if len(t)==2:
                                     #if 'CLASS '+i['share_class']==t[0] and i['nasdaq_ticker'] in t[1]:
-                                    print("ttt:",t,d[0][0])
-                                    if 'CLASS '+i['share_class']==t[0] and i['nasdaq_ticker'] in t[1]:
+                                    #print("ttt:",t,d[0][0])
+
+                                    temp = i['share_class']
+                                    if temp=='I':
+                                        temp='INST.'
+                                    else:
+                                        temp = 'CLASS '+temp
+
+                                    if temp==t[0] and i['nasdaq_ticker'] in t[1]:
                                         print("hurray !!!",counter)
                                         print(d)
                                         #print("vinod:",d,len(d),counter)
@@ -193,6 +239,10 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
                                                 if 'PAYABLE'==t:
                                                     payable_date_loc=c2
                                                     print("Payable_date:",payable_date_loc)
+                                            for c2,t in enumerate(d[0]):
+                                                if 'EX-DATE'==t:
+                                                    ex_date_date_loc=c2
+                                                    print("ex_date:",ex_date_date_loc)
 
 
                                            
@@ -203,9 +253,9 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
 
                                                 record_date = d[c][record_date_loc-1]
                                                 pay_date = d[c][payable_date_loc-1]
-                                                ex_date=""
+                                                ex_date=d[c][ex_date_date_loc-1]
                                                 #reinvestment_price=d[c][8]
-                                                print("d[c][counter]:", d[c][counter-1][0])
+                                                #print("d[c][counter]:", d[c][counter-1][0])
                                                 per_share = d[c][counter-1][0]
                                                 ordinary_income = d[c][counter-1][0]
 
@@ -217,7 +267,7 @@ class yorktownfundsDetail(FinancialDetailFieldMapSpider):
                                                 #print(data_dict2)
 
             # #print(data_dict1)
-                                        dividends_list.append(data_dict2)
+                                                dividends_list.append(data_dict2)
             i['capital_gains']=capital_gain_list
             i['dividends']=dividends_list
 
