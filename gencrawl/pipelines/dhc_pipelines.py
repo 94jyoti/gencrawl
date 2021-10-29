@@ -7,6 +7,7 @@ import os
 import re
 from gencrawl.settings import RES_DIR
 from lxml import html
+import unidecode
 
 
 class DHCPipeline:
@@ -309,12 +310,14 @@ class DHCPipeline:
                     if state.lower() in addr.lower():
                         item['state'] = state
                         if item.get("zip"):
-                            address[index] = address[index].replace(state, "")
+                            address[index] = "".join(address[index].rsplit(state, 1))
+                            # address[index].replace(state, "")
                         else:
                             address[index] = address[index].split(f" {state}")[0]
                         break
                 if item.get("state"):
                     break
+
         # if zip is not in address
         if not item.get("zip") and item.get("state") and address:
             address = address[:index+1]
@@ -389,7 +392,7 @@ class DHCPipeline:
             address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip().strip(",").strip()]
 
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
-
+            address_raw = [unidecode.unidecode(a) for a in address_raw]
             if self.decision_tags.get("split_address_1_by_comma"):
                 a1 = address_raw[0]
                 address_raw = address_raw[1:]
