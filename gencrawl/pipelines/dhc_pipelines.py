@@ -335,8 +335,8 @@ class DHCPipeline:
                 return False
         for t in text.split():
             if t.isdigit():
-                return True
-        return False
+                return False
+        return True
 
     def find_practice_name(self, item, address):
         if not address:
