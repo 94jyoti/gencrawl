@@ -7,6 +7,7 @@ import os
 import re
 from gencrawl.settings import RES_DIR
 from lxml import html
+import unidecode
 
 
 class DHCPipeline:
@@ -309,12 +310,14 @@ class DHCPipeline:
                     if state.lower() in addr.lower():
                         item['state'] = state
                         if item.get("zip"):
-                            address[index] = address[index].replace(state, "")
+                            address[index] = "".join(address[index].rsplit(state, 1))
+                            # address[index].replace(state, "")
                         else:
                             address[index] = address[index].split(f" {state}")[0]
                         break
                 if item.get("state"):
                     break
+
         # if zip is not in address
         if not item.get("zip") and item.get("state") and address:
             address = address[:index+1]
@@ -332,16 +335,18 @@ class DHCPipeline:
                 return False
         for t in text.split():
             if t.isdigit():
-                return True
-        return False
+                return False
+        return True
 
     def find_practice_name(self, item, address):
+        if not address:
+            return item, address
+
+        is_practice_name = False
         if self.decision_tags.get("practice_may_in_address"):
             is_practice_name = self.check_practice_name((address[0]))
-            if is_practice_name:
-                self.decision_tags['practice_in_address'] = True
 
-        if self.decision_tags.get("practice_in_address"):
+        if is_practice_name or self.decision_tags.get("practice_in_address"):
             practice_name = address[0]
             address = address[1:]
             address = [a for a in address if a != practice_name]
@@ -385,10 +390,15 @@ class DHCPipeline:
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
             address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip().strip(",").strip()]
-            
-            # hardcoded check for franciscanhealth.org
-            # can make it dynamic using decision_tags if needed in future.
+
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
+            address_raw = [unidecode.unidecode(a) for a in address_raw]
+            if self.decision_tags.get("split_address_1_by_comma"):
+                a1 = address_raw[0]
+                address_raw = address_raw[1:]
+                for a in reversed(a1.split(",")):
+                    address_raw.insert(0, a.strip())
+
             item['address_raw_1'] = "___".join(address_raw)
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
