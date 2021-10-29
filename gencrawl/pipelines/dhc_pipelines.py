@@ -339,12 +339,11 @@ class DHCPipeline:
         if not address:
             return item, address
 
+        is_practice_name = False
         if self.decision_tags.get("practice_may_in_address"):
             is_practice_name = self.check_practice_name((address[0]))
-            if is_practice_name:
-                self.decision_tags['practice_in_address'] = True
 
-        if self.decision_tags.get("practice_in_address"):
+        if is_practice_name or self.decision_tags.get("practice_in_address"):
             practice_name = address[0]
             address = address[1:]
             address = [a for a in address if a != practice_name]
