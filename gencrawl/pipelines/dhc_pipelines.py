@@ -132,7 +132,7 @@ class DHCPipeline:
                 name = name.replace(sep, ' ')
             name = [r.strip() for r in name.split() if r.strip()]
             d = []
-            for part in name:
+            for part in name[1:]:
                 if part in self.designations_map:
                     d.append(part)
             return d
@@ -140,7 +140,6 @@ class DHCPipeline:
         raw_name = item['raw_full_name']
         # parse the designations after first comma
         designation = parse_d(raw_name.split(",", 1)[-1])
-
         # if not found after first comma, parse from full name
         if not designation:
             designation = parse_d(raw_name)
