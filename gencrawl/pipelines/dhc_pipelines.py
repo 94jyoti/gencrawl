@@ -414,9 +414,9 @@ class DHCPipeline:
                 item = self.find_phone_and_fax(item, address_extra)
                 item = self.find_email(item, address_extra)
 
+            item, address = self.find_practice_name(item, address)
             item, address = self.find_state(item, address)
             item, address = self.find_city(item, address)
-            item, address = self.find_practice_name(item, address)
             item = self.find_address_lines(item, address)
         else:
             item = self.find_phone_and_fax(item, None)

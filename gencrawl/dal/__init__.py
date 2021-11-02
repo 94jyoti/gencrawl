@@ -13,7 +13,7 @@ class DAL:
 			"NFN": """select fund_url FROM public.nfn_fundlist where (fund_domain like '%www.{}%'
 					or fund_domain like '%//{}%' or fund_domain like '{}%')""",
 			"DHC": """
-				SELECT distinct("DoctorUrl") FROM public.dhc_master_input_table where "DoctorUrl"!='' and 
+				SELECT distinct("DoctorUrl") FROM public.dhc_master_input_table_october_2021 where "DoctorUrl"!='' and 
 				("DoctorUrl" like '%www.{}%' or "DoctorUrl" like '%//{}%' or "DoctorUrl" like '{}%') 
 				"""
 		}
