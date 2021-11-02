@@ -399,6 +399,12 @@ class DHCPipeline:
                 for a in reversed(a1.split(",")):
                     address_raw.insert(0, a.strip())
 
+            if self.decision_tags.get("split_address_1_by_hyphen"):
+                a1 = address_raw[0]
+                address_raw = address_raw[1:]
+                for a in reversed(a1.split("-")):
+                    address_raw.insert(0, a.strip())
+
             item['address_raw_1'] = "___".join(address_raw)
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
