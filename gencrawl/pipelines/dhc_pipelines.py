@@ -300,7 +300,10 @@ class DHCPipeline:
                     if item.get("zip"):
                         address[index] = re.sub(r, '', addr)
                     else:
-                        address[index] = "".join(address[index].rsplit(state, 1))
+                        if address[index].count(f" {state}") == 1:
+                            address[index] = address[index].split(f" {state}")[0]
+                        else:
+                            address[index] = "".join(address[index].rsplit(state, 1))
                     break
 
             if not item.get("state"):
