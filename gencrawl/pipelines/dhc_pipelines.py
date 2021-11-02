@@ -294,12 +294,13 @@ class DHCPipeline:
                     if state in self.us_states:
                         item['state'] = state
                         break
+
                 if item.get("state"):
                     r = r'\b{}\b'.format(state)
                     if item.get("zip"):
                         address[index] = re.sub(r, '', addr)
                     else:
-                        address[index] = address[index].split(f" {state}")[0]
+                        address[index] = "".join(address[index].rsplit(state, 1))
                     break
 
             if not item.get("state"):
@@ -415,7 +416,8 @@ class DHCPipeline:
                 item, address = self.find_phone_and_fax(item, address)
                 item = self.find_email(item, address)
             else:
-                address_extra = address_raw[address_upto_idx + 1:]
+                # recently added or address in case address_extra is empty
+                address_extra = address_raw[address_upto_idx + 1:] or address
                 item = self.find_phone_and_fax(item, address_extra)
                 item = self.find_email(item, address_extra)
 
