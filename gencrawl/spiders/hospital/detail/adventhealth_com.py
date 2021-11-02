@@ -15,12 +15,15 @@ class AdventhealthcomhospitalDetail(HospitalDetailSpider):
         fax_block=response.xpath("//div[@class='geolocation']//@data-content").extract()
         print(fax_block)
         fax_list=[]
-        for block in fax_block:
-            temp_data=re.findall('{"content".*?location-block__fax-text(.*?)location-block__map.*?"}',block.replace("\n",""))
-            print(temp_data)
-            fax_list.append(re.findall("\d+-\d+-\d+",temp_data[0])[0])
-        print(fax_list)
-        for i,item in enumerate(items):
-            item['fax']=fax_list[i]
-            yield self.generate_item(item, HospitalDetailItem)
-    
+        try:
+            for block in fax_block:
+                temp_data=re.findall('{"content".*?location-block__fax-text(.*?)location-block__map.*?"}',block.replace("\n",""))
+                print(temp_data)
+                fax_list.append(re.findall("\d+-\d+-\d+",temp_data[0])[0])
+            print(fax_list)
+            for i,item in enumerate(items):
+                item['fax']=fax_list[i]
+                yield self.generate_item(item, HospitalDetailItem)
+        except:
+            for item in items:
+                yield self.generate_item(item, HospitalDetailItem)
