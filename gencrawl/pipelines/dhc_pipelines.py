@@ -182,8 +182,8 @@ class DHCPipeline:
             item['first_name'] = raw_name[0].strip()
         if not item.get("last_name") and len(raw_name) > 1:
             item['last_name'] = raw_name[-1].strip()
-        if not item.get("middle_name") and len(raw_name) == 3:
-            item['middle_name'] = raw_name[1]
+        if not item.get("middle_name"):
+            item['middle_name'] = " ".join(raw_name[1:-1])
         return item
 
     def parse_fields_from_name(self, item):
