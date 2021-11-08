@@ -458,12 +458,27 @@ class DHCPipeline:
             item[key] = item.get(key) or ''
         return item
 
+    def remove_redundant_phones(self, item):
+        phones = item.get("phone")
+        parsed_phones = []
+        if phones and isinstance(phones, list):
+            for p1 in phones:
+                to_add = True
+                for p2 in phones:
+                    if p1 != p2 and p1 in p2:
+                        to_add = False
+                if to_add:
+                    parsed_phones.append(p1)
+            item['phone'] = parsed_phones
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
             item = self.parse_fields_from_name(item)
             item = self.parse_fields_from_address(item)
             item = self.combine_address(item)
             item = self.parse_item(item)
+            item = self.remove_redundant_phones(item)
             item = self.parse_list_fields(item)
             item = self.replace_none_with_blank_string(item)
         return item
