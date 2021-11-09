@@ -378,6 +378,19 @@ class DHCPipeline:
                     item['address_line_1'], item['address_line_2'] = address
             elif len(address) == 1:
                 item['address_line_1'] = address[0]
+
+        if self.decision_tags.get("g"):
+            address_1 = item.get("address_line_1")
+            address_2 = item.get("address_line_2")
+            address_3 = item.get("address_line_3")
+            if address_2 and len(address_2.strip()) <= 2:
+                item['address_line_1'] = address_1 + ',' + address_2
+                item['address_line_2'] = address_3
+                item['address_line_3'] = None
+
+                if item['address_line_2'] and ',' in item['address_line_2']:
+                    item['address_line_2'], item['address_line_3'] = item['address_line_2'].rsplit(",", 1)
+
         if item.get('address_line_1'):
             for text in self.address1_text_to_remove:
                 if item['address_line_1'].startswith(text):
