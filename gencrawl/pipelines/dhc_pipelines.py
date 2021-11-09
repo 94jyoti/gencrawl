@@ -442,7 +442,10 @@ class DHCPipeline:
             item, address = self.find_city(item, address)
             item = self.find_address_lines(item, address)
         else:
-            item = self.find_phone_and_fax(item, None)
+            if self.decision_tags.get("phone_at_start"):
+                item, _ = self.find_phone_and_fax(item, None)
+            else:
+                item = self.find_phone_and_fax(item, None)
             item = self.find_email(item, None)
         return item
 
