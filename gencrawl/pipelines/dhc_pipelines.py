@@ -379,7 +379,7 @@ class DHCPipeline:
             elif len(address) == 1:
                 item['address_line_1'] = address[0]
 
-        if self.decision_tags.get("g"):
+        if self.decision_tags.get("merge_address2_in_address1"):
             address_1 = item.get("address_line_1")
             address_2 = item.get("address_line_2")
             address_3 = item.get("address_line_3")
