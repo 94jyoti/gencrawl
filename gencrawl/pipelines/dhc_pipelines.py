@@ -118,12 +118,16 @@ class DHCPipeline:
         return parsed_item
 
     def parse_suffix(self, item):
+        ignore_suffixes = []
+        for key in ['first_name', 'middle_name', 'last_name']:
+            if item.get(key):
+                ignore_suffixes.append(item[key])
         raw_name = item['raw_full_name']
         for sep in self.name_separators:
             raw_name = raw_name.replace(sep, ' ')
         raw_name = [r.strip() for r in raw_name.split() if r.strip()]
         for part in raw_name:
-            if part in self.suffixes_map:
+            if part in self.suffixes_map and part not in ignore_suffixes:
                 item['suffix'] = part
                 break
         return item
