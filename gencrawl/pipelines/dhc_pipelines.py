@@ -245,11 +245,17 @@ class DHCPipeline:
 
         def get_field_type(line):
             for k in self.phone_keywords:
-                if k in line.lower():
+                if self.decision_tags.get("phone_at_start"):
+                    if k == line.strip().lower():
+                        return "phone"
+                elif k in line.lower():
                     return "phone"
 
             for k in self.fax_keywords:
-                if k in line.lower():
+                if self.decision_tags.get("phone_at_start"):
+                    if k == line.strip().lower():
+                        return "fax"
+                elif k in line.lower():
                     return "fax"
 
         regexes = self.phone_rgx
@@ -263,7 +269,6 @@ class DHCPipeline:
                 idx_to_remove.add(index)
                 # variable to store whether field type i.e. phone or fax
                 field_type = get_field_type(addr)
-
                 # if field type not found, check in last line of address
                 if not field_type and index > 0:
                     prev_addr = address_extra[index - 1]
@@ -279,7 +284,6 @@ class DHCPipeline:
                     phones.extend(phone_or_fax)
                 elif field_type == 'fax':
                     faxes.extend(phone_or_fax)
-
         phones = item.get("phone") or phones
         faxes = item.get("fax") or faxes
         item['phone'] = Utility.match_rgx(phones, regexes)
