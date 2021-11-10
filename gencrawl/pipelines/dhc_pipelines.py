@@ -154,6 +154,8 @@ class DHCPipeline:
     # default implementation takes designation after first comma
     def parse_designation(self, item):
         raw_name = item['raw_full_name']
+        if self.decision_tags.get("replace_comma_in_raw_name"):
+            raw_name = raw_name.replace(",", " ").replace("  ", " ")
         ignore_designations = []
         for key in ['first_name', 'middle_name', 'last_name']:
             if item.get(key):
@@ -173,6 +175,8 @@ class DHCPipeline:
 
     def parse_name(self, item):
         raw_name = item.get('raw_full_name')
+        if self.decision_tags.get("replace_comma_in_raw_name"):
+            raw_name = raw_name.replace(",", " ").replace("  ", " ")
         if "," in raw_name:
             raw_name = raw_name.split(",")[0]
 
