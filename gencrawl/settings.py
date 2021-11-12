@@ -42,8 +42,7 @@ SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
 # SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
 SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless']
 
-# default client, has to be removed from here in future
-CLIENT = 'NFN'
+
 ITEM_PIPELINES = {
 }
 
@@ -71,14 +70,21 @@ else:
     ENVIRONMENT = Statics.ENV_DEV
 
 # db settings
-# DB_USER = 'postgres'
-# DB_PASS = 'kapow123'
-# DB_HOST = '65.2.58.32'
-# DB_PORT = '5432'
-# DB_NAME = 'postgres'
-DB_USER = 'devuser'
-DB_HOST = 'forage-dev-db.cod4levdfbtz.ap-south-1.rds.amazonaws.com'
-DB_NAME = 'dhc'
-DB_PORT = '5432'
-DB_PASS = 'Dev#forage!2021'
+NFN_DB_USER = 'postgres'
+NFN_DB_PASS = 'kapow123'
+NFN_DB_HOST = '65.2.58.32'
+NFN_DB_PORT = '5432'
+NFN_DB_NAME = 'postgres'
+
+DHC_DB_USER = 'devuser'
+DHC_DB_PASS = 'Dev#forage!2021'
+DHC_DB_HOST = 'forage-dev-db.cod4levdfbtz.ap-south-1.rds.amazonaws.com'
+DHC_DB_PORT = '5432'
+DHC_DB_NAME = 'dhc'
+
+GENCRAWL_DB_USER = 'postgres'
+GENCRAWL_DB_PASS = 'kapow123'
+GENCRAWL_DB_HOST = '65.2.58.32'
+GENCRAWL_DB_PORT = '5432'
+GENCRAWL_DB_NAME = 'gencrawl'
 

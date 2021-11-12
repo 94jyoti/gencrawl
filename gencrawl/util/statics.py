@@ -49,10 +49,10 @@ class Statics:
     WAIT_TIME_DEFAULT = 3
 
     # crawl methods
-    CRAWL_METHOD_DEFAULT = 'SCRAPY_GET'
-    CRAWL_METHOD_GET = "SCRAPY_GET"
-    CRAWL_METHOD_POST = "SCRAPY_POST"
-    CRAWL_METHOD_SELENIUM = "SELENIUM"
+    CRAWL_METHOD_DEFAULT = 'scrapy_get'
+    CRAWL_METHOD_GET = "scrapy_get"
+    CRAWL_METHOD_POST = "scrapy_post"
+    CRAWL_METHOD_SELENIUM = "selenium"
 
     # return strategy
     RETURN_STRATEGY_DEFAULT = 'multiple_objects'
@@ -77,6 +77,7 @@ class Statics:
     # clients
     CLIENT_NFN = "NFN"
     CLIENT_DHC = "DHC"
+    CLIENT_GENCRAWL = "GENCRAWL"
 
     # Google links
     CITY_STATE_GOOGLE_LINK = "https://docs.google.com/spreadsheets/u/1/d/1rg55Fwn5UjNcgGJcDZFGD3a-X0MR-YqpKOoCUVNTmuc/export?format=csv&id=1rg55Fwn5UjNcgGJcDZFGD3a-X0MR-YqpKOoCUVNTmuc&gid=0"

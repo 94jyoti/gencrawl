@@ -10,7 +10,6 @@ import numpy as np
 from gencrawl.util.statics import Statics
 from gencrawl.util.utility import Utility
 from gencrawl.settings import CONFIG_DIR, SPIDER_DIR
-from gencrawl.settings import CLIENT as DEFAULT_CLIENT
 SPIDER_TEMPLATE = '''from gencrawl.spiders.financial.financial_detail_spider import FinancialDetailSpider
 from gencrawl.spiders.financial.financial_detail_field_mapping import FinancialDetailFieldMapSpider
 from gencrawl.spiders.hospital.hospital_detail_spider import HospitalDetailSpider
@@ -31,7 +30,7 @@ class GoogleConfig:
     def __init__(self, client=None):
         self.spider = None
         self.config_name = None
-        self.client = client or DEFAULT_CLIENT
+        self.client = client
         if self.client == Statics.CLIENT_DHC:
             self.google_link = "https://docs.google.com/spreadsheets/u/1/d/1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw/export?format=csv&id=1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw&gid=1934331278"
         else:
