@@ -316,7 +316,7 @@ class DHCPipeline:
                 if item.get("state"):
                     r = r'\b{}\b'.format(state)
                     if item.get("zip"):
-                        address[index] = re.sub(r, '', addr)
+                        address[index] = re.sub(r, '', address[index])
                     else:
                         if address[index].count(f" {state}") == 1:
                             address[index] = address[index].split(f" {state}")[0]
@@ -445,7 +445,6 @@ class DHCPipeline:
             if pincode:
                 address_raw[address_upto_idx] = address_raw[address_upto_idx].split(pincode)[0]
             address = address_raw[:address_upto_idx + 1]
-
             if self.decision_tags.get("phone_at_start"):
                 item, address = self.find_phone_and_fax(item, address)
                 item = self.find_email(item, address)
