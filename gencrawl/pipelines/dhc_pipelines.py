@@ -380,9 +380,21 @@ class DHCPipeline:
         return item, address
 
     def find_address_lines(self, item, address):
-        if not item.get("address_line_1"):
+        if address and not item.get("address_line_1"):
+            phone_keys = ['phone', 'fax', 'email']
+            replace_text = self.decision_tags.get("replace_text_from_address") or []
+            for pkey in phone_keys:
+                pvals = item.get(pkey) or []
+                if isinstance(pvals, str):
+                    pvals = [pvals]
+                replace_text.extend(pvals)
+            for index, addr in enumerate(address):
+                for r in replace_text:
+                    address[index] = addr.replace(r, "").strip(", ")
+
             if len(address) == 1:
                 address = address[0].rsplit(",", 2)
+
             if len(address) == 3:
                 item['address_line_1'], item['address_line_2'], item['address_line_3'] = address
             elif len(address) == 2:
