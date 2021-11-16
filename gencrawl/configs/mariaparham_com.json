@@ -1,0 +1,128 @@
+{
+    "website": "https://www.mariaparham.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "mariaparham.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.mariaparham.com/provider/1336428580/peter-acheampong",
+            "https://www.mariaparham.com/provider/1740485390/mohammed-akhter",
+            "https://www.mariaparham.com/provider/1609063254/ivy-altomare",
+            "https://www.mariaparham.com/provider/1316054364/francis-aniekwensi",
+            "https://www.mariaparham.com/provider/1437233780/lisardo-augustin",
+            "https://www.mariaparham.com/provider/1275037541/danielle-ballard",
+            "https://www.mariaparham.com/provider/1598103350/richard-benson-ii",
+            "https://www.mariaparham.com/provider/1225063779/daniel-bernstein",
+            "https://www.mariaparham.com/provider/1881117075/michaela-beynon",
+            "https://www.mariaparham.com/provider/1619071065/krishna-reddy-bhaghayath-md",
+            "https://www.mariaparham.com/provider/1225009996/estena-bradley",
+            "https://www.mariaparham.com/provider/1336401900/talitha-brown-md",
+            "https://www.mariaparham.com/provider/1134582034/kayla-cagle-colon",
+            "https://www.mariaparham.com/provider/1447201678/madhu-chaudhry",
+            "https://www.mariaparham.com/provider/1649883190/gloria-chun",
+            "https://www.mariaparham.com/provider/1841672490/anthony-congeni",
+            "https://www.mariaparham.com/provider/1174910152/melissa-dean-appasu",
+            "https://www.mariaparham.com/provider/1588822118/laura-diefendorf",
+            "https://www.mariaparham.com/provider/1538352968/benjamin-dieter",
+            "https://www.mariaparham.com/provider/1366544843/darius-a-divina-do-faoao",
+            "https://www.mariaparham.com/provider/1073542890/neil-dolan",
+            "https://www.mariaparham.com/provider/1750360947/dianne-dookhan",
+            "https://www.mariaparham.com/provider/1104224203/matthew-dorn",
+            "https://www.mariaparham.com/provider/1386616415/patrick-dougherty",
+            "https://www.mariaparham.com/provider/1255396198/richard-goldstein",
+            "https://www.mariaparham.com/provider/1801082730/eric-grant",
+            "https://www.mariaparham.com/provider/1497839302/augustus-grant",
+            "https://www.mariaparham.com/provider/1609004936/shauna-guthrie",
+            "https://www.mariaparham.com/provider/1669630968/jorge-gutierrez",
+            "https://www.mariaparham.com/provider/1366477895/cynthia-hampton",
+            "https://www.mariaparham.com/provider/1508845801/james-weldon-hampton-md",
+            "https://www.mariaparham.com/provider/1790747434/ibrahim-hany",
+            "https://www.mariaparham.com/provider/1811081037/kara-henderson",
+            "https://www.mariaparham.com/provider/1205424660/cheryl-hester",
+            "https://www.mariaparham.com/provider/1962695395/matthew-higgins",
+            "https://www.mariaparham.com/provider/1295231645/jared-hopkins",
+            "https://www.mariaparham.com/provider/1518438969/jimmena-huffman-hall",
+            "https://www.mariaparham.com/provider/1093226649/aidevo-igbide-md",
+            "https://www.mariaparham.com/provider/1285630301/hernan-jimenez-md",
+            "https://www.mariaparham.com/provider/1366456063/schuyler-jones",
+            "https://www.mariaparham.com/provider/1740485846/rhonda-kearney",
+            "https://www.mariaparham.com/provider/1639177249/james-kenney",
+            "https://www.mariaparham.com/provider/1457937401/melanie-kiser",
+            "https://www.mariaparham.com/provider/1730275819/nicole-larrier",
+            "https://www.mariaparham.com/provider/1033288303/ellen-leavell",
+            "https://www.mariaparham.com/provider/1396966818/david-mack",
+            "https://www.mariaparham.com/provider/1841559432/karen-maclean",
+            "https://www.mariaparham.com/provider/1811968597/janice-martinez",
+            "https://www.mariaparham.com/provider/1750927893/crystal-minor",
+            "https://www.mariaparham.com/provider/1043697311/nadeem-modan",
+            "https://www.mariaparham.com/provider/1548343320/robert-noel-md",
+            "https://www.mariaparham.com/provider/1518058577/adrian-ogle-md",
+            "https://www.mariaparham.com/provider/1487696365/manesh-patel",
+            "https://www.mariaparham.com/provider/1730543406/david-peltier",
+            "https://www.mariaparham.com/provider/1932117892/theresa-ramos",
+            "https://www.mariaparham.com/provider/1225072648/devinderpal-randhawa",
+            "https://www.mariaparham.com/provider/1962585018/joel-rapchik",
+            "https://www.mariaparham.com/provider/1407312424/kevin-rapp",
+            "https://www.mariaparham.com/provider/1285282947/alyson-ringle",
+            "https://www.mariaparham.com/provider/1972686756/cynthia-robinson-md",
+            "https://www.mariaparham.com/provider/1134410566/jennifer-rymer",
+            "https://www.mariaparham.com/provider/1952692857/oussama-saleh-md",
+            "https://www.mariaparham.com/provider/1477896827/diana-sarmiento",
+            "https://www.mariaparham.com/provider/1588627053/willie-sessions",
+            "https://www.mariaparham.com/provider/1053411165/sydney-short",
+            "https://www.mariaparham.com/provider/1912946070/kulbir-sidhu",
+            "https://www.mariaparham.com/provider/1083611149/ashish-singh",
+            "https://www.mariaparham.com/provider/1669440798/douglas-smith",
+            "https://www.mariaparham.com/provider/1528271848/gary-smith-md",
+            "https://www.mariaparham.com/provider/1407896244/john-spargo",
+            "https://www.mariaparham.com/provider/1174661110/kavitha-subramanian-md",
+            "https://www.mariaparham.com/provider/1467420182/valarmathi-sundar",
+            "https://www.mariaparham.com/provider/1144298886/veerappan-sundar",
+            "https://www.mariaparham.com/provider/1386759066/rajesh-swaminathan",
+            "https://www.mariaparham.com/provider/1215197330/michael-sylvia",
+            "https://www.mariaparham.com/provider/1396708434/munther-tabet",
+            "https://www.mariaparham.com/provider/1356449789/cindy-tuten",
+            "https://www.mariaparham.com/provider/1518942119/diane-varnadore",
+            "https://www.mariaparham.com/provider/1679570717/khanh-vu",
+            "https://www.mariaparham.com/provider/1467854828/kristie-white",
+            "https://www.mariaparham.com/provider/1861878324/emma-white-do",
+            "https://www.mariaparham.com/provider/1770679144/christopher-willett",
+            "https://www.mariaparham.com/provider/1023084886/naji-yousef"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//h1//following-sibling::p/strong/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[@class='doctor-action-address'])[2]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

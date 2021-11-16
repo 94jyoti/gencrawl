@@ -1,0 +1,101 @@
+{
+    "website": "https://www.wilsonmedical.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "wilsonmedical.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.wilsonmedical.com/provider/1003817412/margaret-metts-md",
+            "https://www.wilsonmedical.com/provider/1003952144/kondal-madaram",
+            "https://www.wilsonmedical.com/provider/1013915388/sonya-bullock-pa-c",
+            "https://www.wilsonmedical.com/provider/1023501764/christian-selby-pa-c-atc",
+            "https://www.wilsonmedical.com/provider/1043448129/tracy-forrest-md",
+            "https://www.wilsonmedical.com/provider/1063498301/stephen-kinard-dpm",
+            "https://www.wilsonmedical.com/provider/1083872915/shannitta-bridgers-dds",
+            "https://www.wilsonmedical.com/provider/1104115211/shannon-drohan-md",
+            "https://www.wilsonmedical.com/provider/1124679683/benessa-sutton-agnp-c",
+            "https://www.wilsonmedical.com/provider/1205066453/dave-duvernois-pa-c",
+            "https://www.wilsonmedical.com/provider/1205800257/sunil-chand-md",
+            "https://www.wilsonmedical.com/provider/1205829066/anwar-haidary-md",
+            "https://www.wilsonmedical.com/provider/1215229612/nirav-jasani-md",
+            "https://www.wilsonmedical.com/provider/1235179128/hal-woodall-md",
+            "https://www.wilsonmedical.com/provider/1235394479/sanjay-cherukuri-md",
+            "https://www.wilsonmedical.com/provider/1255431516/rosario-rick-guarino-md",
+            "https://www.wilsonmedical.com/provider/1275508830/medhat-sidaros-md",
+            "https://www.wilsonmedical.com/provider/1326034513/william-rucker-md",
+            "https://www.wilsonmedical.com/provider/1356408207/gregg-sigmon-md",
+            "https://www.wilsonmedical.com/provider/1366428583/suzanne-fiscus-md",
+            "https://www.wilsonmedical.com/provider/1376530881/malay-agrawal-md",
+            "https://www.wilsonmedical.com/provider/1376836254/william-ryan-mitchell-md",
+            "https://www.wilsonmedical.com/provider/1437108123/phillip-perkins-md",
+            "https://www.wilsonmedical.com/provider/1457313363/milan-genge-do",
+            "https://www.wilsonmedical.com/provider/1467643908/tamara-phelps-giscombe-dds",
+            "https://www.wilsonmedical.com/provider/1467890012/christopher-gal-md",
+            "https://www.wilsonmedical.com/provider/1477525111/robert-william-bynum-iv-md",
+            "https://www.wilsonmedical.com/provider/1497857973/george-isaacs-md",
+            "https://www.wilsonmedical.com/provider/1578918595/love-moore-dds",
+            "https://www.wilsonmedical.com/provider/1598741290/arthur-hanson-md",
+            "https://www.wilsonmedical.com/provider/1609856905/lawrence-yenni-md",
+            "https://www.wilsonmedical.com/provider/1619150950/samuel-cohen-md",
+            "https://www.wilsonmedical.com/provider/1629272182/badie-clark-iii-md",
+            "https://www.wilsonmedical.com/provider/1639140163/james-rounder-md",
+            "https://www.wilsonmedical.com/provider/1669823100/thomas-parrish-do",
+            "https://www.wilsonmedical.com/provider/1679507651/ramesh-mutyala-md-facp",
+            "https://www.wilsonmedical.com/provider/1689193104/catherine-melin-fnp-c",
+            "https://www.wilsonmedical.com/provider/1689284820/corrie-hansen-dnp-rn-fnp-bc",
+            "https://www.wilsonmedical.com/provider/1720433469/aryendra-shrivastava",
+            "https://www.wilsonmedical.com/provider/1730161092/keith-lerro-md",
+            "https://www.wilsonmedical.com/provider/1730341108/sayeed-hossain-md",
+            "https://www.wilsonmedical.com/provider/1730706888/brittany-fulghum-agnp-c",
+            "https://www.wilsonmedical.com/provider/1811077209/john-buck-md",
+            "https://www.wilsonmedical.com/provider/1831351576/ketarah-robinson-md",
+            "https://www.wilsonmedical.com/provider/1831391945/benjamin-thomas-md",
+            "https://www.wilsonmedical.com/provider/1841276540/daniel-michalak-md",
+            "https://www.wilsonmedical.com/provider/1851341960/paul-perez-navarro-md",
+            "https://www.wilsonmedical.com/provider/1861690893/geoffrey-lewis-md",
+            "https://www.wilsonmedical.com/provider/1881685428/mamun-shahrier-md",
+            "https://www.wilsonmedical.com/provider/1891875340/susan-andersen-md",
+            "https://www.wilsonmedical.com/provider/1902995111/tonya-little-md",
+            "https://www.wilsonmedical.com/provider/1912010190/vincent-dahringer-md",
+            "https://www.wilsonmedical.com/provider/1932546157/jasmine-elmore-dds",
+            "https://www.wilsonmedical.com/provider/1942272638/emil-cekada-md",
+            "https://www.wilsonmedical.com/provider/1972916914/anna-kalbfell-md",
+            "https://www.wilsonmedical.com/provider/1982847349/john-wechter-md"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//h1//following-sibling::p/strong/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[@class='doctor-action-address'])[2]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

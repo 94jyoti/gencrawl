@@ -1,0 +1,84 @@
+{
+    "website": "https://www.coloradoplainsmedicalcenter.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "coloradoplainsmedicalcenter.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.coloradoplainsmedicalcenter.com/provider/1396732079/isabelle-audet",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1356639140/colin-carpenter",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1932217742/stephen-castle",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1366464562/douglas-christensen",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1336185636/steven-cummings",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1710954748/lynn-dilley---brush-family-medicine",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1134179914/alexander-feldman",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1144588427/kyle-haffner",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1295997740/barbara-hager",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1073685442/aline-hansen---guzman",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1457337040/elias-hernandez",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1497212377/amanda-hrycaj",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1417480799/morgan-hungenberg",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1013959188/michael-jacobson",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1548711393/tiffany-jorgensen",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1548310196/david-keller---eastern-colorado-orthopedic-center",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1104976802/kenneth-keller---eastern-colorado-orthopedic-center",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1528051018/anant-kumar",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1205866837/william-lanting",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1891706701/laurie-mahar",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1750532552/anne-manchester",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1083889927/thomas-manchester---colorado-plains-general-surgery",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1740271063/richard-milchak",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1134116932/kevin-muelken",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1417261017/michelle-nadon",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1700236668/christina-pavelko",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1295378016/jennifer-romero",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1295727840/james-smith",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1447233226/michelle-soriano---womens-clinic-of-the-plains",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1275503120/eric-stevens",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1831177443/michael-stone",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1891922522/sindhura-trivedi",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1508958612/marshal-unrein---colorado-plains-medical-group",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1598221921/erin-weber",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1861635096/ryan-wheatley",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1396168068/sarah-whitney---colorado-plains-medical-group",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1558509398/seth-wolff",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1669748489/christopher-wright",
+            "https://www.coloradoplainsmedicalcenter.com/provider/1730304593/christy-young"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//h1//following-sibling::p/strong/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[@class='doctor-action-address'])[2]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

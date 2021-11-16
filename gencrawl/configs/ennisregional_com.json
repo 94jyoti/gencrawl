@@ -1,0 +1,84 @@
+{
+    "website": "https://www.ennisregional.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "ennisregional.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.ennisregional.com/provider/1093714826/john-arkusinski",
+            "https://www.ennisregional.com/provider/1902212509/sadaf-assani",
+            "https://www.ennisregional.com/provider/1417077207/raymond-blair",
+            "https://www.ennisregional.com/provider/1871759704/katherine-brown",
+            "https://www.ennisregional.com/provider/1851590079/james-carlisle",
+            "https://www.ennisregional.com/provider/1518213156/susan-chiusano",
+            "https://www.ennisregional.com/provider/1205216751/fernando-cruz",
+            "https://www.ennisregional.com/provider/1699809921/jose-fajardo",
+            "https://www.ennisregional.com/provider/1376525253/andre-graham",
+            "https://www.ennisregional.com/provider/1992886923/lance-hall",
+            "https://www.ennisregional.com/provider/1528149234/larry-hayes",
+            "https://www.ennisregional.com/provider/1336124130/basem-jassin",
+            "https://www.ennisregional.com/provider/1750485306/larry-jinks",
+            "https://www.ennisregional.com/provider/1306890645/blayne-laws",
+            "https://www.ennisregional.com/provider/1487811097/rebecca-lucas-dnp-aprn-fnp-c",
+            "https://www.ennisregional.com/provider/1073888947/joshua-mcspadden",
+            "https://www.ennisregional.com/provider/1407872039/robert-megna",
+            "https://www.ennisregional.com/provider/1629227855/henrick-mike-myer",
+            "https://www.ennisregional.com/provider/1679699714/francis-nwafor",
+            "https://www.ennisregional.com/provider/1972505428/jeffrey-parrett",
+            "https://www.ennisregional.com/provider/1518057439/davey-perrin",
+            "https://www.ennisregional.com/provider/1043804719/mark-pollard",
+            "https://www.ennisregional.com/provider/1154596765/fredric-puckett",
+            "https://www.ennisregional.com/provider/1952359622/keith-rigsby",
+            "https://www.ennisregional.com/provider/1306848866/robert-roye",
+            "https://www.ennisregional.com/provider/1417060724/emmanuel-sackey",
+            "https://www.ennisregional.com/provider/1770509390/jose-salguero",
+            "https://www.ennisregional.com/provider/1841394491/robert-silverman",
+            "https://www.ennisregional.com/provider/1336132117/john-sullivan",
+            "https://www.ennisregional.com/provider/1134330178/margaret-sullivan",
+            "https://www.ennisregional.com/provider/1548277924/john-tenny",
+            "https://www.ennisregional.com/provider/1205871951/steven-zielinski"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//h1//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//strong//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[contains(@class,'doctor-action-address')])[position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@id=\"main\"]//br//following::text()[contains(.,\"Phone\")]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

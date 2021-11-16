@@ -1,0 +1,94 @@
+{
+    "website": "https://www.losalamosmedicalcenter.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "losalamosmedicalcenter.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.losalamosmedicalcenter.com/provider/1477654697/m-kamel-abouda-md",
+            "https://www.losalamosmedicalcenter.com/provider/1760964506/leigh-barham-cnp",
+            "https://www.losalamosmedicalcenter.com/provider/1962525550/galina-batygina-pa-c",
+            "https://www.losalamosmedicalcenter.com/provider/1154503852/kathryn-bauer-nnp",
+            "https://www.losalamosmedicalcenter.com/provider/1093962300/monique-beyerle-pa-c",
+            "https://www.losalamosmedicalcenter.com/provider/1568411916/michelle-carr-md",
+            "https://www.losalamosmedicalcenter.com/provider/1811916604/vincent-fiorica-md",
+            "https://www.losalamosmedicalcenter.com/provider/1134225493/madhavi-garimella-md",
+            "https://www.losalamosmedicalcenter.com/provider/1114966462/justin-l-green-md-phd-mba-facs",
+            "https://www.losalamosmedicalcenter.com/provider/1033302625/fei-gu-md-phd",
+            "https://www.losalamosmedicalcenter.com/provider/1922066455/steven-harris-mhs-pa-c",
+            "https://www.losalamosmedicalcenter.com/provider/1710982681/richard-honsinger-md",
+            "https://www.losalamosmedicalcenter.com/provider/1407962061/gary-jacques-md",
+            "https://www.losalamosmedicalcenter.com/provider/1942290283/jacqueline-krohn-md-mph",
+            "https://www.losalamosmedicalcenter.com/provider/1972565554/elisa-lange-md",
+            "https://www.losalamosmedicalcenter.com/provider/1043273543/a-carolyn-linnebur-md",
+            "https://www.losalamosmedicalcenter.com/provider/1174521983/timothy-lopez-md",
+            "https://www.losalamosmedicalcenter.com/provider/1578562393/karen-lorusso-md",
+            "https://www.losalamosmedicalcenter.com/provider/1841625852/alexa-lujan",
+            "https://www.losalamosmedicalcenter.com/provider/1932526134/elizabeth-maclean-md-faap",
+            "https://www.losalamosmedicalcenter.com/provider/1750720306/elena-mcatee",
+            "https://www.losalamosmedicalcenter.com/provider/1780676866/patricia-mcculloch-pa-c",
+            "https://www.losalamosmedicalcenter.com/provider/1972776011/david-mills-md",
+            "https://www.losalamosmedicalcenter.com/provider/1821082033/ben-neal-md-faap",
+            "https://www.losalamosmedicalcenter.com/provider/1760757264/dr-bill",
+            "https://www.losalamosmedicalcenter.com/provider/1730173949/michael-nichols-md-faap",
+            "https://www.losalamosmedicalcenter.com/provider/1649815168/taylor-ortega-calzadillas-pa-c",
+            "https://www.losalamosmedicalcenter.com/provider/1255519435/brenda-pereda-md",
+            "https://www.losalamosmedicalcenter.com/provider/1790748168/melissa-petty-nnp",
+            "https://www.losalamosmedicalcenter.com/provider/1164866331/keeley-power-md",
+            "https://www.losalamosmedicalcenter.com/provider/1003840208/ivana-radovanovic-md-faap",
+            "https://www.losalamosmedicalcenter.com/provider/1639185192/bard-rogers-md",
+            "https://www.losalamosmedicalcenter.com/provider/1679582159/bradley-rowberry-md",
+            "https://www.losalamosmedicalcenter.com/provider/1528062346/anthony-sandoval-md-facc",
+            "https://www.losalamosmedicalcenter.com/provider/1790779007/shelley-schoonover-md-faap",
+            "https://www.losalamosmedicalcenter.com/provider/1023051232/peter-shepard",
+            "https://www.losalamosmedicalcenter.com/provider/1710085444/monica-snowden-md",
+            "https://www.losalamosmedicalcenter.com/provider/1588217749/pema-tamang-cnp",
+            "https://www.losalamosmedicalcenter.com/provider/1487962031/linda-taylor-pa-c",
+            "https://www.losalamosmedicalcenter.com/provider/1063475473/molly-vosburg-md",
+            "https://www.losalamosmedicalcenter.com/provider/1023054913/lori-whitley-md",
+            "https://www.losalamosmedicalcenter.com/provider/1487652780/james-ziomek-md"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//h1//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//strong//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[contains(@class,'doctor-action-address')])[position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@id=\"main\"]//br//following::text()[contains(.,\"Phone\")]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

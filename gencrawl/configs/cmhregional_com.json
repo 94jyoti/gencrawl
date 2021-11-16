@@ -1,0 +1,152 @@
+{
+    "website": "https://www.cmhregional.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "cmhregional.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.cmhregional.com/provider/1003163684/michael-shvarts",
+            "https://www.cmhregional.com/provider/1003259177/jonathan-rischall",
+            "https://www.cmhregional.com/provider/1013909027/david-brown",
+            "https://www.cmhregional.com/provider/1013928258/michael-keleher",
+            "https://www.cmhregional.com/provider/1013969807/duc-tran",
+            "https://www.cmhregional.com/provider/1013996123/david-zadvinskis",
+            "https://www.cmhregional.com/provider/1013997642/john-leach",
+            "https://www.cmhregional.com/provider/1023001823/michael-cross",
+            "https://www.cmhregional.com/provider/1023120623/opeolu-adeoye",
+            "https://www.cmhregional.com/provider/1023138401/arshdeep-tindni",
+            "https://www.cmhregional.com/provider/1023178159/michael-gelbart",
+            "https://www.cmhregional.com/provider/1023283900/katrina-peariso",
+            "https://www.cmhregional.com/provider/1033111802/timothy-schoonover",
+            "https://www.cmhregional.com/provider/1033296827/roberta-galford",
+            "https://www.cmhregional.com/provider/1033462833/lindsey-bowen",
+            "https://www.cmhregional.com/provider/1043590540/michael-doherty",
+            "https://www.cmhregional.com/provider/1053391649/carmen-doty-armstrong",
+            "https://www.cmhregional.com/provider/1053524868/veera-veerla",
+            "https://www.cmhregional.com/provider/1053610923/byron-stapleton-do",
+            "https://www.cmhregional.com/provider/1063409514/rick-compton",
+            "https://www.cmhregional.com/provider/1063456747/phillip-carr",
+            "https://www.cmhregional.com/provider/1063623353/steven-agabegi",
+            "https://www.cmhregional.com/provider/1063739027/seung-hur",
+            "https://www.cmhregional.com/provider/1073652780/sharon-griffith",
+            "https://www.cmhregional.com/provider/1073889267/shamima-ahmed",
+            "https://www.cmhregional.com/provider/1083156459/kirsten-ulrich",
+            "https://www.cmhregional.com/provider/1083665343/john-petty",
+            "https://www.cmhregional.com/provider/1083803951/brian-santin",
+            "https://www.cmhregional.com/provider/1083854343/ava-powell",
+            "https://www.cmhregional.com/provider/1083979710/grant-holz",
+            "https://www.cmhregional.com/provider/1093778748/james-bianchi",
+            "https://www.cmhregional.com/provider/1093785867/walter-timperman",
+            "https://www.cmhregional.com/provider/1104364884/megan-miller",
+            "https://www.cmhregional.com/provider/1104808591/thomas-zimmer",
+            "https://www.cmhregional.com/provider/1104823137/sumit-bhatla",
+            "https://www.cmhregional.com/provider/1114012853/steven-skinner",
+            "https://www.cmhregional.com/provider/1114196185/giovanni-lorenz",
+            "https://www.cmhregional.com/provider/1114906211/jason-shonk",
+            "https://www.cmhregional.com/provider/1114921905/ali-moussaoui",
+            "https://www.cmhregional.com/provider/1114974706/j-havey",
+            "https://www.cmhregional.com/provider/1114997574/william-knight",
+            "https://www.cmhregional.com/provider/1124007224/phillip-shaffer",
+            "https://www.cmhregional.com/provider/1124092846/john-hollon",
+            "https://www.cmhregional.com/provider/1124095823/madhukar-gupta",
+            "https://www.cmhregional.com/provider/1124438239/jason-ernst",
+            "https://www.cmhregional.com/provider/1134183445/gabriel-salamie",
+            "https://www.cmhregional.com/provider/1134185481/santosh-menon",
+            "https://www.cmhregional.com/provider/1134410285/saima-ali",
+            "https://www.cmhregional.com/provider/1134589971/deborah-rogers",
+            "https://www.cmhregional.com/provider/1144277427/franco-policaro",
+            "https://www.cmhregional.com/provider/1154311694/suzanne-aquino",
+            "https://www.cmhregional.com/provider/1154368041/dawn-staehling",
+            "https://www.cmhregional.com/provider/1154377216/steven-boker",
+            "https://www.cmhregional.com/provider/1154382901/mary-inwood",
+            "https://www.cmhregional.com/provider/1154383941/kimberly-seaver",
+            "https://www.cmhregional.com/provider/1184603276/peter-pema",
+            "https://www.cmhregional.com/provider/1184690257/ronald-pedalino",
+            "https://www.cmhregional.com/provider/1194177865/melissa-storer",
+            "https://www.cmhregional.com/provider/1194246009/jill-reese",
+            "https://www.cmhregional.com/provider/1194738757/mohammad-saklayen",
+            "https://www.cmhregional.com/provider/1194882571/vidyashankar-revan",
+            "https://www.cmhregional.com/provider/1194884239/karyl-mehlman",
+            "https://www.cmhregional.com/provider/1215001870/john-rigano",
+            "https://www.cmhregional.com/provider/1215017744/glenn-rogers",
+            "https://www.cmhregional.com/provider/1215293352/robert-hobohm",
+            "https://www.cmhregional.com/provider/1215998851/scott-puckett",
+            "https://www.cmhregional.com/provider/1225037534/michael-jopling",
+            "https://www.cmhregional.com/provider/1225196371/naveen-bekkam",
+            "https://www.cmhregional.com/provider/1225197593/joshua-lumbley",
+            "https://www.cmhregional.com/provider/1235199696/bruce-kinney",
+            "https://www.cmhregional.com/provider/1245258995/leslie-hood",
+            "https://www.cmhregional.com/provider/1245443746/matthew-hale",
+            "https://www.cmhregional.com/provider/1245527803/fahim-khan",
+            "https://www.cmhregional.com/provider/1255368312/daniel-woo",
+            "https://www.cmhregional.com/provider/1255427167/gaby-aoun",
+            "https://www.cmhregional.com/provider/1265410617/david-raiken",
+            "https://www.cmhregional.com/provider/1265411375/william-tarrant",
+            "https://www.cmhregional.com/provider/1265455067/shagufta-khan",
+            "https://www.cmhregional.com/provider/1265651582/erin-mcdonough",
+            "https://www.cmhregional.com/provider/1265774954/nicholas-hardin",
+            "https://www.cmhregional.com/provider/1265779003/lisa-adams",
+            "https://www.cmhregional.com/provider/1265824809/kenneth-staples",
+            "https://www.cmhregional.com/provider/1265861025/paul-amiott",
+            "https://www.cmhregional.com/provider/1265895262/andrew-vang",
+            "https://www.cmhregional.com/provider/1275540882/elizzabeth-lazzara",
+            "https://www.cmhregional.com/provider/1285636050/michael-valle",
+            "https://www.cmhregional.com/provider/1285636555/thomas-buse",
+            "https://www.cmhregional.com/provider/1285921858/ali-imani",
+            "https://www.cmhregional.com/provider/1295129922/judd-shelton",
+            "https://www.cmhregional.com/provider/1295724524/sanjeev-khanna",
+            "https://www.cmhregional.com/provider/1295774552/andrea-franklin",
+            "https://www.cmhregional.com/provider/1295974160/shalin-jhaveri",
+            "https://www.cmhregional.com/provider/1306272430/wayman-lee",
+            "https://www.cmhregional.com/provider/1306807888/kristen-fults-ganey",
+            "https://www.cmhregional.com/provider/1306862909/gaurang-mavani",
+            "https://www.cmhregional.com/provider/1306874771/john-grosel",
+            "https://www.cmhregional.com/provider/1316087174/stephen-hunter",
+            "https://www.cmhregional.com/provider/1316146236/nishant-kalra",
+            "https://www.cmhregional.com/provider/1316926934/santosh-likki",
+            "https://www.cmhregional.com/provider/1316949266/rashad-el-dabh"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//h1//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//strong//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[contains(@class,'doctor-action-address')])[position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@id=\"main\"]//br//following::text()[contains(.,\"Phone\")]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

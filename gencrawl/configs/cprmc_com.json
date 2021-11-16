@@ -1,0 +1,108 @@
+{
+    "website": "https://www.cprmc.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "cprmc.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.cprmc.com/provider/1003000936/mark-stellingworth",
+            "https://www.cprmc.com/provider/1003854464/terry-grainger",
+            "https://www.cprmc.com/provider/1053310110/wallace-vaught-jr-md",
+            "https://www.cprmc.com/provider/1053340935/arvind-j-bali-md",
+            "https://www.cprmc.com/provider/1053371104/robert-bullard-jr",
+            "https://www.cprmc.com/provider/1063665636/jordanna-baker",
+            "https://www.cprmc.com/provider/1104138072/marian-japitana-bunnell",
+            "https://www.cprmc.com/provider/1104814409/david-j-horger-md",
+            "https://www.cprmc.com/provider/1104858489/william-long",
+            "https://www.cprmc.com/provider/1144668419/aaron-haire",
+            "https://www.cprmc.com/provider/1154353787/robert-elder",
+            "https://www.cprmc.com/provider/1174696454/toya-danzey",
+            "https://www.cprmc.com/provider/1194241349/angela-williamson",
+            "https://www.cprmc.com/provider/1194757856/scott-h-daniel-md-facog",
+            "https://www.cprmc.com/provider/1215115639/william-j-martin-iii-md",
+            "https://www.cprmc.com/provider/1245260470/orville-dyce",
+            "https://www.cprmc.com/provider/1245610062/christopher-tyree",
+            "https://www.cprmc.com/provider/1255525820/joseph-william-powell-md",
+            "https://www.cprmc.com/provider/1255840773/haley-jackson",
+            "https://www.cprmc.com/provider/1265093470/casey-mcleod",
+            "https://www.cprmc.com/provider/1316530074/elizabeth-newsom",
+            "https://www.cprmc.com/provider/1316976186/linda-george-certified-nurse-midwife",
+            "https://www.cprmc.com/provider/1316983729/venugopal-govindappa",
+            "https://www.cprmc.com/provider/1396939971/jacob-coward",
+            "https://www.cprmc.com/provider/1407253644/casey-moore",
+            "https://www.cprmc.com/provider/1457383317/shari-carter",
+            "https://www.cprmc.com/provider/1467772392/david-prior-md",
+            "https://www.cprmc.com/provider/1487686150/michelle-quaye",
+            "https://www.cprmc.com/provider/1508898727/thomas-james-bell-md",
+            "https://www.cprmc.com/provider/1538226527/solomon-budhram",
+            "https://www.cprmc.com/provider/1548235757/abraham-areephanthu-md",
+            "https://www.cprmc.com/provider/1588644116/jack-t-sproul",
+            "https://www.cprmc.com/provider/1609197623/yolanda-mendez",
+            "https://www.cprmc.com/provider/1619350162/jessica-fink",
+            "https://www.cprmc.com/provider/1679573422/kenneth-evans",
+            "https://www.cprmc.com/provider/1679575013/patrick-sizemore",
+            "https://www.cprmc.com/provider/1689692253/c-brooks-bannister-md",
+            "https://www.cprmc.com/provider/1699707281/raymond-mac-chapman-md",
+            "https://www.cprmc.com/provider/1700863404/jason-dameron",
+            "https://www.cprmc.com/provider/1730245069/elizabeth-morphis",
+            "https://www.cprmc.com/provider/1730365214/terence-w-hassler-md",
+            "https://www.cprmc.com/provider/1730381252/samuel-okoh",
+            "https://www.cprmc.com/provider/1760463491/farhan-maqsood",
+            "https://www.cprmc.com/provider/1780914051/shannon-gainey",
+            "https://www.cprmc.com/provider/1821155888/joni-ovanna-budhram",
+            "https://www.cprmc.com/provider/1841527454/maggie-flowers",
+            "https://www.cprmc.com/provider/1851659858/aaron-wynkoop",
+            "https://www.cprmc.com/provider/1851709554/kevin-sponseller-md",
+            "https://www.cprmc.com/provider/1891795985/barry-clark",
+            "https://www.cprmc.com/provider/1891984647/brian-sponseller-md",
+            "https://www.cprmc.com/provider/1902847494/richard-edelson",
+            "https://www.cprmc.com/provider/1922012640/jane-senseney-md",
+            "https://www.cprmc.com/provider/1922037191/john-ropp-iii",
+            "https://www.cprmc.com/provider/1942367388/harry-stone-jr",
+            "https://www.cprmc.com/provider/1972535342/michael-harless",
+            "https://www.cprmc.com/provider/1972535631/leroy-f-robinson-md-facog"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//h1//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//strong//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[contains(@class,'doctor-action-address')])[position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@id=\"main\"]//br//following::text()[contains(.,\"Phone\")]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

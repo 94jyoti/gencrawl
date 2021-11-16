@@ -1,0 +1,62 @@
+{
+    "website": "https://www.lakecumberlandhospital.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "lakecumberlandhospital.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.lakecumberlandhospital.com/provider/1245329069/mohammad-afzal",
+            "https://www.lakecumberlandhospital.com/provider/1720439540/ausaf-ahmed-md",
+            "https://www.lakecumberlandhospital.com/provider/1922028604/mateen-ahmed-md",
+            "https://www.lakecumberlandhospital.com/provider/1346397163/ben-b-alderdice-dmd",
+            "https://www.lakecumberlandhospital.com/provider/1518973478/ben-b-alderdice-jr-dmd",
+            "https://www.lakecumberlandhospital.com/provider/1811993280/ashwini-anand-md",
+            "https://www.lakecumberlandhospital.com/provider/1811992852/aruna-arekapudi-md",
+            "https://www.lakecumberlandhospital.com/provider/1912128307/brian-baker-md",
+            "https://www.lakecumberlandhospital.com/provider/1285671255/william-baker-md",
+            "https://www.lakecumberlandhospital.com/provider/1366762197/deanna-ball-grubbs-md",
+            "https://www.lakecumberlandhospital.com/provider/1558802751/umar-bhatti-do",
+            "https://www.lakecumberlandhospital.com/provider/1932466083/brandi-blackburn-md",
+            "https://www.lakecumberlandhospital.com/provider/1376800409/reaford-blackburn-jr-md",
+            "https://www.lakecumberlandhospital.com/provider/1255790051/andrew-blakley-do",
+            "https://www.lakecumberlandhospital.com/provider/1689730418/carter-blevins-dmd",
+            "https://www.lakecumberlandhospital.com/provider/1588760706/robina-bokhari-md",
+            "https://www.lakecumberlandhospital.com/provider/1861847394/stacey-bowlds-md"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//h1//following-sibling::p/strong/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[@class='doctor-action-address'])[2]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

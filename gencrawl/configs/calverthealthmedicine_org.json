@@ -1,0 +1,47 @@
+{
+    "website": "https://www.calverthealthmedicine.org/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "calverthealthmedicine.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[@class = 'info']//h3[1]/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[@class = 'info']//h3[1]/following-sibling::div/text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "address": {
+                "paths": [
+                    "//label[contains(text(),\"P:\")]//parent::li//preceding-sibling::li[position()!=last()]"
+                ],
+                "return_type": "selector",
+                "selector": "multiple_items"
+            },
+            "address_line_1": {
+                "paths": [
+                    ".//text()"
+                ],
+                "return_type": "str",
+                "selector": "address"
+            }
+        }
+    }
+}

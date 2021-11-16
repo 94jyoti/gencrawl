@@ -1,0 +1,152 @@
+{
+    "website": "https://www.yourlourdes.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "yourlourdes.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.yourlourdes.com/provider/1013012293/spencer-jilek-dds",
+            "https://www.yourlourdes.com/provider/1023314820",
+            "https://www.yourlourdes.com/provider/1033254982/john-badal-md",
+            "https://www.yourlourdes.com/provider/1033637582/jesse-clossey-pa-c",
+            "https://www.yourlourdes.com/provider/1043256233/hector-gutierrez-pa-c",
+            "https://www.yourlourdes.com/provider/1043507973/brent-thielges-dpm",
+            "https://www.yourlourdes.com/provider/1053592055/philip-karuman-md-phd",
+            "https://www.yourlourdes.com/provider/1053608331/kirk-morris-dds",
+            "https://www.yourlourdes.com/provider/1053611400/cheryl-lee-md",
+            "https://www.yourlourdes.com/provider/1063928448/heidi-april-pa-c",
+            "https://www.yourlourdes.com/provider/1073616611/fareed-arif-md",
+            "https://www.yourlourdes.com/provider/1073813424/richard-withers-pa-c",
+            "https://www.yourlourdes.com/provider/1073824900/guy-jones-md",
+            "https://www.yourlourdes.com/provider/1083649305/stephen-blatt-md",
+            "https://www.yourlourdes.com/provider/1083666127/carl-garabedian-md",
+            "https://www.yourlourdes.com/provider/1083703086/cameron-ritchie-pa-c",
+            "https://www.yourlourdes.com/provider/1093079949/matthew-lamb-md",
+            "https://www.yourlourdes.com/provider/1093803884/elhami-hannan-md",
+            "https://www.yourlourdes.com/provider/1104896794/brian-lawenda-md",
+            "https://www.yourlourdes.com/provider/1134160104/christopher-montague-md",
+            "https://www.yourlourdes.com/provider/1134288533/travis-carter-dpm",
+            "https://www.yourlourdes.com/provider/1144540931/flordeliza-lilagan-md",
+            "https://www.yourlourdes.com/provider/1144615857/elizabeth-karr-do",
+            "https://www.yourlourdes.com/provider/1184966624/sudeep-thapa-md",
+            "https://www.yourlourdes.com/provider/1205079365/cathryn-cj-vadala-md",
+            "https://www.yourlourdes.com/provider/1205099082/porntip-kiatsimkul-md",
+            "https://www.yourlourdes.com/provider/1205125945/judd-r-fitzgerald-md",
+            "https://www.yourlourdes.com/provider/1205855574/eric-lowe-pa-c",
+            "https://www.yourlourdes.com/provider/1205939840/jimmy-chua-md",
+            "https://www.yourlourdes.com/provider/1215137542/jasdip-matharu-md",
+            "https://www.yourlourdes.com/provider/1215349998/eyob-kidane-pa-c",
+            "https://www.yourlourdes.com/provider/1225076680/wayne-riches-md",
+            "https://www.yourlourdes.com/provider/1235342510/david-hamilton-dds",
+            "https://www.yourlourdes.com/provider/1245314608/jaime-nicacio-md",
+            "https://www.yourlourdes.com/provider/1255499398/laurie-s-evans-md",
+            "https://www.yourlourdes.com/provider/1255519021/a-follis-crna",
+            "https://www.yourlourdes.com/provider/1275552531/mark-merrell-md",
+            "https://www.yourlourdes.com/provider/1275556904/marshall-keith-brown-do",
+            "https://www.yourlourdes.com/provider/1275866139/julie-israelsen-pa-c",
+            "https://www.yourlourdes.com/provider/1285101097/joshua-scoville-fnp-c",
+            "https://www.yourlourdes.com/provider/1285632919/patrick-lassen-md",
+            "https://www.yourlourdes.com/provider/1285709568/brian-york-do",
+            "https://www.yourlourdes.com/provider/1285747139/kim-reis-do",
+            "https://www.yourlourdes.com/provider/1285747873/richard-lorenzo-do",
+            "https://www.yourlourdes.com/provider/1285830703/james-collette-dds",
+            "https://www.yourlourdes.com/provider/1285995365/jazmin-yepez-kuri-md",
+            "https://www.yourlourdes.com/provider/1316482821/erica-arias-pa-c---specialty-hospitalist",
+            "https://www.yourlourdes.com/provider/1326070871/ernesto-dizon-md",
+            "https://www.yourlourdes.com/provider/1326261637/david-vance-md",
+            "https://www.yourlourdes.com/provider/1346308483/richard-shallman-md",
+            "https://www.yourlourdes.com/provider/1346582509/scott-lamb-md",
+            "https://www.yourlourdes.com/provider/1346593050/paul-carbaugh-pa-c",
+            "https://www.yourlourdes.com/provider/1356513014/joshua-spendlove-md",
+            "https://www.yourlourdes.com/provider/1356785406/hardildar-gill-md",
+            "https://www.yourlourdes.com/provider/1366407942/kenneth-berger-md",
+            "https://www.yourlourdes.com/provider/1376578781/eric-pearson-pa-c---urgent-care",
+            "https://www.yourlourdes.com/provider/1376595637/ningxin-zeng-md",
+            "https://www.yourlourdes.com/provider/1396715181/amardeep-mann-md",
+            "https://www.yourlourdes.com/provider/1396862868/allen-shoham-md",
+            "https://www.yourlourdes.com/provider/1407126220/dalila-fairchild-crna",
+            "https://www.yourlourdes.com/provider/1407150055/benjamin-clark-crna",
+            "https://www.yourlourdes.com/provider/1407170715/jennifer-balde-md",
+            "https://www.yourlourdes.com/provider/1407813298/james-hulse-md",
+            "https://www.yourlourdes.com/provider/1417240961/scott-spendlove-do",
+            "https://www.yourlourdes.com/provider/1417286386/wanda-good-do",
+            "https://www.yourlourdes.com/provider/1417312901/christa-brown-crna",
+            "https://www.yourlourdes.com/provider/1417486606/colin-mckay-dpm",
+            "https://www.yourlourdes.com/provider/1417943069/robert-strobl-crna",
+            "https://www.yourlourdes.com/provider/1427068915/venkataraman-sambasivan-md",
+            "https://www.yourlourdes.com/provider/1427147404/larry-loveridge-dmd",
+            "https://www.yourlourdes.com/provider/1437143179/fred-foss-md",
+            "https://www.yourlourdes.com/provider/1447257266/devin-harrison-md",
+            "https://www.yourlourdes.com/provider/1447443767/stephen-welch-do",
+            "https://www.yourlourdes.com/provider/1457600496/louay-toni-md",
+            "https://www.yourlourdes.com/provider/1467420174/wassim-khawandi-md",
+            "https://www.yourlourdes.com/provider/1467433706/johnathan-perry-md",
+            "https://www.yourlourdes.com/provider/1467497222/farrukh-hashmi-md",
+            "https://www.yourlourdes.com/provider/1467542852/michael-shannon-dmd",
+            "https://www.yourlourdes.com/provider/1477195196/douglas-griffith-arnp-c",
+            "https://www.yourlourdes.com/provider/1477862878/cameron-ritchie-pa-c",
+            "https://www.yourlourdes.com/provider/1487844874/dane-sandquist-md",
+            "https://www.yourlourdes.com/provider/1508819855/peter-andress-crna",
+            "https://www.yourlourdes.com/provider/1508843970/eduardo-meirelles-md",
+            "https://www.yourlourdes.com/provider/1528090032/naeem-chavla-md",
+            "https://www.yourlourdes.com/provider/1528124138/anthony-gambone-pa-c",
+            "https://www.yourlourdes.com/provider/1528163680/cheta-nand-md",
+            "https://www.yourlourdes.com/provider/1528371564/lisa-rootvik-md",
+            "https://www.yourlourdes.com/provider/1528383155/paolo-antonio-de-vera-md",
+            "https://www.yourlourdes.com/provider/1538215447/uel-d-hansen-md",
+            "https://www.yourlourdes.com/provider/1538269378/robert-shirey-pa-c---urgent-care---retired",
+            "https://www.yourlourdes.com/provider/1538300819/charles-middleton-crna",
+            "https://www.yourlourdes.com/provider/1538396932/daniel-mcguire-md",
+            "https://www.yourlourdes.com/provider/1548207830/raul-garcia-rodriguez-do",
+            "https://www.yourlourdes.com/provider/1548213408/nicolas-arretche-crna",
+            "https://www.yourlourdes.com/provider/1548411341/joseph-webb-pa-c",
+            "https://www.yourlourdes.com/provider/1548612153/tyler-shaw-pa-c",
+            "https://www.yourlourdes.com/provider/1558320515/timothy-hockenberry-md",
+            "https://www.yourlourdes.com/provider/1568514032/thomas-lenart-md",
+            "https://www.yourlourdes.com/provider/1568941904/joel-gardner-pa-c",
+            "https://www.yourlourdes.com/provider/1578595286/steven-erlemeier-md"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//h1//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//strong//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[contains(@class,'doctor-action-address')])[position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@id=\"main\"]//br//following::text()[contains(.,\"Phone\")]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

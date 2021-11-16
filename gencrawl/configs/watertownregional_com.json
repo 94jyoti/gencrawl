@@ -1,0 +1,152 @@
+{
+    "website": "https://www.watertownregional.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "watertownregional.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.watertownregional.com/provider/1013908771/robert-legrow-md",
+            "https://www.watertownregional.com/provider/1013963107/jay-met-md",
+            "https://www.watertownregional.com/provider/1023085685/michael-grajewski-md",
+            "https://www.watertownregional.com/provider/1033178512/john-basarich-md",
+            "https://www.watertownregional.com/provider/1053380345/katharina-stewart-md",
+            "https://www.watertownregional.com/provider/1063677920/kara-hoppe-do",
+            "https://www.watertownregional.com/provider/1063709491/lexi-derry-od",
+            "https://www.watertownregional.com/provider/1073920708/kristen-burg-crna",
+            "https://www.watertownregional.com/provider/1083013270/jan-beyer-fnp",
+            "https://www.watertownregional.com/provider/1083608087/issam-al-bitar-md-facc",
+            "https://www.watertownregional.com/provider/1083806814/danielle-tonelli-do",
+            "https://www.watertownregional.com/provider/1083895312/mark-roman-do",
+            "https://www.watertownregional.com/provider/1093001851/brian-curtin-do",
+            "https://www.watertownregional.com/provider/1093012734/beau-boedecker-pa-c",
+            "https://www.watertownregional.com/provider/1093883142/michael-sullivan-md",
+            "https://www.watertownregional.com/provider/1093997355/kristin-erickson-pa-c",
+            "https://www.watertownregional.com/provider/1104854363/matthew-mathai-md",
+            "https://www.watertownregional.com/provider/1114029196/arturo-eyzaguirre-md",
+            "https://www.watertownregional.com/provider/1114499001/heather-avellone-apnp",
+            "https://www.watertownregional.com/provider/1114914538/scott-martin-md",
+            "https://www.watertownregional.com/provider/1164978581/kathleen-pugh-np",
+            "https://www.watertownregional.com/provider/1174546899/ellen-hayes-md-facog",
+            "https://www.watertownregional.com/provider/1184990178/jason-mcmaster-md",
+            "https://www.watertownregional.com/provider/1194943399/paul-lisi-do",
+            "https://www.watertownregional.com/provider/1215476874/beth-pape-np",
+            "https://www.watertownregional.com/provider/1215987128/danish-siddiqui-md",
+            "https://www.watertownregional.com/provider/1255606430/garrett-fleming-md",
+            "https://www.watertownregional.com/provider/1265455596/robert-allen-md",
+            "https://www.watertownregional.com/provider/1275737199/matthew-herald",
+            "https://www.watertownregional.com/provider/1285601070/michael-janowak-md",
+            "https://www.watertownregional.com/provider/1285698548/adam-dachman-do",
+            "https://www.watertownregional.com/provider/1285757997/jesus-iruretagoyena-md",
+            "https://www.watertownregional.com/provider/1285848291/fahad-iqbal-md",
+            "https://www.watertownregional.com/provider/1295791937/salim-shammo-md",
+            "https://www.watertownregional.com/provider/1316958705/florin-stuleanu",
+            "https://www.watertownregional.com/provider/1326045485/cheryl-kolkovich-pa-c",
+            "https://www.watertownregional.com/provider/1326506031/jackie-hill-np",
+            "https://www.watertownregional.com/provider/1336401736/leslie-golden-md",
+            "https://www.watertownregional.com/provider/1346450558/danny-yaish-do",
+            "https://www.watertownregional.com/provider/1356864276/devarsh-murthy-crna",
+            "https://www.watertownregional.com/provider/1376972349/patricia-howard-ms-lpc-csac",
+            "https://www.watertownregional.com/provider/1396720587/christopher-peters-msw-lcsw",
+            "https://www.watertownregional.com/provider/1396796074/ronald-sokovich-md",
+            "https://www.watertownregional.com/provider/1396921375/andrea-cantwell-durand-fnp",
+            "https://www.watertownregional.com/provider/1427001676/brent-yaeggi-dpm",
+            "https://www.watertownregional.com/provider/1427392687/gina-sullivan-apnp",
+            "https://www.watertownregional.com/provider/1437143435/paul-volkert-md-facc-fscai",
+            "https://www.watertownregional.com/provider/1437156163/jeffery-meade-md",
+            "https://www.watertownregional.com/provider/1437544863/zach-richardson-md",
+            "https://www.watertownregional.com/provider/1437638830/lori-unger-msn-pmhnp-bc",
+            "https://www.watertownregional.com/provider/1457309965/maher-fattouh-md",
+            "https://www.watertownregional.com/provider/1457649634/nicholas-conwell-md",
+            "https://www.watertownregional.com/provider/1467426452/steven-rhodes-md",
+            "https://www.watertownregional.com/provider/1477076297/rachel-dillon-np",
+            "https://www.watertownregional.com/provider/1487053005/casey-brown-apnp",
+            "https://www.watertownregional.com/provider/1487092078/susie-drake-md",
+            "https://www.watertownregional.com/provider/1487610184/karen-howard-np",
+            "https://www.watertownregional.com/provider/1518196807/sajjad-nasir-md",
+            "https://www.watertownregional.com/provider/1528065257/james-meade-md",
+            "https://www.watertownregional.com/provider/1538194790/linnea-nagel-pa-c",
+            "https://www.watertownregional.com/provider/1548237076/james-milford-md",
+            "https://www.watertownregional.com/provider/1558358143/charles-havel-md",
+            "https://www.watertownregional.com/provider/1558780221/whitney-van-reesen-md",
+            "https://www.watertownregional.com/provider/1578530705/michael-eastman-md",
+            "https://www.watertownregional.com/provider/1588685077/michael-anderson-md",
+            "https://www.watertownregional.com/provider/1588920516/obinna-orji-md",
+            "https://www.watertownregional.com/provider/1598174187/virginia-kashevarof-crna",
+            "https://www.watertownregional.com/provider/1619239936/matthew-weeks-md",
+            "https://www.watertownregional.com/provider/1619350667/emily-muras-np",
+            "https://www.watertownregional.com/provider/1619950375/steven-donatello-md",
+            "https://www.watertownregional.com/provider/1629020946/shekhar-dagam-md",
+            "https://www.watertownregional.com/provider/1659822815/sarah-coffey-pa-c",
+            "https://www.watertownregional.com/provider/1669007357/liz-gilson-pa-c",
+            "https://www.watertownregional.com/provider/1669670345/cathy-hunter-pa-c",
+            "https://www.watertownregional.com/provider/1699975979/nestor-rodriguez-md",
+            "https://www.watertownregional.com/provider/1700963352/janell-loescher-lcsw",
+            "https://www.watertownregional.com/provider/1710395058/june-suwanabol-pa-c",
+            "https://www.watertownregional.com/provider/1710516117/karla-bakke-pa-c",
+            "https://www.watertownregional.com/provider/1730175589/jeffrey-van-beek-md",
+            "https://www.watertownregional.com/provider/1740337518/terry-turke-md",
+            "https://www.watertownregional.com/provider/1740690320/aaron-yohann-pa-c",
+            "https://www.watertownregional.com/provider/1750692364/rachel-busalacchi-pa-c",
+            "https://www.watertownregional.com/provider/1811330376/jacquelyn-adams-md",
+            "https://www.watertownregional.com/provider/1841244555/greg-graglia-dpm",
+            "https://www.watertownregional.com/provider/1841588993/janine-rhoades-md",
+            "https://www.watertownregional.com/provider/1841779238/michelle-zapinski-msn-apnp-pmhnp-b",
+            "https://www.watertownregional.com/provider/1851381099/christopher-eckerman-dpm",
+            "https://www.watertownregional.com/provider/1851486518/laurie-radojevich-np",
+            "https://www.watertownregional.com/provider/1861711822/jessica-schuster-md",
+            "https://www.watertownregional.com/provider/1861753485/jason-habeck-md",
+            "https://www.watertownregional.com/provider/1871038638/dana-stinnett-np",
+            "https://www.watertownregional.com/provider/1871067553/chris-thomas-apnp",
+            "https://www.watertownregional.com/provider/1871657528/helen-box-md",
+            "https://www.watertownregional.com/provider/1881164481/melodie-de-fouw-np",
+            "https://www.watertownregional.com/provider/1881244358/amber-hendriksen-apnp",
+            "https://www.watertownregional.com/provider/1881679173/kathleen-oneill-msw-lcsw-mdiv",
+            "https://www.watertownregional.com/provider/1881679975/erik-beaver-phd",
+            "https://www.watertownregional.com/provider/1891106027/heather-raatz-apnp",
+            "https://www.watertownregional.com/provider/1891845780/sharon-gottschalk-pa-c",
+            "https://www.watertownregional.com/provider/1902233216/megan-klarner-np"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//h1//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//strong//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[contains(@class,'doctor-action-address')])[position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@id=\"main\"]//br//following::text()[contains(.,\"Phone\")]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}
