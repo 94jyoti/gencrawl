@@ -2,6 +2,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from gencrawl.util.statics import Statics
+from psycopg2.extras import execute_values
+from psycopg2 import sql
+import json
 
 
 class DAL:
@@ -22,6 +25,13 @@ class DAL:
 				SELECT distinct("DoctorUrl") FROM public.dhc_master_input_table_october_2021 where "DoctorUrl"!='' and 
 				("DoctorUrl" like '%www.{}%' or "DoctorUrl" like '%//{}%' or "DoctorUrl" like '{}%') 
 				"""
+		}
+		self.client_insert_columns = {
+			"DHC": ['job_id', 'gencrawl_id', 'profile_id', 'website', 'search_url', 'doctor_url', 'http_status',
+					'unique_data_identifier', 'raw_address', 'raw_name', 'json_data']
+		}
+		self.client_column_mapping = {
+			"DHC": {"raw_name": "raw_full_name", "raw_address": "address_raw_1"}
 		}
 
 	@staticmethod
@@ -53,4 +63,27 @@ class DAL:
 		results = [x[0] for x in pg_session.execute(query)]
 		self._close_session(pg_session)
 		return results
+
+	def insert_raw_output(self, items):
+		pg_session = self._create_session(self.engine)
+		columns = self.client_insert_columns[self.client]
+		column_mapping = self.client_column_mapping.get(self.client) or {}
+		db_rows = [{k: item.get(column_mapping.get(k) or k) for k in columns} for item in items]
+		for item, row in zip(items, db_rows):
+			row['json_data'] = json.dumps(item).replace("'", "''")
+			# TODO remove this temp check
+			row['profile_id'] = 1
+		connection = pg_session.bind.raw_connection()
+		with connection.cursor() as cursor:
+			query = sql.SQL("""INSERT INTO gencrawl_raw_output({fields}) VALUES %s;""").format(
+				fields=sql.SQL(', ').join(map(sql.Identifier, columns)),
+			).as_string(cursor)
+			try:
+				execute_values(cur=cursor, sql=query,
+							   argslist=[tuple(row.get(col) for col in columns) for row in db_rows])
+				connection.commit()
+			except Exception as error:
+				print(str(error))
+		self._close_session(pg_session)
+
 

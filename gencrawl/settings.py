@@ -44,6 +44,7 @@ SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless']
 
 
 ITEM_PIPELINES = {
+    'gencrawl.pipelines.db_pipeline.DBPipeline': 500
 }
 
 # encoding
@@ -70,6 +71,8 @@ else:
     ENVIRONMENT = Statics.ENV_DEV
 
 # db settings
+DB_BATCH_SIZE = 50
+
 NFN_DB_USER = 'postgres'
 NFN_DB_PASS = 'kapow123'
 NFN_DB_HOST = '65.2.58.32'

@@ -50,6 +50,8 @@ class BaseSpider(Spider):
                 f'gencrawl.pipelines.{config["domain"]}_{cls.crawl_type}_custom_pipeline.CustomPipeline': 301
             }
         }
+        if kwargs.get("env"):
+            custom_settings['ENVIRONMENT'] = kwargs['env'].upper()
         # settings as provided in the config json
         config_settings = config.get("custom_settings")
         if config_settings:
@@ -63,10 +65,11 @@ class BaseSpider(Spider):
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.logger.info("Config Loaded - \n{}".format(json.dumps(config)))
+        self.config = config
+        self.environment = self.settings['ENVIRONMENT']
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
         self.db_limit = kwargs.get("db_limit")
-        self.config = config
         self.input = self._get_start_urls(self.urls, self.input_file, self.db_limit)
         self.job_id = str(uuid.uuid4())
         self.allowed_domains = config['allowed_domains']
@@ -427,6 +430,7 @@ class BaseSpider(Spider):
             elif key not in self.ignore_meta_fields:
                 temp_fields[key] = str(value)[:Statics.MAX_OTHER_FIELDS_LENGTH] + "..."
         item['gencrawl_id'] = uuid.uuid4().hex
+        item['website'] = Utility.get_allowed_domains([self.config['website']])[0]
         return item
 
     # return field names from the ext_codes. The temp_ fields are assigned first in the queue and
