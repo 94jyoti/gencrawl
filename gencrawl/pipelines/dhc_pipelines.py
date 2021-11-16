@@ -246,11 +246,12 @@ class DHCPipeline:
         for i, adr in reversed(list(enumerate(address_raw))):
             to_break = False
             for rgx in self.pincode_rgx:
-                pincode = rgx.search(adr)
+                pincode = rgx.findall(adr)
                 if pincode:
+                    pincode = pincode[-1]
                     address_upto_idx = i
                     if not item.get("zip"):
-                        item['zip'] = pincode.group(1)
+                        item['zip'] = pincode
                     to_break = True
                     break
             if to_break:
