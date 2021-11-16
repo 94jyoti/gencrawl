@@ -46,8 +46,8 @@ class BaseSpider(Spider):
         custom_settings = {
             "ITEM_PIPELINES": {
                 **get_project_settings()['ITEM_PIPELINES'],
-                f'gencrawl.pipelines.{cls.client.lower()}_pipelines.{cls.client}Pipeline': 300,
-                f'gencrawl.pipelines.{config["domain"]}_{cls.crawl_type}_custom_pipelines.CustomPipeline': 301
+                f'gencrawl.pipelines.{cls.client.lower()}_pipeline.{cls.client}Pipeline': 300,
+                f'gencrawl.pipelines.{config["domain"]}_{cls.crawl_type}_custom_pipeline.CustomPipeline': 301
             }
         }
         # settings as provided in the config json

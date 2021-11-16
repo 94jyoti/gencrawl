@@ -4,8 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from gencrawl.util.statics import Statics
 
 
-
 class DAL:
+
 	@staticmethod
 	def _create_engine(settings, client):
 		return create_engine(
