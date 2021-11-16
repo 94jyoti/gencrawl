@@ -1,11 +1,15 @@
-# -*- coding: utf-8 -*-
-
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
+from gencrawl.util.utility import Utility
+import logging
+logger = logging.getLogger(__name__)
 
 
-class Pipeline(object):
-    pass
-
+class BaseCustomPipeline:
+    def process_item(self, item, spider):
+        custom_method_name = Utility.get_config_name(spider.config['website'])
+        try:
+            custom_method = getattr(self, custom_method_name)
+            logging.info(f"Custom pipeline logic is being called - {custom_method_name}")
+            item = custom_method(item, spider)
+        except AttributeError:
+            pass
+        return item

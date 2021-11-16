@@ -29,6 +29,8 @@ class DHCPipeline:
         phone_rgx = [r'(\(\d{3}\)[\.\-\s]\d{3}[\.\-\s]\d{4})', r'(\d{3}[\.\-\s]\d{3}[\.\s\-]\d{4})',
                      r'(\(\d{3}\)\d{3}[\.\-\s]\d{4})']
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
+        nick_name_rgx = [r'"[a-zA-Z]+"', r'\([a-zA-Z]+\)']
+        self.nick_name_rgx = [re.compile(r) for r in nick_name_rgx]
         self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
         self.fax_keywords = ["fax", "fx", "f:", "(f)"]
 
@@ -116,12 +118,16 @@ class DHCPipeline:
         return parsed_item
 
     def parse_suffix(self, item):
+        ignore_suffixes = []
+        for key in ['first_name', 'middle_name', 'last_name']:
+            if item.get(key):
+                ignore_suffixes.append(item[key])
         raw_name = item['raw_full_name']
         for sep in self.name_separators:
             raw_name = raw_name.replace(sep, ' ')
         raw_name = [r.strip() for r in raw_name.split() if r.strip()]
         for part in raw_name:
-            if part in self.suffixes_map:
+            if part in self.suffixes_map and part not in ignore_suffixes:
                 item['suffix'] = part
                 break
         return item
@@ -132,7 +138,7 @@ class DHCPipeline:
                 name = name.replace(sep, ' ')
             name = [r.strip() for r in name.split() if r.strip()]
             d = []
-            for part in name:
+            for part in name[1:]:
                 if part in self.designations_map:
                     d.append(part)
             return d
@@ -140,7 +146,6 @@ class DHCPipeline:
         raw_name = item['raw_full_name']
         # parse the designations after first comma
         designation = parse_d(raw_name.split(",", 1)[-1])
-
         # if not found after first comma, parse from full name
         if not designation:
             designation = parse_d(raw_name)
@@ -153,6 +158,8 @@ class DHCPipeline:
     # default implementation takes designation after first comma
     def parse_designation(self, item):
         raw_name = item['raw_full_name']
+        if self.decision_tags.get("replace_comma_in_raw_name"):
+            raw_name = raw_name.replace(",", " ").replace("  ", " ")
         ignore_designations = []
         for key in ['first_name', 'middle_name', 'last_name']:
             if item.get(key):
@@ -172,6 +179,8 @@ class DHCPipeline:
 
     def parse_name(self, item):
         raw_name = item.get('raw_full_name')
+        if self.decision_tags.get("replace_comma_in_raw_name"):
+            raw_name = raw_name.replace(",", " ").replace("  ", " ")
         if "," in raw_name:
             raw_name = raw_name.split(",")[0]
 
@@ -183,8 +192,24 @@ class DHCPipeline:
             item['first_name'] = raw_name[0].strip()
         if not item.get("last_name") and len(raw_name) > 1:
             item['last_name'] = raw_name[-1].strip()
-        if not item.get("middle_name") and len(raw_name) == 3:
-            item['middle_name'] = raw_name[1]
+        if not item.get("middle_name"):
+            middle_name = " ".join(raw_name[1:-1])
+            if middle_name:
+                for rgx in self.nick_name_rgx:
+                    middle_name = re.sub(rgx, '', middle_name).strip()
+            item['middle_name'] = middle_name
+        return item
+
+    def parse_exceptions(self, item):
+        suffix = item.get("suffix")
+        last_name = item.get("last_name")
+        middle_name = item.get("middle_name")
+        raw_name = item.get("raw_full_name")
+        if suffix in ['V'] and last_name and not middle_name:
+            # this means suffix is incorrectly extracted. Should have been middle_name
+            if raw_name.index(suffix) < raw_name.index(last_name):
+                item['middle_name'] = suffix
+                item['suffix'] = ''
         return item
 
     def parse_fields_from_name(self, item):
@@ -195,6 +220,7 @@ class DHCPipeline:
             if not item.get("designation"):
                 item = self.parse_designation(item)
             item = self.parse_name(item)
+            item = self.parse_exceptions(item)
         return item
 
     # Receive a line that have an address + city and separate them
@@ -220,11 +246,12 @@ class DHCPipeline:
         for i, adr in reversed(list(enumerate(address_raw))):
             to_break = False
             for rgx in self.pincode_rgx:
-                pincode = rgx.search(adr)
+                pincode = rgx.findall(adr)
                 if pincode:
+                    pincode = pincode[-1]
                     address_upto_idx = i
                     if not item.get("zip"):
-                        item['zip'] = pincode.group(1)
+                        item['zip'] = pincode
                     to_break = True
                     break
             if to_break:
@@ -240,11 +267,17 @@ class DHCPipeline:
 
         def get_field_type(line):
             for k in self.phone_keywords:
-                if k in line.lower():
+                if self.decision_tags.get("phone_at_start"):
+                    if k == line.strip().lower():
+                        return "phone"
+                elif k in line.lower():
                     return "phone"
 
             for k in self.fax_keywords:
-                if k in line.lower():
+                if self.decision_tags.get("phone_at_start"):
+                    if k == line.strip().lower():
+                        return "fax"
+                elif k in line.lower():
                     return "fax"
 
         regexes = self.phone_rgx
@@ -258,7 +291,6 @@ class DHCPipeline:
                 idx_to_remove.add(index)
                 # variable to store whether field type i.e. phone or fax
                 field_type = get_field_type(addr)
-
                 # if field type not found, check in last line of address
                 if not field_type and index > 0:
                     prev_addr = address_extra[index - 1]
@@ -274,7 +306,6 @@ class DHCPipeline:
                     phones.extend(phone_or_fax)
                 elif field_type == 'fax':
                     faxes.extend(phone_or_fax)
-
         phones = item.get("phone") or phones
         faxes = item.get("fax") or faxes
         item['phone'] = Utility.match_rgx(phones, regexes)
@@ -295,12 +326,16 @@ class DHCPipeline:
                     if state in self.us_states:
                         item['state'] = state
                         break
+
                 if item.get("state"):
                     r = r'\b{}\b'.format(state)
                     if item.get("zip"):
-                        address[index] = re.sub(r, '', addr)
+                        address[index] = re.sub(r, '', address[index])
                     else:
-                        address[index] = address[index].split(f" {state}")[0]
+                        if address[index].count(f" {state}") == 1:
+                            address[index] = address[index].split(f" {state}")[0]
+                        else:
+                            address[index] = "".join(address[index].rsplit(state, 1))
                     break
 
             if not item.get("state"):
@@ -359,9 +394,21 @@ class DHCPipeline:
         return item, address
 
     def find_address_lines(self, item, address):
-        if not item.get("address_line_1"):
+        if address and not item.get("address_line_1"):
+            phone_keys = ['phone', 'fax', 'email']
+            replace_text = self.decision_tags.get("replace_text_from_address") or []
+            for pkey in phone_keys:
+                pvals = item.get(pkey) or []
+                if isinstance(pvals, str):
+                    pvals = [pvals]
+                replace_text.extend(pvals)
+            for index, addr in enumerate(address):
+                for r in replace_text:
+                    address[index] = addr.replace(r, "").strip(", ")
+
             if len(address) == 1:
                 address = address[0].rsplit(",", 2)
+
             if len(address) == 3:
                 item['address_line_1'], item['address_line_2'], item['address_line_3'] = address
             elif len(address) == 2:
@@ -375,6 +422,19 @@ class DHCPipeline:
                     item['address_line_1'], item['address_line_2'] = address
             elif len(address) == 1:
                 item['address_line_1'] = address[0]
+
+        if self.decision_tags.get("merge_address2_in_address1"):
+            address_1 = item.get("address_line_1")
+            address_2 = item.get("address_line_2")
+            address_3 = item.get("address_line_3")
+            if address_2 and len(address_2.strip()) <= 2:
+                item['address_line_1'] = address_1 + ',' + address_2
+                item['address_line_2'] = address_3
+                item['address_line_3'] = None
+
+                if item['address_line_2'] and ',' in item['address_line_2']:
+                    item['address_line_2'], item['address_line_3'] = item['address_line_2'].rsplit(",", 1)
+
         if item.get('address_line_1'):
             for text in self.address1_text_to_remove:
                 if item['address_line_1'].startswith(text):
@@ -399,27 +459,36 @@ class DHCPipeline:
                 for a in reversed(a1.split(",")):
                     address_raw.insert(0, a.strip())
 
+            if self.decision_tags.get("split_address_1_by_hyphen"):
+                a1 = address_raw[0]
+                address_raw = address_raw[1:]
+                for a in reversed(a1.split("-")):
+                    address_raw.insert(0, a.strip())
+
             item['address_raw_1'] = "___".join(address_raw)
             item, address_upto_idx = self.find_zip(item, address_raw)
             pincode = item.get("zip")
             if pincode:
                 address_raw[address_upto_idx] = address_raw[address_upto_idx].split(pincode)[0]
             address = address_raw[:address_upto_idx + 1]
-
             if self.decision_tags.get("phone_at_start"):
                 item, address = self.find_phone_and_fax(item, address)
                 item = self.find_email(item, address)
             else:
-                address_extra = address_raw[address_upto_idx + 1:]
+                # recently added or address in case address_extra is empty
+                address_extra = address_raw[address_upto_idx + 1:] or address
                 item = self.find_phone_and_fax(item, address_extra)
                 item = self.find_email(item, address_extra)
 
+            item, address = self.find_practice_name(item, address)
             item, address = self.find_state(item, address)
             item, address = self.find_city(item, address)
-            item, address = self.find_practice_name(item, address)
             item = self.find_address_lines(item, address)
         else:
-            item = self.find_phone_and_fax(item, None)
+            if self.decision_tags.get("phone_at_start"):
+                item, _ = self.find_phone_and_fax(item, None)
+            else:
+                item = self.find_phone_and_fax(item, None)
             item = self.find_email(item, None)
         return item
 
@@ -448,12 +517,29 @@ class DHCPipeline:
             item[key] = item.get(key) or ''
         return item
 
+    def remove_redundant_fields(self, item):
+        fields = ['phone', 'fax', 'zip']
+        for field in fields:
+            values = item.get(field)
+            parsed_values = []
+            if values and isinstance(values, list):
+                for p1 in values:
+                    to_add = True
+                    for p2 in values:
+                        if p1 != p2 and p1 in p2:
+                            to_add = False
+                    if to_add:
+                        parsed_values.append(p1)
+                item[field] = parsed_values
+        return item
+
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
             item = self.parse_fields_from_name(item)
             item = self.parse_fields_from_address(item)
             item = self.combine_address(item)
             item = self.parse_item(item)
+            item = self.remove_redundant_fields(item)
             item = self.parse_list_fields(item)
             item = self.replace_none_with_blank_string(item)
         return item
