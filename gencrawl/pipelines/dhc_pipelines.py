@@ -200,6 +200,18 @@ class DHCPipeline:
             item['middle_name'] = middle_name
         return item
 
+    def parse_exceptions(self, item):
+        suffix = item.get("suffix")
+        last_name = item.get("last_name")
+        middle_name = item.get("middle_name")
+        raw_name = item.get("raw_full_name")
+        if suffix in ['V'] and last_name and not middle_name:
+            # this means suffix is incorrectly extracted. Should have been middle_name
+            if raw_name.index(suffix) < raw_name.index(last_name):
+                item['middle_name'] = suffix
+                item['suffix'] = ''
+        return item
+
     def parse_fields_from_name(self, item):
         raw_name = item.get("raw_full_name")
         if raw_name:
@@ -208,6 +220,7 @@ class DHCPipeline:
             if not item.get("designation"):
                 item = self.parse_designation(item)
             item = self.parse_name(item)
+            item = self.parse_exceptions(item)
         return item
 
     # Receive a line that have an address + city and separate them
@@ -503,18 +516,20 @@ class DHCPipeline:
             item[key] = item.get(key) or ''
         return item
 
-    def remove_redundant_phones(self, item):
-        phones = item.get("phone")
-        parsed_phones = []
-        if phones and isinstance(phones, list):
-            for p1 in phones:
-                to_add = True
-                for p2 in phones:
-                    if p1 != p2 and p1 in p2:
-                        to_add = False
-                if to_add:
-                    parsed_phones.append(p1)
-            item['phone'] = parsed_phones
+    def remove_redundant_fields(self, item):
+        fields = ['phone', 'fax', 'zip']
+        for field in fields:
+            values = item.get(field)
+            parsed_values = []
+            if values and isinstance(values, list):
+                for p1 in values:
+                    to_add = True
+                    for p2 in values:
+                        if p1 != p2 and p1 in p2:
+                            to_add = False
+                    if to_add:
+                        parsed_values.append(p1)
+                item[field] = parsed_values
         return item
 
     def process_item(self, item, spider):
@@ -523,7 +538,7 @@ class DHCPipeline:
             item = self.parse_fields_from_address(item)
             item = self.combine_address(item)
             item = self.parse_item(item)
-            item = self.remove_redundant_phones(item)
+            item = self.remove_redundant_fields(item)
             item = self.parse_list_fields(item)
             item = self.replace_none_with_blank_string(item)
         return item

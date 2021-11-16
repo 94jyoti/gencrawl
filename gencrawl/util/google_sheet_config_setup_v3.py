@@ -174,7 +174,6 @@ class GoogleConfig:
         for filename, jsn in configs.items():
             filename = filename + Statics.CONFIG_EXT
             fp = os.path.join(config_dir, filename)
-            print(fp)
             with open(fp, 'w') as w:
                 w.write(json.dumps(jsn, indent=4))
 
