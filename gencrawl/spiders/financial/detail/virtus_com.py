@@ -10,7 +10,7 @@ from gencrawl.util.statics import Statics
 
 
 class AshmoreComDetail(FinancialDetailSpider):
-    name = 'financial_detail_ashmore_com'
+    name = 'financial_detail_virtus_com'
     custom_settings = {
         "HTTPCACHE_ENABLED": False,
         "CONCURRENT_REQUESTS_PER_DOMAIN": 2,
