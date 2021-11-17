@@ -38,6 +38,6 @@ class DupeFilterPipeline(object):
         """Item version based on hashlib.sha1 algorithm"""
         _hash = hashlib.sha1()
         for attrname in fields:
-            _hash.update(repr(item.get(attrname)).encode('utf-8'))
+            _hash.update(repr(item.get(attrname) or '').encode('utf-8'))
         return _hash.hexdigest()
 

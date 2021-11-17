@@ -97,7 +97,8 @@ class Utility:
     @staticmethod
     def get_config_name(website):
         config = website.replace("https:", '').replace('http:', '').strip(' /')
-        config = config.replace("www.", '').replace(".", "_").replace("-", "_")
+        config = config.replace("www.", '').replace(".", "_")
+        config = config.split("/")[0]
         return config
 
     @staticmethod
@@ -105,6 +106,7 @@ class Utility:
         allowed_domains = []
         for website in websites:
             domain = website.replace("https:", '').replace('http:', '').strip(' /').replace("www.", '')
+            domain = domain.split("/")[0]
             allowed_domains.append(domain)
         return allowed_domains
 
