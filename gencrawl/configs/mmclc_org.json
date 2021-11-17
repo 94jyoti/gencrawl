@@ -1,0 +1,152 @@
+{
+    "website": "https://www.mmclc.org/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "mmclc.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SELENIUM",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.mmclc.org/provider/1366696072/jaime-aburto-md",
+            "https://www.mmclc.org/provider/1225444714/salvador-adame-zambrano",
+            "https://www.mmclc.org/provider/1992980015/chudi-adi",
+            "https://www.mmclc.org/provider/1710918610/william-adler-md",
+            "https://www.mmclc.org/provider/1063490175/hasan-adnan",
+            "https://www.mmclc.org/provider/1730216003/mario-aguilar",
+            "https://www.mmclc.org/provider/1184008153/syed-ahmed-md",
+            "https://www.mmclc.org/provider/1346447091/gilbert-aidinian",
+            "https://www.mmclc.org/provider/1881780955/daniel-allan",
+            "https://www.mmclc.org/provider/1538672738/david-alonso",
+            "https://www.mmclc.org/provider/1063410777/adolfo-anchondo",
+            "https://www.mmclc.org/provider/1760438196/john-andazola-md",
+            "https://www.mmclc.org/provider/1205871720/emmanuel-anekwe",
+            "https://www.mmclc.org/provider/1538671078/matthew-arenibas-cnp",
+            "https://www.mmclc.org/provider/1295733434/eugenio-armendariz",
+            "https://www.mmclc.org/provider/1780894790/alejandro-arzabala",
+            "https://www.mmclc.org/provider/1174981690/kerry-atkinson",
+            "https://www.mmclc.org/provider/1457346652/francis-attiogbe",
+            "https://www.mmclc.org/provider/1255713467/darcy-bains",
+            "https://www.mmclc.org/provider/1215913447/william-baker",
+            "https://www.mmclc.org/provider/1588653083/amit-banerjee",
+            "https://www.mmclc.org/provider/1790815926/saytaki-banerjee",
+            "https://www.mmclc.org/provider/1760547970/sanjoy-banik",
+            "https://www.mmclc.org/provider/1881973873/victor-barnica-md-facs-fascrs",
+            "https://www.mmclc.org/provider/1780815258/thelmo-fidel-barrantes-ramirez",
+            "https://www.mmclc.org/provider/1154829570/sarah-barrio-dnp",
+            "https://www.mmclc.org/provider/1952398364/harry-bass",
+            "https://www.mmclc.org/provider/1447806047/sabrina-bazan",
+            "https://www.mmclc.org/provider/1568416410/lynette-bear",
+            "https://www.mmclc.org/provider/1205221579/john-beauchamp",
+            "https://www.mmclc.org/provider/1841214772/nancy-beckett",
+            "https://www.mmclc.org/provider/1235303512/emma-bendana",
+            "https://www.mmclc.org/provider/1063445666/louis-m-benevento-md-facp",
+            "https://www.mmclc.org/provider/1932383775/stephanie-benson",
+            "https://www.mmclc.org/provider/1275543126/arthur-berkson",
+            "https://www.mmclc.org/provider/1598790438/harry-bernstein",
+            "https://www.mmclc.org/provider/1578873774/matthew-bezzant-pa-c",
+            "https://www.mmclc.org/provider/1386087963/udit-bhatnagar-md-facc",
+            "https://www.mmclc.org/provider/1144579632/daubney-boland",
+            "https://www.mmclc.org/provider/1679096788/justin-boland",
+            "https://www.mmclc.org/provider/1164822490/melinda-brooks-fnp-msn",
+            "https://www.mmclc.org/provider/1740672385/misti-browder-jackson",
+            "https://www.mmclc.org/provider/1346506904/andrew-bruner-md",
+            "https://www.mmclc.org/provider/1790960383/saul-burciaga",
+            "https://www.mmclc.org/provider/1194931352/virginia-burnett",
+            "https://www.mmclc.org/provider/1982230264/devin-burroughs",
+            "https://www.mmclc.org/provider/1922095926/carlos-cadena",
+            "https://www.mmclc.org/provider/1497744288/rolando-cadena",
+            "https://www.mmclc.org/provider/1558535971/jason-call-md",
+            "https://www.mmclc.org/provider/1962449736/kathleen-callaghan",
+            "https://www.mmclc.org/provider/1689815797/dora-carcoba",
+            "https://www.mmclc.org/provider/1225591662/carlos-carrillo-fnp-bc",
+            "https://www.mmclc.org/provider/1578563136/angelina-carver",
+            "https://www.mmclc.org/provider/1811144884/michael-castillo",
+            "https://www.mmclc.org/provider/1154346252/tarah-castleberry-do",
+            "https://www.mmclc.org/provider/1508020355/oscar-castrejon",
+            "https://www.mmclc.org/provider/1093702987/eduardo-castrejon-md",
+            "https://www.mmclc.org/provider/1528211372/hector-castro",
+            "https://www.mmclc.org/provider/1073743704/yolanda-chacon",
+            "https://www.mmclc.org/provider/1790955367/timothy-chan",
+            "https://www.mmclc.org/provider/1962634188/nitin-chanana",
+            "https://www.mmclc.org/provider/1174061873/ryan-chavez",
+            "https://www.mmclc.org/provider/1295910321/kanaka-chelliah",
+            "https://www.mmclc.org/provider/1841399656/nnaemeka-chikwendu",
+            "https://www.mmclc.org/provider/1609858166/alison-clark",
+            "https://www.mmclc.org/provider/1972713832/luis-colato-md",
+            "https://www.mmclc.org/provider/1639677289/melissa-cometti-aprn",
+            "https://www.mmclc.org/provider/1366433633/john-conniff",
+            "https://www.mmclc.org/provider/1821459397/rebecca-cooper",
+            "https://www.mmclc.org/provider/1669472254/lucia-corro",
+            "https://www.mmclc.org/provider/1073016549/andrew-costin",
+            "https://www.mmclc.org/provider/1902398209/davin-craig",
+            "https://www.mmclc.org/provider/1407090947/sandra-crane",
+            "https://www.mmclc.org/provider/1750341020/jose-crespo",
+            "https://www.mmclc.org/provider/1801876115/barry-cromer-md",
+            "https://www.mmclc.org/provider/1073167615/lynn-cubela",
+            "https://www.mmclc.org/provider/1457772576/elicia-currier",
+            "https://www.mmclc.org/provider/1770774176/steve-curtis",
+            "https://www.mmclc.org/provider/1851355382/iris-darby-pa-c",
+            "https://www.mmclc.org/provider/1598173981/diana-dashnaw",
+            "https://www.mmclc.org/provider/1861493991/brian-de-la-houssaye",
+            "https://www.mmclc.org/provider/1669548848/osvaldo-de-la-vega",
+            "https://www.mmclc.org/provider/1497233464/suzanne-denson",
+            "https://www.mmclc.org/provider/1093797011/carlos-diaz",
+            "https://www.mmclc.org/provider/1134129240/gonzalo-diaz",
+            "https://www.mmclc.org/provider/1891189833/sasha-dib",
+            "https://www.mmclc.org/provider/1730348467/carrie-dieker-md",
+            "https://www.mmclc.org/provider/1437158003/charles-dow-md-facs",
+            "https://www.mmclc.org/provider/1972714806/jesus-duran",
+            "https://www.mmclc.org/provider/1275659468/carolyn-evans-pa-c",
+            "https://www.mmclc.org/provider/1851891659/michael-evett-pa",
+            "https://www.mmclc.org/provider/1750386470/joseph-ewing",
+            "https://www.mmclc.org/provider/1699918722/audrey-ezeh",
+            "https://www.mmclc.org/provider/1770847360/evangelia-falkner-cnm",
+            "https://www.mmclc.org/provider/1366406639/frank-felts-md",
+            "https://www.mmclc.org/provider/1083196497/theresa-ferralez",
+            "https://www.mmclc.org/provider/1235311788/danielle-fitzsimmons-pattison",
+            "https://www.mmclc.org/provider/1043286586/jose-flores-jr",
+            "https://www.mmclc.org/provider/1174878656/lindley-folkerson",
+            "https://www.mmclc.org/provider/1902148885/fermin-fontan-md"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//h1//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//div[contains(@class,'doctor-profile')]//strong//text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[contains(@class,'doctor-action-address')])[position()>1]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@id=\"main\"]//br//following::text()[contains(.,\"Phone\")]"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

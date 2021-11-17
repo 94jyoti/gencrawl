@@ -1,9 +1,9 @@
 {
-    "website": "https://www.pbhrmc.com/",
+    "website": "https://harrisonmemhosp.com/",
     "domain": "hospital",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "pbhrmc.com"
+        "harrisonmemhosp.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -13,28 +13,26 @@
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.pbhrmc.com/findadoctor/ahmed-naveed-md-5318",
-            "https://www.pbhrmc.com/findadoctor/arms-donald-md-2837",
-            "https://www.pbhrmc.com/findadoctor/ramachandran-preeti-md-24"
+            "https://www.harrisonmemhosp.com/node/221"
         ],
         "ext_codes": {
             "raw_full_name": {
                 "paths": [
-                    "//div[@class=\"findadoc-profile-header-text\"]//h1//span//text()"
+                    "//h1//text()"
                 ],
-                "return_type": "join",
+                "return_type": "str",
                 "selector": "root"
             },
             "speciality": {
                 "paths": [
-                    "//div[@class=\"phys-specialties\"]//text()"
+                    "//div[contains(@class,'general-information')]//p//text()"
                 ],
-                "return_type": "list",
+                "return_type": "str",
                 "selector": "root"
             },
             "address_raw": {
                 "paths": [
-                    "//div[@class=\"findadoc-profile-contact-info-text\"]"
+                    "//div[contains(@class,'contact-info field')]//div[2]"
                 ],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",

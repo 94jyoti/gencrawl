@@ -1,9 +1,9 @@
 {
-    "website": "https://www.pbhrmc.com/",
+    "website": "https://doctors.temeculavalleyhospital.com/",
     "domain": "hospital",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "pbhrmc.com"
+        "doctors.temeculavalleyhospital.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -13,28 +13,26 @@
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.pbhrmc.com/findadoctor/ahmed-naveed-md-5318",
-            "https://www.pbhrmc.com/findadoctor/arms-donald-md-2837",
-            "https://www.pbhrmc.com/findadoctor/ramachandran-preeti-md-24"
+            "https://doctors.temeculavalleyhospital.com/provider/Hazem+Zekry/1676176?sort=name"
         ],
         "ext_codes": {
             "raw_full_name": {
                 "paths": [
-                    "//div[@class=\"findadoc-profile-header-text\"]//h1//span//text()"
+                    "//h2[@id=\"provider-name\"]//text()"
                 ],
-                "return_type": "join",
+                "return_type": "str",
                 "selector": "root"
             },
             "speciality": {
                 "paths": [
-                    "//div[@class=\"phys-specialties\"]//text()"
+                    "//div[@id=\"about-panel-specialties.specialty\"]//div[position()=last()]//text()"
                 ],
                 "return_type": "list",
                 "selector": "root"
             },
             "address_raw": {
                 "paths": [
-                    "//div[@class=\"findadoc-profile-contact-info-text\"]"
+                    "//div[@itemprop=\"address\"]"
                 ],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
@@ -43,6 +41,6 @@
         }
     },
     "decision_tags": {
-        "practice_may_in_address": "1"
+        "practice_in_address": 1
     }
 }

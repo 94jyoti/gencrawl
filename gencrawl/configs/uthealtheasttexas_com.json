@@ -1,9 +1,9 @@
 {
-    "website": "https://www.pbhrmc.com/",
+    "website": "https://uthealtheasttexas.com/",
     "domain": "hospital",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "pbhrmc.com"
+        "uthealtheasttexas.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -12,37 +12,37 @@
         "spider": "hospital_detail",
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
-        "start_urls": [
-            "https://www.pbhrmc.com/findadoctor/ahmed-naveed-md-5318",
-            "https://www.pbhrmc.com/findadoctor/arms-donald-md-2837",
-            "https://www.pbhrmc.com/findadoctor/ramachandran-preeti-md-24"
-        ],
+        "start_urls": [],
         "ext_codes": {
             "raw_full_name": {
                 "paths": [
-                    "//div[@class=\"findadoc-profile-header-text\"]//h1//span//text()"
+                    "(//h1)[1]//text()"
                 ],
-                "return_type": "join",
+                "return_type": "str",
                 "selector": "root"
             },
             "speciality": {
                 "paths": [
-                    "//div[@class=\"phys-specialties\"]//text()"
+                    "((//div[contains(text(),'Specialty')])[1]//following::div[1]/div)[1]/text()"
                 ],
                 "return_type": "list",
                 "selector": "root"
             },
             "address_raw": {
                 "paths": [
-                    "//div[@class=\"findadoc-profile-contact-info-text\"]"
+                    "//div[contains(@class,\"address field-type\")]"
                 ],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
                 "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[contains(@class,\"phone field-type\")]//div/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
             }
         }
-    },
-    "decision_tags": {
-        "practice_may_in_address": "1"
     }
 }

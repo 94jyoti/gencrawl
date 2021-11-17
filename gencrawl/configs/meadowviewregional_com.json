@@ -1,9 +1,9 @@
 {
-    "website": "https://www.pbhrmc.com/",
+    "website": "https://www.meadowviewregional.com/",
     "domain": "hospital",
     "crawl_method": "SCRAPY_GET",
     "allowed_domains": [
-        "pbhrmc.com"
+        "meadowviewregional.com"
     ],
     "parsing_type": "xpath",
     "country": "US",
@@ -13,36 +13,41 @@
         "crawl_method": "SCRAPY_GET",
         "parsing_type": "xpath",
         "start_urls": [
-            "https://www.pbhrmc.com/findadoctor/ahmed-naveed-md-5318",
-            "https://www.pbhrmc.com/findadoctor/arms-donald-md-2837",
-            "https://www.pbhrmc.com/findadoctor/ramachandran-preeti-md-24"
+            "https://www.meadowviewregional.com/find-a-doctor/eric-r-lohman-md"
         ],
         "ext_codes": {
             "raw_full_name": {
                 "paths": [
-                    "//div[@class=\"findadoc-profile-header-text\"]//h1//span//text()"
+                    "(//div[@id=\"main\"]//h2)[1]//text()"
                 ],
-                "return_type": "join",
+                "return_type": "str",
                 "selector": "root"
             },
-            "speciality": {
+            "designation": {
                 "paths": [
-                    "//div[@class=\"phys-specialties\"]//text()"
+                    "(//div[@id=\"main\"]//br//preceding::text()[1])[1]"
                 ],
-                "return_type": "list",
+                "return_type": "str",
                 "selector": "root"
             },
             "address_raw": {
                 "paths": [
-                    "//div[@class=\"findadoc-profile-contact-info-text\"]"
+                    "//a[@aria-controls=\"profile\"]"
                 ],
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@id=\"main\"]//br//following::text()[contains(.,\"Phone\")]"
+                ],
+                "return_type": "str",
                 "selector": "root"
             }
         }
     },
     "decision_tags": {
-        "practice_may_in_address": "1"
+        "practice_in_address": "1"
     }
 }

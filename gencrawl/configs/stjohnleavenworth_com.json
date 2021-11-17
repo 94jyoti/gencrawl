@@ -1,0 +1,99 @@
+{
+    "website": "https://www.stjohnleavenworth.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "stjohnleavenworth.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.stjohnleavenworth.com/find-a-provider/aaron-s-card-dmd/",
+            "https://www.stjohnleavenworth.com/find-a-provider/ahmed-m-madi-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/andrew-crow-do/",
+            "https://www.stjohnleavenworth.com/find-a-provider/andrew-dalton-do/",
+            "https://www.stjohnleavenworth.com/find-a-provider/andrew-f-ramaley-crna/",
+            "https://www.stjohnleavenworth.com/find-a-provider/angelica-k-varga-pa/",
+            "https://www.stjohnleavenworth.com/find-a-provider/anis-toumeh-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/anne-marie-b-hall-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/ashlee-hess-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/balaji-s-datti-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/bradley-w-rupp-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/christine-e-ely-crna/",
+            "https://www.stjohnleavenworth.com/find-a-provider/claudia-mcallaster-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/claudia-perez-tamayo-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/collin-c-hull-do/",
+            "https://www.stjohnleavenworth.com/find-a-provider/daniel-i-bettis-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/danielle-d-boguslaw-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/deanna-m-bafus-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/debra-l-heidgen-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/donald-j-mcsweyn-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/eliana-megerman-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/emily-ostrander-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/fariz-habib-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/gregory-d-nanney-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/gregory-h-tanquary-do/",
+            "https://www.stjohnleavenworth.com/find-a-provider/jason-e-kimm-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/jennifer-d-skouse-voll-pa/",
+            "https://www.stjohnleavenworth.com/find-a-provider/jhunne-m-galimba-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/john-s-reifschneider-do/",
+            "https://www.stjohnleavenworth.com/find-a-provider/kathleen-r-mcbratney-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/leonid-shunyakov-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/lori-a-golon-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/man-m-anand-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/michael-a-adamovich-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/michael-b-moore-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/mohammad-m-hassan-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/nicholas-g-brockert-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/peter-j-cristiano-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/prashanth-s-katrapati-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/quoc-t-luu-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/rose-m-mutunga-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/sashidhar-manthravadi-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/scott-a-corcoran-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/scott-d-ellison-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/shawn-j-toliver-aprn/",
+            "https://www.stjohnleavenworth.com/find-a-provider/shekhar-k-challa-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/srinivasa-g-vasa-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/stephen-j-lowry-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/steven-s-ranzenberger-do/",
+            "https://www.stjohnleavenworth.com/find-a-provider/thomas-w-wilder-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/timothy-j-monahan-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/vellore-kirubakaran-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/venkat-r-pasnoori-md/",
+            "https://www.stjohnleavenworth.com/find-a-provider/vernon-a-mills-md/"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//*[@id=\"PhysicianContent\"]//h1//text()"
+                ],
+                "return_type": "join",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//*[contains(@id,\"PhysicianSpecialties\")]//a//text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "//strong[contains(text(),'Locations')]/parent::div//li"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_may_in_address": "1"
+    }
+}

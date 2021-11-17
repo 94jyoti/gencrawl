@@ -1,0 +1,79 @@
+{
+    "website": "https://www.springviewhospital.com/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "springviewhospital.com"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.springviewhospital.com/provider/1033140918/thomas-g-abell-md",
+            "https://www.springviewhospital.com/provider/1104932466/mark-a-ackermann-md",
+            "https://www.springviewhospital.com/provider/1821352824/sufian-ahmad-md",
+            "https://www.springviewhospital.com/provider/1053724278/meredith-angel-md",
+            "https://www.springviewhospital.com/provider/1306138912/ben-angel-md",
+            "https://www.springviewhospital.com/provider/1659852556/jennifer-r-bartley-aprn",
+            "https://www.springviewhospital.com/provider/1669459434/julia-k-brown-md",
+            "https://www.springviewhospital.com/provider/1538171517/charles-b-dawson-md",
+            "https://www.springviewhospital.com/provider/1467848952/kelly-r-deatley-md",
+            "https://www.springviewhospital.com/provider/1942306105/paul-e-defranco-do",
+            "https://www.springviewhospital.com/provider/1376532564/james-e-ewing-md",
+            "https://www.springviewhospital.com/provider/1265480164/david-m-faber-md",
+            "https://www.springviewhospital.com/provider/1578933222/lora-garrett-aprn",
+            "https://www.springviewhospital.com/provider/1376525212/david-b-george-md",
+            "https://www.springviewhospital.com/provider/1508341959/andrea-gifford-np",
+            "https://www.springviewhospital.com/provider/1386073963/stephanie-s-harmon-aprn",
+            "https://www.springviewhospital.com/provider/1295813533/daniel-v-hunt-md",
+            "https://www.springviewhospital.com/provider/1356574917/audrey-m-hunt-aprn",
+            "https://www.springviewhospital.com/provider/1265708168/shane-kibbe-md",
+            "https://www.springviewhospital.com/provider/1710549282/christa-kinney-np-c",
+            "https://www.springviewhospital.com/provider/1972595270/william-d-kirk-md",
+            "https://www.springviewhospital.com/provider/1093797185/michelle-j-leathers-md",
+            "https://www.springviewhospital.com/provider/1316387665/jared-r-malan-dpm",
+            "https://www.springviewhospital.com/provider/1497747919/james-montgomery-md",
+            "https://www.springviewhospital.com/provider/1174063234/jennifer-d-mullins-aprn",
+            "https://www.springviewhospital.com/provider/1801825500/muhammad-w-sajid-md",
+            "https://www.springviewhospital.com/provider/1255384020/wayne-m-shugoll-md",
+            "https://www.springviewhospital.com/provider/1336394543/jennifer-sievert-aprn",
+            "https://www.springviewhospital.com/provider/1174555163/james-m-smith-md",
+            "https://www.springviewhospital.com/provider/1376015602/stefanie-k-spalding-aprn",
+            "https://www.springviewhospital.com/provider/1255464236/gerasimos-s-stavens-md",
+            "https://www.springviewhospital.com/provider/1588026181/michael-tanner-md",
+            "https://www.springviewhospital.com/provider/1861458374/diane-s-thomas-md",
+            "https://www.springviewhospital.com/provider/1770901712/amelia-r-wantland"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//h1//following-sibling::p/strong/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[@class='doctor-action-address'])[2]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}

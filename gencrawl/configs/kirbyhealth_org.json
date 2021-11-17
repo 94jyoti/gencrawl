@@ -1,0 +1,71 @@
+{
+    "website": "https://www.kirbyhealth.org/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "kirbyhealth.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.kirbyhealth.org/meet-our-providers/b/raymond-bement-lcsw/",
+            "https://www.kirbyhealth.org/meet-our-providers/c/lauren-coovert-pa-c-certified-lactation-counselo/",
+            "https://www.kirbyhealth.org/meet-our-providers/e/kelley-l-evans-msn-fnp-c/",
+            "https://www.kirbyhealth.org/meet-our-providers/f/tia-fitzpatrick-butler-dnp-fnp-bc-rn/",
+            "https://www.kirbyhealth.org/meet-our-providers/h/katelynn-hayes-msn-aprn-fnp-c/",
+            "https://www.kirbyhealth.org/meet-our-providers/h/evelyn-huang-md/",
+            "https://www.kirbyhealth.org/meet-our-providers/l/david-liss-apn/",
+            "https://www.kirbyhealth.org/meet-our-providers/l/daniel-r-lygrisse-do/",
+            "https://www.kirbyhealth.org/meet-our-providers/m/jennifer-mahannah-np/",
+            "https://www.kirbyhealth.org/meet-our-providers/m/narain-d-mandhan-m-d-/",
+            "https://www.kirbyhealth.org/meet-our-providers/c/lauren-coovert-pa-c-certified-lactation-counselo/"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//*[contains(text(), 'Primary Specialties')]/parent::li/ul/li/span/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "affiliation": {
+                "paths": [
+                    "//*[contains(text(), 'Medical Groups & Affiliations')]/parent::li/ul/li/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "//*[contains(text(), 'Address')]/parent::li"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//*[contains(text(), 'Phone')]/parent::li/a/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "split_address_1_by_comma": "1",
+        "practice_may_in_address": "1"
+    }
+}

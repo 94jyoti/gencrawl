@@ -1,0 +1,90 @@
+{
+    "website": "https://www.tcrh.org/",
+    "domain": "hospital",
+    "crawl_method": "SCRAPY_GET",
+    "allowed_domains": [
+        "tcrh.org"
+    ],
+    "parsing_type": "xpath",
+    "country": "US",
+    "language": "ENGLISH",
+    "detail": {
+        "spider": "hospital_detail",
+        "crawl_method": "SCRAPY_GET",
+        "parsing_type": "xpath",
+        "start_urls": [
+            "https://www.tcrh.org/provider/1801978721/carlos-blattner-md",
+            "https://www.tcrh.org/provider/1265404925/john-bolen-md",
+            "https://www.tcrh.org/provider/1912197765/katherine-katie-f-bryant-md",
+            "https://www.tcrh.org/provider/1568445526/amy-butler",
+            "https://www.tcrh.org/provider/1184703266/jamie-carlo-demovich-md",
+            "https://www.tcrh.org/provider/1790883627/vimal-choudhari-md",
+            "https://www.tcrh.org/provider/1902880370/kenneth-clark-md",
+            "https://www.tcrh.org/provider/1679592554/joy-k-creed-np",
+            "https://www.tcrh.org/provider/1316599038/meagan-u-crowder-fnp",
+            "https://www.tcrh.org/provider/1083724512/glenn-davis-md",
+            "https://www.tcrh.org/provider/1568498111/gamal-elsaidi-do",
+            "https://www.tcrh.org/provider/1447657150/sammy-elyas-md",
+            "https://www.tcrh.org/provider/1124090840/landon-garland-md",
+            "https://www.tcrh.org/provider/1760573083/janet-h-garvey-fnp-c",
+            "https://www.tcrh.org/provider/1174589659/salahadin-gharad",
+            "https://www.tcrh.org/provider/1588716914/dwynn-greenfield-do",
+            "https://www.tcrh.org/provider/1801483524/deborah-greer",
+            "https://www.tcrh.org/provider/1134160351/rollin-hawley",
+            "https://www.tcrh.org/provider/1205454139/diane-helm",
+            "https://www.tcrh.org/provider/1215252143/joseph-iskandar-do",
+            "https://www.tcrh.org/provider/1881920395/deborah-jones",
+            "https://www.tcrh.org/provider/1942229851/john-kovacich-md",
+            "https://www.tcrh.org/provider/1487637435/allen-laws-md",
+            "https://www.tcrh.org/provider/1821083908/paul-liebrecht-md",
+            "https://www.tcrh.org/provider/1558550566/manoj-maloo",
+            "https://www.tcrh.org/provider/1194716985/john-mayer-md",
+            "https://www.tcrh.org/provider/1295830842/maria-b-mcguire-md",
+            "https://www.tcrh.org/provider/1356338016/robert-c-menzes-jr-md",
+            "https://www.tcrh.org/provider/1528403839/gaurav-nayyar-md",
+            "https://www.tcrh.org/provider/1043646904/trish-g-osborne-fnp-bc",
+            "https://www.tcrh.org/provider/1942263934/heather-pearman",
+            "https://www.tcrh.org/provider/1578533873/arthur-pemberton-md",
+            "https://www.tcrh.org/provider/1568447886/robert-pryor",
+            "https://www.tcrh.org/provider/1982604914/joseph-puma",
+            "https://www.tcrh.org/provider/1346553575/heather-d-richardson-fnp-c",
+            "https://www.tcrh.org/provider/1629179858/owen-roberts-md",
+            "https://www.tcrh.org/provider/1356425276/lesco-rogers",
+            "https://www.tcrh.org/provider/1629242037/michael-simmons",
+            "https://www.tcrh.org/provider/1255302410/julie-b-sprinkle-fnp",
+            "https://www.tcrh.org/provider/1952902827/sherry-taylor",
+            "https://www.tcrh.org/provider/1811353261/tracie-s-vaughan-np",
+            "https://www.tcrh.org/provider/1750858502/jaime-warren-fnp-c",
+            "https://www.tcrh.org/provider/1457355299/jacqueline-webb-fnp",
+            "https://www.tcrh.org/provider/1104869692/brenda-h-worrell-lcsw",
+            "https://www.tcrh.org/provider/1487600458/zaki-kareem-a-md"
+        ],
+        "ext_codes": {
+            "raw_full_name": {
+                "paths": [
+                    "//h1/text()"
+                ],
+                "return_type": "str",
+                "selector": "root"
+            },
+            "speciality": {
+                "paths": [
+                    "//h1//following-sibling::p/strong/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "address_raw": {
+                "paths": [
+                    "(//div[@class='doctor-action-address'])[2]"
+                ],
+                "child_return_strategy": "multiple_items",
+                "return_type": "selector",
+                "selector": "root"
+            }
+        }
+    },
+    "decision_tags": {
+        "practice_in_address": "1"
+    }
+}
