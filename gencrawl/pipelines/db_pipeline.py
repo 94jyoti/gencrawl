@@ -1,11 +1,17 @@
 from scrapy.exceptions import NotConfigured
 from gencrawl.util.statics import Statics
 from gencrawl.dal import DAL
+import logging
+
 
 class DBPipeline:
 
     def __init__(self, settings):
+        self.logger = logging.getLogger(self.__class__.__name__)
+        if not settings.get("DB_PIPELINE_ENABLED"):
+            raise NotConfigured
         if settings['ENVIRONMENT'] != Statics.ENV_PROD:
+            self.logger.info("Environment not PRODUCTION, hence disabling DB Pipeline")
             raise NotConfigured
         self.settings = settings
         self.items = list()
@@ -31,5 +37,6 @@ class DBPipeline:
         return item
 
     def insert_items(self, items):
+        self.logger.info(f"Inserting {len(items)} items to DB")
         DAL(self.settings, self.client).insert_raw_output(items)
 

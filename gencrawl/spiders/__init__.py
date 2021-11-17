@@ -41,7 +41,7 @@ class BaseSpider(Spider):
         cls.client = kwargs.get("client", cls.settings['CLIENT']).upper()
         config = DAL.get_config_from_db(cls.settings, config)
         if not config:
-            print("WRONG CONFIG ARGUMENT")
+            print("------------------WRONG CONFIG ARGUMENT--------------------")
         # settings item pipelines according to the client
         custom_settings = {
             "ITEM_PIPELINES": {
@@ -50,6 +50,7 @@ class BaseSpider(Spider):
                 f'gencrawl.pipelines.{config["domain"]}_{cls.crawl_type}_custom_pipeline.CustomPipeline': 301
             }
         }
+
         if kwargs.get("env"):
             custom_settings['ENVIRONMENT'] = kwargs['env'].upper()
         # settings as provided in the config json

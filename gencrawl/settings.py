@@ -18,7 +18,7 @@ DOWNLOAD_DELAY = 3
 CONCURRENT_REQUESTS = 32
 CONCURRENT_REQUESTS_PER_DOMAIN = 4
 
-COOKIES_ENABLED = True
+COOKIES_ENABLED = False
 AUTOTHROTTLE_ENABLED = False
 RETRY_ENABLED = True
 RETRY_TIMES = 5
@@ -38,12 +38,13 @@ DOWNLOADER_MIDDLEWARES = {
     # website
 }
 SELENIUM_URL = "http://xpathexractoralb-516078059.ap-south-1.elb.amazonaws.com/api/xvfy/procx"
-SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
+# SELENIUM_DRIVER_NAME = Statics.CHROME_SELENIUM_DRIVER
 # SELENIUM_DRIVER_EXECUTABLE_PATH = os.path.join(os.getcwd(), "chromedriver")
-SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless']
+# SELENIUM_DRIVER_ARGUMENTS = ['--no-sandbox', '--headless']
 
 
 ITEM_PIPELINES = {
+    'gencrawl.pipelines.dupefilter_pipeline.DupeFilterPipeline': 450,
     'gencrawl.pipelines.db_pipeline.DBPipeline': 500
 }
 
@@ -70,7 +71,14 @@ if os.environ.get('SHUB_JOBKEY') or os.environ.get('ENVIRONMENT') == Statics.ENV
 else:
     ENVIRONMENT = Statics.ENV_DEV
 
+# dupefilter settings
+ITEM_DUPEFILTER_ENABLED = True
+DHC_DUPEFILTER_FIELDS = ["npi", "raw_full_name", "doctor_url", "speciality", "affiliation", "practice_name", "address",
+                         "phone", "fax", "email"]
+NFN_DUPEFILTER_FIELDS = []
+
 # db settings
+DB_PIPELINE_ENABLED = True
 DB_BATCH_SIZE = 50
 
 NFN_DB_USER = 'postgres'

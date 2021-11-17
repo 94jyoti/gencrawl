@@ -3,6 +3,7 @@ import os
 from google_sheet_config_setup_v3 import *
 from datetime import datetime as dt
 import psycopg2
+from gencrawl.util.utility import Utility
 
 
 def modify_final_values(json_data):
@@ -10,10 +11,30 @@ def modify_final_values(json_data):
     spider = json_data["spider"]
     for key, value in json_data.get("ext_codes").items():
         if key in keys and value and spider == 'hospital_detail':
-            print(f"Changing spider name for - {json_data.get('website')}")
             spider = 'hospital_detail_field_as_item'
             json_data['spider'] = spider
             break
+
+    for field, value in json_data.get("ext_codes").items():
+        value["name"] = field
+        keys = {'paths': [], 'cleanup_functions': [], 'parsing_type': "xpath",
+                'return_type': "str", 'selector': 'root', 'child_return_strategy': None}
+        for key, val in keys.items():
+            if key not in value:
+                value[key] = val
+
+    keys = {'domain': 'hospital', 'crawl_type': 'detail', 'country': 'US', 'language': 'EN',
+            'crawl_method': 'scrapy_get', 'parsing_type': "xpath", 'proxy': 'CRAWLERA(US)',
+            'spider': 'hospital_detail', 'start_urls': [],
+            "decision_tags": {}, 'allowed_domains': [], "custom_settings": {}}
+
+    for key, val in keys.items():
+        if key not in json_data:
+            if key == 'allowed_domains':
+                json_data[key] = Utility.get_allowed_domains(json_data['website'])
+            else:
+                json_data[key] = val
+
     return spider
 
 
@@ -30,7 +51,6 @@ def load_to_db():
     websites = df['Config'].tolist()
     # spiders = df['Spider'].tolist()
     websites_without_nan = [x for x in websites if str(x) != 'nan']
-
     # get the json data
     gc = GoogleConfig()
     config_dir = r'/tmp/util'

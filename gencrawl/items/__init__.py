@@ -9,6 +9,7 @@ from scrapy import Field, Item
 class BaseItem(Item):
     url = Field()
     website = Field()
+    unique_hash = Field()
     language = Field()
     country = Field()
     input_url = Field()

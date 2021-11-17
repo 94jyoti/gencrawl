@@ -28,7 +28,7 @@ class DAL:
 		}
 		self.client_insert_columns = {
 			"DHC": ['job_id', 'gencrawl_id', 'profile_id', 'website', 'search_url', 'doctor_url', 'http_status',
-					'unique_data_identifier', 'raw_address', 'raw_name', 'json_data']
+					'unique_hash', 'raw_address', 'raw_name', 'json_data']
 		}
 		self.client_column_mapping = {
 			"DHC": {"raw_name": "raw_full_name", "raw_address": "address_raw_1"}
