@@ -109,7 +109,7 @@
                 "paths": [
                     "//div[@id=\"about-panel-specialties.specialty\"]//div[position()=last()]//text()"
                 ],
-                "return_type": "str",
+                "return_type": "list",
                 "selector": "root"
             },
             "address_raw": {
@@ -119,10 +119,24 @@
                 "child_return_strategy": "multiple_items",
                 "return_type": "selector",
                 "selector": "root"
+            },
+            "phone": {
+                "paths": [
+                    "//div[@itemprop=\"address\"]//a[contains(@class,\"location-phone-link\")]//text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
+            },
+            "fax": {
+                "paths": [
+                    "//div[@itemprop=\"address\"]//div[not(contains(@class,\"location-phone-link\"))]/text()"
+                ],
+                "return_type": "list",
+                "selector": "root"
             }
         }
     },
     "decision_tags": {
-        "practice_in_address": 1
+        "practice_may_in_address": 1
     }
 }

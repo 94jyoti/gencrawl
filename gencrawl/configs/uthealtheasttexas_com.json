@@ -36,6 +36,13 @@
                 "return_type": "selector",
                 "selector": "root"
             },
+            "practice_name": {
+                "paths": [
+                    "//h2//a//text()"
+                ],
+                "return_type": "list-map",
+                "selector": "root"
+            },
             "phone": {
                 "paths": [
                     "//div[contains(@class,\"phone field-type\")]//div/text()"
@@ -44,5 +51,8 @@
                 "selector": "root"
             }
         }
+    },
+    "decision_tags": {
+        "practice_may_in_address": "1"
     }
 }
