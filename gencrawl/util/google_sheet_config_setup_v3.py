@@ -10,7 +10,6 @@ import numpy as np
 from gencrawl.util.statics import Statics
 from gencrawl.util.utility import Utility
 from gencrawl.settings import CONFIG_DIR, SPIDER_DIR
-from gencrawl.settings import CLIENT as DEFAULT_CLIENT
 
 
 class GoogleConfig:
@@ -27,6 +26,8 @@ class GoogleConfig:
         self.spider_class_map = {"financial_parsed_config": "Financialparsed_configSpider",
                                  "financial_parsed_config_field_map": "Financialparsed_configFieldMapSpider",
                                  "hospital_parsed_config": "Hospitalparsed_configSpider"}
+        self.df = self.download_csv_file(self.google_link)
+
 
     def create_pg_id(self, weblink):
         if 'www' in weblink:
@@ -178,8 +179,7 @@ class GoogleConfig:
                 w.write(json.dumps(jsn, indent=4))
 
     def main(self, website, config_dir, env):
-        df = self.download_csv_file(self.google_link)
-        website_df = self.filter_website_in_config(df, website)
+        website_df = self.filter_website_in_config(self.df, website)
         if not website_df.empty:
             p_configs = self.create_configs(website_df)
             # only write files in development env

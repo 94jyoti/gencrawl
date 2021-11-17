@@ -39,29 +39,22 @@ class BaseSpider(Spider):
         # client taken from argument, otherwise from the settings
         cls.settings = crawler.settings
         cls.client = kwargs.get("client", cls.settings['CLIENT']).upper()
-
-        # config set up from google sheet
-        google_config = GoogleConfig(cls.client).main(config, CONFIG_DIR, crawler.settings['ENVIRONMENT'])
-        # config returned from google config, if None i.e. no config exists at google sheet, then take the value
-        # provided in arguments
-        if google_config:
-            config = google_config
-        else:
-            config = Utility.get_config_name(config)
-            config_filename = config + Statics.CONFIG_EXT
-            config_fp = os.path.join(CONFIG_DIR, config_filename)
-            config = json.loads(open(config_fp).read())
-
+        config = DAL.get_config_from_db(cls.settings, config)
+        if not config:
+            print("------------------WRONG CONFIG ARGUMENT--------------------")
         # settings item pipelines according to the client
         custom_settings = {
             "ITEM_PIPELINES": {
                 **get_project_settings()['ITEM_PIPELINES'],
-                f'gencrawl.pipelines.{cls.client.lower()}_pipelines.{cls.client}Pipeline': 300,
-                f'gencrawl.pipelines.{config["domain"]}_{cls.crawl_type}_custom_pipelines.CustomPipeline': 301
+                f'gencrawl.pipelines.{cls.client.lower()}_pipeline.{cls.client}Pipeline': 300,
+                f'gencrawl.pipelines.{config["domain"]}_{cls.crawl_type}_custom_pipeline.CustomPipeline': 301
             }
         }
+
+        if kwargs.get("env"):
+            custom_settings['ENVIRONMENT'] = kwargs['env'].upper()
         # settings as provided in the config json
-        config_settings = config[cls.crawl_type].get("custom_settings") or config.get("custom_settings")
+        config_settings = config.get("custom_settings")
         if config_settings:
             custom_settings.update(config_settings)
         # unfreeze, updating the settings & freezing again.
@@ -73,22 +66,22 @@ class BaseSpider(Spider):
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.logger.info("Config Loaded - \n{}".format(json.dumps(config)))
+        self.config = config
+        self.environment = self.settings['ENVIRONMENT']
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
         self.db_limit = kwargs.get("db_limit")
-        self.config = config
-        self.specific_config = config[self.crawl_type]
         self.input = self._get_start_urls(self.urls, self.input_file, self.db_limit)
         self.job_id = str(uuid.uuid4())
         self.allowed_domains = config['allowed_domains']
         self.website = config['website']
-        self.parsing_type = self.specific_config.get('parsing_type') or config['parsing_type']
-        self.crawl_method = self.specific_config.get("crawl_method") or config['crawl_method']
-        self.wait_time = self.specific_config.get("wait_time") or config.get('wait_time')
-        self.default_parsing_type = self.specific_config.get("parsing_type") or config.get('parsing_type')
-        self.navigation = self.specific_config.get("navigation")
-        self.pagination = self.specific_config.get("pagination")
-        self.ext_codes = self.specific_config['ext_codes']
+        self.parsing_type = self.config.get('parsing_type') or config['parsing_type']
+        self.crawl_method = self.config.get("crawl_method") or config['crawl_method']
+        self.wait_time = self.config.get("wait_time") or config.get('wait_time')
+        self.default_parsing_type = self.config.get("parsing_type") or config.get('parsing_type')
+        self.navigation = self.config.get("navigation")
+        self.pagination = self.config.get("pagination")
+        self.ext_codes = self.config['ext_codes']
         self.retry_condition = self.ext_codes.pop("retry_condition", None)
         self.default_return_type = Statics.RETURN_TYPE_DEFAULT
         self.default_selector = Statics.SELECTOR_DEFAULT
@@ -119,7 +112,7 @@ class BaseSpider(Spider):
             for url in fund_urls:
                 objs.append({self.url_key: url})
         else:
-            urls = self.specific_config.get("start_urls", [])
+            urls = self.config.get("start_urls", [])
             for url in urls:
                 objs.append({self.url_key: url})
 
@@ -133,6 +126,8 @@ class BaseSpider(Spider):
                      iframe=None, dont_filter=False):
         headers = headers or dict()
         meta = meta or dict()
+        # for backward compatibility
+        method = method.lower()
         if method == Statics.CRAWL_METHOD_SELENIUM:
             request = GenSeleniumRequest(url=url, callback=callback, meta=meta, wait_time=wait_time,
                                          wait_until=wait_until, iframe=iframe, dont_filter=dont_filter)
@@ -152,8 +147,8 @@ class BaseSpider(Spider):
             url = obj[self.url_key]
             obj['selector'] = Statics.SELECTOR_ROOT
             yield self.make_request(url, callback=self.parse, method=self.crawl_method, meta=obj,
-                                    wait_time=self.wait_time, wait_until=self.specific_config.get('wait_until'),
-                                    iframe=self.specific_config.get("iframe"))
+                                    wait_time=self.wait_time, wait_until=self.config.get('wait_until'),
+                                    iframe=self.config.get("iframe"))
 
     def get_default_item(self, response):
         default_item = {}
@@ -436,6 +431,7 @@ class BaseSpider(Spider):
             elif key not in self.ignore_meta_fields:
                 temp_fields[key] = str(value)[:Statics.MAX_OTHER_FIELDS_LENGTH] + "..."
         item['gencrawl_id'] = uuid.uuid4().hex
+        item['website'] = Utility.get_allowed_domains([self.config['website']])[0]
         return item
 
     # return field names from the ext_codes. The temp_ fields are assigned first in the queue and
