@@ -12,7 +12,6 @@ import re
 from gencrawl.util.statics import Statics
 # import urllib
 import itertools
-import logging
 import requests
 from lxml import html
 from scrapy.selector import Selector
@@ -20,13 +19,9 @@ import copy
 
 
 class PaydenDetail(FinancialDetailSpider):
-    logging.basicConfig(filename="hsbc.log", level=logging.INFO)
-    logging.info("InvestorFundsUSHSBCDetail")
     name = 'financial_detail_payden_com'
-
     
     def get_items_or_req(self, response, default_item={}):
-        logging.info("InvestorFundsUSHSBCDetail...get_items_or_req")
         items = super().get_items_or_req(response, default_item)
         #print("Items:",len(items))
         meta = response.meta
