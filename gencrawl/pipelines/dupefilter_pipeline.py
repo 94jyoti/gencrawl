@@ -14,7 +14,6 @@ class DupeFilterPipeline(object):
         self._itemversion_cache = {}
 
     def open_spider(self, spider):
-        self.client = spider.client
         self.fields = set(spider.settings.getlist(f'{spider.client}_DUPEFILTER_FIELDS'))
 
     @classmethod

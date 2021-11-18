@@ -44,6 +44,7 @@ SELENIUM_URL = "http://xpathexractoralb-516078059.ap-south-1.elb.amazonaws.com/a
 
 
 ITEM_PIPELINES = {
+    'gencrawl.pipelines.validation_pipeline.ValidationPipeline': 449,
     'gencrawl.pipelines.dupefilter_pipeline.DupeFilterPipeline': 450,
     'gencrawl.pipelines.db_pipeline.DBPipeline': 500
 }
@@ -73,9 +74,14 @@ else:
 
 # dupefilter settings
 ITEM_DUPEFILTER_ENABLED = True
-DHC_DUPEFILTER_FIELDS = ["npi", "raw_full_name", "doctor_url", "speciality", "affiliation", "practice_name", "address",
-                         "phone", "fax", "email"]
+DHC_DUPEFILTER_FIELDS = ["website", "npi", "raw_full_name", "doctor_url", "speciality", "affiliation", "practice_name",
+                         "address", "phone", "fax", "email"]
 NFN_DUPEFILTER_FIELDS = []
+
+ITEM_VALIDATION_ENABLED = True
+VALIDATION_FIELDS = ["website", "crawl_datetime", "http_status", "job_id", "gencrawl_id"]
+DHC_VALIDATION_FIELDS = ['raw_full_name']
+NFN_VALIDATION_FIELDS = []
 
 # db settings
 DB_PIPELINE_ENABLED = True
