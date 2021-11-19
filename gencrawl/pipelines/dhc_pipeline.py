@@ -31,6 +31,10 @@ class DHCPipeline:
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
         nick_name_rgx = [r'"[a-zA-Z]+"', r'“[a-zA-Z]+”', r'\([a-zA-Z]+\)']
         self.nick_name_rgx = [re.compile(r) for r in nick_name_rgx]
+
+        address_line_rgx = [r'(\d+[A-Z]{1})', r'(\d+-\d+)']
+        self.address_line_rgx = [re.compile(r) for r in address_line_rgx]
+
         self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
         self.fax_keywords = ["fax", "fx", "f:", "(f)"]
 
@@ -161,7 +165,7 @@ class DHCPipeline:
         if self.decision_tags.get("replace_comma_in_raw_name"):
             raw_name = raw_name.replace(",", " ").replace("  ", " ")
         ignore_designations = []
-        for key in ['first_name', 'middle_name', 'last_name']:
+        for key in ['first_name', 'middle_name', 'last_name', 'suffix']:
             if item.get(key):
                 ignore_designations.append(item[key])
         # parse the designations after first comma
@@ -371,6 +375,11 @@ class DHCPipeline:
         for t in text.split():
             if t.isdigit():
                 return False
+        # some street common regex
+        for t in text.split():
+            for rgx in self.address_line_rgx:
+                if rgx.findall(t):
+                    return False
         return True
 
     def find_practice_name(self, item, address):
