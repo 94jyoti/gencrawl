@@ -32,7 +32,7 @@ class DHCPipeline:
         nick_name_rgx = [r'"[a-zA-Z]+"', r'“[a-zA-Z]+”', r'\([a-zA-Z]+\)']
         self.nick_name_rgx = [re.compile(r) for r in nick_name_rgx]
 
-        address_line_rgx = [r'(\d+[A-Z]{1})', r'(\d+-\d+)']
+        address_line_rgx = [r'(\d+[A-Z]{1})', r'(\d+-\d+)', r'(\d+-[A-Z]{1})']
         self.address_line_rgx = [re.compile(r) for r in address_line_rgx]
 
         self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
