@@ -10,8 +10,7 @@ import datetime
 import urllib.parse
 import re
 from datetime import date, datetime
-# import date_converter
-
+import date_converter
 
 
 class DirexionComDetail(FinancialDetailFieldMapSpider):
@@ -58,14 +57,11 @@ class DirexionComDetail(FinancialDetailFieldMapSpider):
                         data_dict1 = {"ex_date": "", "pay_date": "", "ordinary_income": "", "qualified_income": "","record_date": "", "per_share": "", "reinvestment_price": ""}
                         data_dict2 = {'long_term_per_share': "", 'cg_ex_date': "", 'cg_record_date': "", 'cg_pay_date': "",'short_term_per_share': "", 'total_per_share': "", 'cg_reinvestment_price': ""}
                         temp_ex_date = data['ExDate']
-                        # data_dict1['ex_date']=date_converter.string_to_string(temp_ex_date, '%m%d%Y', '%m-%d-%Y')
-                        data_dict1['ex_date']=''
+                        data_dict1['ex_date'] = date_converter.string_to_string(temp_ex_date, '%m%d%Y', '%m-%d-%Y')
                         pay_date_temp = data['PayDate']
-                        # data_dict1['pay_date']=date_converter.string_to_string(pay_date_temp, '%m%d%Y', '%m-%d-%Y')
-                        data_dict1['pay_date']=''
+                        data_dict1['pay_date']= date_converter.string_to_string(pay_date_temp, '%m%d%Y', '%m-%d-%Y')
                         temp_record_date= data['RecordDate']
-                        # data_dict1['record_date'] =date_converter.string_to_string(temp_record_date, '%m%d%Y', '%m-%d-%Y')
-                        data_dict1['record_date']=''
+                        data_dict1['record_date'] = date_converter.string_to_string(temp_record_date, '%m%d%Y', '%m-%d-%Y')
                         data_dict2['short_term_per_share'] = data['ShortTermCapitalGain']
                         data_dict2['long_term_per_share'] = data['LongTermCapitalGain']
                         data_dict1['ordinary_income'] = data['IncomeDividend']
