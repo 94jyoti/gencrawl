@@ -50,11 +50,13 @@ class DHCPipeline:
         self.address_tags = set()
         self.address_text_to_remove = set()
         self.address1_text_to_remove = set()
+        self.multi_word_designations = set()
         for row in Utility.read_csv_from_response(resp):
             city, state, suffix, designation = row['City'], row['State'], row['Suffix'], row['Designation']
             text_to_remove, text_to_remove1 = row['Text To Remove'], row['Text To Remove From Address1 Start']
             practice_tag = row['Practice Tags']
             address_tag = row['Address Tags']
+            multi_designation = row['Multi-Word Designation']
             if city:
                 us_cities.add(city.strip())
             if state:
@@ -71,6 +73,8 @@ class DHCPipeline:
                 self.practice_tags.add(practice_tag.strip())
             if address_tag:
                 self.address_tags.add(address_tag.strip())
+            if multi_designation:
+                self.multi_word_designations.add(multi_designation.strip())
 
         self.us_cities = sorted(us_cities, key=len, reverse=True)
         self.us_states = sorted(us_states, key=len, reverse=True)
@@ -136,7 +140,8 @@ class DHCPipeline:
                 break
         return item
 
-    def parse_designation_backup(self, item):
+    def parse_designation_backup(self, item, raw_name):
+
         def parse_d(name):
             for sep in self.name_separators:
                 name = name.replace(sep, ' ')
@@ -147,17 +152,15 @@ class DHCPipeline:
                     d.append(part)
             return d
 
-        raw_name = item['raw_full_name']
-        if self.decision_tags.get("replace_comma_in_raw_name"):
-            raw_name = raw_name.replace(",", " ").replace("  ", " ")
         # parse the designations after first comma
         designation = parse_d(raw_name.split(",", 1)[-1])
+
         # if not found after first comma, parse from full name
         if not designation:
             designation = parse_d(raw_name)
 
         if designation:
-            item['designation'] = designation
+            item['designation'] = designation + item['designation']
 
         return item
 
@@ -171,15 +174,24 @@ class DHCPipeline:
         for key in ['first_name', 'middle_name', 'last_name', 'suffix']:
             if item.get(key):
                 ignore_designations.append(item[key])
+
+        multi_designations = []
+        for desig in self.multi_word_designations:
+            if desig in raw_name:
+                multi_designations.append(desig)
+                raw_name = "".join(raw_name.rsplit(desig, 1))
+
         # parse the designations after first comma
         if ',' in raw_name:
             designation = raw_name.split(",", 1)[-1]
             suffix = item.get("suffix") or ''
             designation = designation.replace(suffix, '').strip(", ")
             designation = [d.strip() for d in designation.split(",")]
-            item['designation'] = designation
+            item['designation'] = designation + multi_designations
         else:
-            item = self.parse_designation_backup(item)
+            item['designation'] = multi_designations
+            item = self.parse_designation_backup(item, raw_name)
+
         if item.get("designation"):
             item['designation'] = [d for d in item['designation'] if d not in ignore_designations]
         return item
@@ -191,9 +203,13 @@ class DHCPipeline:
         if "," in raw_name:
             raw_name = raw_name.split(",")[0]
 
-        raw_name = [r.strip() for r in raw_name.split() if r.strip()]
         designations = item.get('designation') or []
+        multi_designations = [d for d in designations if len(d.split()) > 1]
+        for m in multi_designations:
+            raw_name = "".join(raw_name.rsplit(m, 1))
+
         suffix = item.get('suffix') or ''
+        raw_name = [r.strip() for r in raw_name.split() if r.strip()]
         raw_name = [r for r in raw_name if r not in designations and r != suffix]
         if not item.get("first_name") and len(raw_name) > 0:
             item['first_name'] = raw_name[0].strip()
