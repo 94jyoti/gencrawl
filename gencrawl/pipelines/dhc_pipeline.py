@@ -148,6 +148,8 @@ class DHCPipeline:
             return d
 
         raw_name = item['raw_full_name']
+        if self.decision_tags.get("replace_comma_in_raw_name"):
+            raw_name = raw_name.replace(",", " ").replace("  ", " ")
         # parse the designations after first comma
         designation = parse_d(raw_name.split(",", 1)[-1])
         # if not found after first comma, parse from full name
@@ -164,6 +166,7 @@ class DHCPipeline:
         raw_name = item['raw_full_name']
         if self.decision_tags.get("replace_comma_in_raw_name"):
             raw_name = raw_name.replace(",", " ").replace("  ", " ")
+
         ignore_designations = []
         for key in ['first_name', 'middle_name', 'last_name', 'suffix']:
             if item.get(key):
