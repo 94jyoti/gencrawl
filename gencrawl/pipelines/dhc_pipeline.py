@@ -379,7 +379,7 @@ class DHCPipeline:
         # if zip is not in address
         if not item.get("zip") and item.get("state") and address:
             address = address[:index+1]
-        address = [a.strip().strip(",").strip() for a in address if a and a.strip()]
+        address = [a.strip(" ,\n") for a in address if a and a.strip()]
         return item, address
 
     def check_practice_name(self, text):
