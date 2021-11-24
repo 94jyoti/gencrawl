@@ -16,24 +16,15 @@ import logging
 
 
 class HardingloevnerDetail(FinancialDetailFieldMapSpider):
-    logging.basicConfig(filename="logfilename_hardingloevner.log", level=logging.INFO)
-    logging.info("HardingloevnerDetail")
     name = 'financial_detail_hardingloevner_com'
-
-    
-
-
 
     def get_items_or_req(self, response, default_item={}):
         items = super().get_items_or_req(response, default_item)
-
         meta = response.meta
         meta['items'] = items
         
         nonceword = response.text.find("nonce")
         admin_url = response.text.find("admin_url")
-
-       
         nonce_value = response.text[nonceword+8:admin_url-3]
        
         meta['nonce'] = nonce_value
@@ -42,8 +33,6 @@ class HardingloevnerDetail(FinancialDetailFieldMapSpider):
         meta['id_value'] = id_value
 
         no_of_classes = response.xpath("//ul/li/a[contains(@class,'hlmetadata_link')]")
-        
-
         if len(no_of_classes)>0:
 
             for c in response.xpath("//ul/li/a[contains(@class,'hlmetadata_link')]"):
@@ -74,36 +63,20 @@ class HardingloevnerDetail(FinancialDetailFieldMapSpider):
                 yield scrapy.Request("https://www.hardingloevner.com/wp-json/hlmetadata/v1/us-mutual-funds/fund_facts/"+instrument_class_url_1+"/"+id_value, method='POST',callback=self.test, headers={'content-length': '0', 'x-wp-nonce': nonce_value,'accept': 'application/json, text/javascript, */*; q=0.01', 'x-requested-with': 'XMLHttpRequest' },dont_filter=True,meta=meta)
 
                 yield scrapy.Request("https://www.hardingloevner.com/wp-json/hlmetadata/v1/us-mutual-funds/fund_facts/"+instrument_class_url+"/"+id_value, method='POST',callback=self.dividends, headers={'content-length': '0', 'x-wp-nonce': nonce_value,'accept': 'application/json, text/javascript, */*; q=0.01', 'x-requested-with': 'XMLHttpRequest' },dont_filter=True,meta=meta)
-                
 
         else:
-            
-
             instrument_class_url =  response.url.split('/')[-2]
-            #print(instrument_class_url)
             meta['instrument_class_url'] = instrument_class_url
-            
-            
             nonce_value = meta['nonce']
 
             string_to_find_start = response.text.find("\""+instrument_class_url+"\":{\"id\":")
-            #print(string_to_find_start)
-
             length1 = len("\""+instrument_class_url+"\":{\"id\":")
 
             string_to_find_end = response.text.find("\",\"footer_perfomance",string_to_find_start)
-            #print(string_to_find_end)
-
             id2_value = response.text[string_to_find_start+length1+1:string_to_find_end]
-            #print(id2_value)
             meta['id2_value'] = id2_value
             
             yield scrapy.Request("https://www.hardingloevner.com/wp-json/hlmetadata/v1/us-mutual-funds/asof_date/"+id2_value, method='POST',callback=self.getclassname, headers={'content-length': '0', 'x-wp-nonce': nonce_value,'accept': 'application/json, text/javascript, */*; q=0.01', 'x-requested-with': 'XMLHttpRequest' },dont_filter=True,meta=meta)
-
-
-
-            
-
 
     def getclassname(self,response):
         meta = response.meta

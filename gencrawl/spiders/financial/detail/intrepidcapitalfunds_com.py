@@ -11,15 +11,11 @@ import re
 from gencrawl.util.statics import Statics
 # import urllib
 import itertools
-import logging
 
 
 class IntrepidCapitalDetail(FinancialDetailFieldMapSpider):
-    logging.basicConfig(filename="logfilename_hardingloevner.log", level=logging.INFO)
-    logging.info("HardingloevnerDetail")
     name = 'financial_detail_intrepidcapitalfunds_com'
     def get_items_or_req(self, response, default_item={}):
-        logging.info("HardingloevnerDetail...get_items_or_req")
         items = super().get_items_or_req(response, default_item)
         meta = response.meta
         meta['items'] = items

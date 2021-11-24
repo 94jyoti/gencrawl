@@ -1,6 +1,5 @@
 from gencrawl.items.hospital.hospital_detail_item import HospitalDetailItem
 from gencrawl.util.utility import Utility
-from gencrawl.util.statics import Statics
 import requests
 import csv
 import os
@@ -13,6 +12,7 @@ import unidecode
 class DHCPipeline:
 
     def __init__(self):
+        CITY_STATE_GOOGLE_LINK = "https://docs.google.com/spreadsheets/u/1/d/1rg55Fwn5UjNcgGJcDZFGD3a-X0MR-YqpKOoCUVNTmuc/export?format=csv&id=1rg55Fwn5UjNcgGJcDZFGD3a-X0MR-YqpKOoCUVNTmuc&gid=0"
         self.all_fields = ['npi', 'doctor_url', 'raw_full_name', 'first_name', 'middle_name', 'last_name', 'suffix',
                            'designation', 'speciality', 'affiliation', 'practice_name', 'address_raw', 'address',
                            'address_line_1', 'address_line_2', 'address_line_3', 'city', 'state', 'zip', 'phone', 'fax',
@@ -41,7 +41,7 @@ class DHCPipeline:
         email_rgx = ['([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)']
         self.email_rgx = [re.compile(r) for r in email_rgx]
 
-        resp = requests.get(Statics.CITY_STATE_GOOGLE_LINK)
+        resp = requests.get(CITY_STATE_GOOGLE_LINK)
         us_cities = set()
         us_states = set()
         suffixes = set()

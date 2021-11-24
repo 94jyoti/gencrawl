@@ -9,7 +9,6 @@ setup(
     entry_points = {'scrapy': ['settings = gencrawl.settings']},
     package_data = {
         '': [
-            'configs/*',
             'res/*'
         ]
     }
