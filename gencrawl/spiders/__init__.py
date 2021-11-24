@@ -27,7 +27,6 @@ from collections.abc import Iterable
 from scrapy.selector import Selector
 from abc import ABC, abstractmethod
 from gencrawl.settings import CONFIG_DIR, RES_DIR
-from gencrawl.util.google_sheet_config_setup_v2 import GoogleConfig
 from gencrawl.dal import DAL
 
 
