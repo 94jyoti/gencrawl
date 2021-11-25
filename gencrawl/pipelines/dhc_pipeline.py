@@ -185,7 +185,7 @@ class DHCPipeline:
         if ',' in raw_name:
             designation = raw_name.split(",", 1)[-1]
             suffix = item.get("suffix") or ''
-            designation = designation.replace(suffix, '').strip(", ")
+            designation = designation.replace(suffix, '').strip(", \n\r\t")
             designation = [d.strip() for d in designation.split(",")]
             item['designation'] = designation + multi_designations
         else:
@@ -379,7 +379,7 @@ class DHCPipeline:
         # if zip is not in address
         if not item.get("zip") and item.get("state") and address:
             address = address[:index+1]
-        address = [a.strip(" ,\n") for a in address if a and a.strip()]
+        address = [a.strip(" ,\n\t\r") for a in address if a and a.strip(" ,\n\t\r")]
         return item, address
 
     def check_practice_name(self, text):
@@ -477,7 +477,8 @@ class DHCPipeline:
             elif not self.decision_tags.get("address_as_list"):
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
-            address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip().strip(",").strip()]
+            address_raw = [a.strip().strip(",").strip()
+                           for a in address_raw if a and a.strip(" ,\n\r\t") and a.strip(" ,\n\r\t") != '&nbsp']
 
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
             address_raw = [unidecode.unidecode(a) for a in address_raw]
@@ -529,7 +530,7 @@ class DHCPipeline:
             address_values = [item[k].strip() for k in address_keys if item.get(k) and item[k].strip()]
             second_part_address = " ".join(address_values)
             if first_part_address or second_part_address:
-                item['address'] = ', '.join([first_part_address, second_part_address]).strip(", ")
+                item['address'] = ', '.join([first_part_address, second_part_address]).strip(", \n\r\t")
         return item
 
     def parse_list_fields(self, item):
