@@ -93,7 +93,8 @@ class DHCPipeline:
                 self.phone_rgx.append(re.compile(r'{}'.format(r)))
         if self.decision_tags.get("ignore_cities"):
             for city in self.decision_tags.get("ignore_cities"):
-                self.us_cities.remove(city)
+                if city in self.us_cities:
+                    self.us_cities.remove(city)
 
     def parse_field(self, field):
         if isinstance(field, bool):
