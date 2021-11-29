@@ -20,18 +20,12 @@ import copy
 
 
 class NicholasFundsDetail(FinancialDetailFieldMapSpider):
-    logging.basicConfig(filename="hsbc.log", level=logging.INFO)
-    logging.info("InvestorFundsUSHSBCDetail")
     name = 'nicholasfunds_com'
 
     
     def get_items_or_req(self, response, default_item={}):
-        logging.info("InvestorFundsUSHSBCDetail...get_items_or_req")
         items = super().get_items_or_req(response, default_item)
-        #print("Items:",len(items))
-
         meta = response.meta
-        
         meta['items'] = items
 
         fundname_class_expense_ratio_list = []
@@ -52,23 +46,16 @@ class NicholasFundsDetail(FinancialDetailFieldMapSpider):
             #print("ss:",ss,tt)
             fundname_class_expense_ratio_list.append((ss,tt))
 
-        #print("fundname_class_expense_ratio_list:",fundname_class_expense_ratio_list)
-
-        print("hello")
         temp_distribution_list = []
         for block in selector.xpath("//select[@id='F21_1_select']/option"):
             distribution_years = block.xpath("text()").get()
             distribution_classification = block.xpath("@value").get()
             temp_distribution_list.append([distribution_years,distribution_classification])
-            
-        print("distribution_years_list:",temp_distribution_list[1:])
 
         share_count=0
 
         temp_dis_list = []
         dist_year = '2021'
-
-
 
         for block in selector.xpath("//h4[contains(text(),'Distribution History')]"):
             share_class_temp = block.xpath("text()").get().split('-')[-1].strip()
@@ -78,68 +65,37 @@ class NicholasFundsDetail(FinancialDetailFieldMapSpider):
             share_count = share_count+1
             print("share_count:",share_count)
 
-
-
             for main_table in block.xpath("following::div[2]"):
-
-                
-                
                 for main_table_row in main_table.xpath("table/tbody/tr"):
                     count=count+1
-                    
-                    
 
                     if count==1:
-
-                        print("main_table_row:",main_table_row, count)
-
                         for td in main_table_row.xpath("td/strong"):
                         
                             td_value = td.xpath("text()").get()
 
-                            print("main_table_td:",td_value)
-                            
-
                     if count>1 and share_count==1:
 
                         td_list=[]
-
-                        print("main_table_row:",main_table_row, count)
-
                         for td in main_table_row.xpath("td"):
                         
                             td_value = td.xpath("span/text()|text()").get()
                             td_list.append(td_value)
-
-                            print("main_table_td:",td_value)
                         temp_dis_list.append([share_class_temp,dist_year,td_list])
 
                     if count>1 and share_count>1:
                         td_list=[]
-                        print("main_table_row:",main_table_row, count)
 
                         for td in main_table_row.xpath("td"):
 
                         
                             td_value = td.xpath("span/text()|text()").get()
                             td_list.append(td_value)
-
-                            print("main_table_td:",td_value)
                         temp_dis_list.append([share_class_temp,dist_year,td_list])
-
-        print("temp_dis_list:",temp_dis_list)
-                   
         
         for c,i in enumerate(items):
 
             capital_gain_list=[]
-            dividends_list=[]
-
-            #print("iiiii:",i['instrument_name'],i['total_net_assets'])
-            #print("dddd:",items[c]['share_class'])
-
-            print("items[0].keys():",items[0].keys())
-
 
             if 'share_class' in items[0].keys():
 
@@ -158,23 +114,10 @@ class NicholasFundsDetail(FinancialDetailFieldMapSpider):
                         short_term_per_share =s[2][2]
                         total_per_share=s[2][4]
 
-                        
-                        
                         data_dict1={"cg_ex_date": cg_ex_date, "cg_record_date": cg_record_date, "cg_pay_date": cg_pay_date, "short_term_per_share": short_term_per_share,"long_term_per_share": long_term_per_share, "total_per_share": total_per_share, "cg_reinvestment_price": ""}
-                        #data_dict2={"ex_date": ex_date, "pay_date": pay_date, "ordinary_income": "", "qualified_income": "", "record_date": record_date,"per_share": per_share, "reinvestment_price": ""}
-                        #data_dict2['ex_date']=year[i]
-                        #data_dict1['total_per_share']=capital_gains[i]
-                        #data_dict2['ordinary_income']=dividends[i]
                         capital_gain_list.append(data_dict1)
-                        #dividends_list.append(data_dict2)
-                
-                        #items[0]['dividends']=dividends_list
-
-
 
                 i['total_net_assets'] = i['total_net_assets'] + " "+ currency_symbol
-
-                #print("share_class: ",response.url,i['share_class'],i['instrument_name'].split(",")[0])
 
                 for j in fundname_class_expense_ratio_list:
 

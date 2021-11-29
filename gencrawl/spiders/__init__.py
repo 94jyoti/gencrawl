@@ -27,7 +27,6 @@ from collections.abc import Iterable
 from scrapy.selector import Selector
 from abc import ABC, abstractmethod
 from gencrawl.settings import CONFIG_DIR, RES_DIR
-from gencrawl.util.google_sheet_config_setup_v2 import GoogleConfig
 from gencrawl.dal import DAL
 
 
@@ -38,18 +37,20 @@ class BaseSpider(Spider):
         assert config
         # client taken from argument, otherwise from the settings
         cls.settings = crawler.settings
-        cls.client = kwargs.get("client", cls.settings['CLIENT']).upper()
+        cls.client = kwargs.get("client", cls.settings.get('CLIENT', '')).upper()
         config = DAL.get_config_from_db(cls.settings, config)
         if not config:
             print("------------------WRONG CONFIG ARGUMENT--------------------")
         # settings item pipelines according to the client
-        custom_settings = {
-            "ITEM_PIPELINES": {
-                **get_project_settings()['ITEM_PIPELINES'],
-                f'gencrawl.pipelines.{cls.client.lower()}_pipeline.{cls.client}Pipeline': 300,
-                f'gencrawl.pipelines.{config["domain"]}_{cls.crawl_type}_custom_pipeline.CustomPipeline': 301
+        custom_settings = {}
+        if cls.client:
+            custom_settings = {
+                "ITEM_PIPELINES": {
+                    **get_project_settings()['ITEM_PIPELINES'],
+                    f'gencrawl.pipelines.{cls.client.lower()}_pipeline.{cls.client}Pipeline': 300,
+                    f'gencrawl.pipelines.{config["domain"]}_{cls.crawl_type}_custom_pipeline.CustomPipeline': 301
+                }
             }
-        }
 
         if kwargs.get("env"):
             custom_settings['ENVIRONMENT'] = kwargs['env'].upper()
