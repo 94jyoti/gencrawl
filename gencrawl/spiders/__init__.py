@@ -28,6 +28,7 @@ from scrapy.selector import Selector
 from abc import ABC, abstractmethod
 from gencrawl.settings import CONFIG_DIR, RES_DIR
 from gencrawl.dal import DAL
+import logging
 
 
 class BaseSpider(Spider):
@@ -35,12 +36,13 @@ class BaseSpider(Spider):
     @classmethod
     def from_crawler(cls, crawler, config, *args, **kwargs):
         assert config
+        logger = logging.getLogger(cls.__class__.__name__)
         # client taken from argument, otherwise from the settings
         cls.settings = crawler.settings
         cls.client = kwargs.get("client", cls.settings.get('CLIENT', '')).upper()
         config = DAL.get_config_from_db(cls.settings, config)
         if not config:
-            print("------------------WRONG CONFIG ARGUMENT--------------------")
+            logger.error("------------------WRONG CONFIG ARGUMENT--------------------")
         # settings item pipelines according to the client
         custom_settings = {}
         if cls.client:
