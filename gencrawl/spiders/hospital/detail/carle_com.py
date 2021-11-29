@@ -24,9 +24,11 @@ class CarlecomhospitalDetail(HospitalDetailSpider):
 
         items = response.meta['items']
         item=items[0]
+        print(response.text)
         temp_items=[]
         temp_items.append(deepcopy(item))
         temp_items.append(deepcopy(item))
+        temp_items[-1]['practice_name']=re.findall("<LocationDto.*?<Title>(.*?)</Title>.*?</LocationDto>",response.text)[0]
         temp_items[-1]['address_line_1']=re.findall("<LocationDto.*?<Address1>(.*?)</Address1>.*?</LocationDto>",response.text)[0]
         temp_items[-1]['phone']=re.findall("<LocationDto.*?<Phone>(.*?)</Phone>.*?</LocationDto>",response.text)[0]
         temp_items[-1]['zip']=re.findall("<LocationDto.*?<Zip>(.*?)</Zip>.*?</LocationDto>",response.text)[0]

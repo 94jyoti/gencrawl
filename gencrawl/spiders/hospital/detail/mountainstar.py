@@ -28,7 +28,7 @@ class MountainStarhospitalDetail(HospitalDetailSpider):
         if(item['middle_name'] is None):
             item['raw_full_name'] = item['first_name'] +" "+item['last_name']+", " +item['designation']
         else:
-            item['raw_full_name'] = item['first_name'] + " " + item['middle_name']+" "+item['last_name']+ ", " + item['designation']
+            item['raw_full_name'] = item['first_name'] + " " + item['middle_name']+" "+item['last_name']+ ",rapy cra " + item['designation']
         provider_speciality=[]
         for spe in json_data['providerSpecialties']:
             provider_speciality.append(spe['specialty'])
