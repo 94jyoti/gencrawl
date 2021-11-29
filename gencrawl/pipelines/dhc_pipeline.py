@@ -19,6 +19,7 @@ class DHCPipeline:
                            'email']
         self.redundant_fields = ['temp_fields']
         self.name_separators = [","]
+        self.strip_by = " ,\n\t\r`"
         # if this rgx is not sufficient, add without \b at end
         pincode_rgx = [r'\b([\d]{5}-[\d]{4})\b', r'\b([\d]{5})\b']
         self.pincode_rgx = [re.compile(r) for r in pincode_rgx]
@@ -186,7 +187,7 @@ class DHCPipeline:
         if ',' in raw_name:
             designation = raw_name.split(",", 1)[-1]
             suffix = item.get("suffix") or ''
-            designation = designation.replace(suffix, '').strip(", \n\r\t")
+            designation = designation.replace(suffix, '').strip(self.strip_by)
             designation = [d.strip() for d in designation.split(",")]
             item['designation'] = designation + multi_designations
         else:
@@ -261,7 +262,7 @@ class DHCPipeline:
                     address_raw[index] = address_raw[index].replace(city, '')
             if found:
                 break
-        address_raw = [a.strip().strip(",").strip() for a in address_raw if a and a.strip()]
+        address_raw = [a.strip(self.strip_by) for a in address_raw if a and a.strip(self.strip_by)]
         return item, address_raw
 
     # return parsed item with zip & index in list where zip is found
@@ -380,7 +381,7 @@ class DHCPipeline:
         # if zip is not in address
         if not item.get("zip") and item.get("state") and address:
             address = address[:index+1]
-        address = [a.strip(" ,\n\t\r") for a in address if a and a.strip(" ,\n\t\r")]
+        address = [a.strip(self.strip_by) for a in address if a and a.strip(self.strip_by)]
         return item, address
 
     def check_practice_name(self, text):
@@ -433,7 +434,7 @@ class DHCPipeline:
                 replace_text.extend(pvals)
             for index, addr in enumerate(address):
                 for r in replace_text:
-                    address[index] = addr.replace(r, "").strip(", ")
+                    address[index] = addr.replace(r, "").strip(self.strip_by)
 
             if len(address) == 1:
                 address = address[0].rsplit(",", 2)
@@ -478,8 +479,8 @@ class DHCPipeline:
             elif not self.decision_tags.get("address_as_list"):
                 address_tree = html.fromstring(address_raw)
                 address_raw = address_tree.xpath("//text()")
-            address_raw = [a.strip().strip(",").strip()
-                           for a in address_raw if a and a.strip(" ,\n\r\t") and a.strip(" ,\n\r\t") != '&nbsp']
+            address_raw = [a.strip(self.strip_by)
+                           for a in address_raw if a and a.strip(self.strip_by) and a.strip(self.strip_by) != '&nbsp']
 
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
             address_raw = [unidecode.unidecode(a) for a in address_raw]
@@ -531,7 +532,7 @@ class DHCPipeline:
             address_values = [item[k].strip() for k in address_keys if item.get(k) and item[k].strip()]
             second_part_address = " ".join(address_values)
             if first_part_address or second_part_address:
-                item['address'] = ', '.join([first_part_address, second_part_address]).strip(", \n\r\t")
+                item['address'] = ', '.join([first_part_address, second_part_address]).strip(self.strip_by)
         return item
 
     def parse_list_fields(self, item):
