@@ -561,7 +561,7 @@ class DHCPipeline:
                             to_add = False
                     if to_add:
                         parsed_values.append(p1)
-                item[field] = parsed_values
+                item[field] = list(set(parsed_values))
         return item
 
     def process_item(self, item, spider):
