@@ -31,7 +31,8 @@ CRAWLERA_APIKEY = 'd1d3dfa7dc4444a88a253a0263be5877'
 
 DOWNLOADER_MIDDLEWARES = {
     # engine
-    'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 550,
+    'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 540,
+    'gencrawl.middlewares.pc_middleware.PCMiddleware': 545,
     'gencrawl.middlewares.selenium_api_request.GenSeleniumApiMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
     # 'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800,
@@ -92,12 +93,14 @@ NFN_DB_PASS = 'kapow123'
 NFN_DB_HOST = '65.2.58.32'
 NFN_DB_PORT = '5432'
 NFN_DB_NAME = 'postgres'
+NFN_CHECK_PC_TABLE = False
 
 DHC_DB_USER = 'devuser'
 DHC_DB_PASS = 'Dev#forage!2021'
 DHC_DB_HOST = 'forage-dev-db.cod4levdfbtz.ap-south-1.rds.amazonaws.com'
 DHC_DB_PORT = '5432'
 DHC_DB_NAME = 'dhc'
+DHC_CHECK_PC_TABLE = False
 
 GENCRAWL_DB_USER = 'postgres'
 GENCRAWL_DB_PASS = 'kapow123'
