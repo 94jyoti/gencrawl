@@ -9,7 +9,7 @@ class HospitalDetailPhoneAsAddressSpider(HospitalDetailSpider):
     crawl_domain = Statics.DOMAIN_HOSPITAL
     url_key = Statics.URL_KEY_HOSPITAL_DETAIL
     name = f'{crawl_domain}_{Statics.CRAWL_TYPE_DETAIL}_field_as_item'
-    address_fields = ['address_raw', 'address', 'address_line_1', 'address_line_2', 'address_line_3',
+    address_fields = ['practice_name', 'address_raw', 'address', 'address_line_1', 'address_line_2', 'address_line_3',
                       'city', 'state', 'zip', 'phone', 'fax']
 
     # will create a new item for each phones found in phone_as_address
