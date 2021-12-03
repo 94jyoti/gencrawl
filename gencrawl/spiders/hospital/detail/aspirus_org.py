@@ -5,7 +5,7 @@ from datetime import datetime
 import re
 from gencrawl.util.statics import Statics
 
-class FhnOrg(HospitalDetailSpider):
+class AspirusOrg(HospitalDetailSpider):
 
     name = 'hospital_detail_aspirus_org_us'
 
