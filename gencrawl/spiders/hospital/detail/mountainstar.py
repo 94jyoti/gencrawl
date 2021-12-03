@@ -28,7 +28,7 @@ class MountainStarhospitalDetail(HospitalDetailSpider):
         if(item['middle_name'] is None):
             item['raw_full_name'] = item['first_name'] +" "+item['last_name']+", " +item['designation']
         else:
-            item['raw_full_name'] = item['first_name'] + " " + item['middle_name']+" "+item['last_name']+ ", " + item['designation']
+            item['raw_full_name'] = item['first_name'] + " " + item['middle_name']+" "+item['last_name']+ ",rapy cra " + item['designation']
         provider_speciality=[]
         for spe in json_data['providerSpecialties']:
             provider_speciality.append(spe['specialty'])
@@ -44,5 +44,7 @@ class MountainStarhospitalDetail(HospitalDetailSpider):
         item['fax'] = json_data['displayLocation']['fax']
         item['practice_name'] = json_data['displayLocation']['name']
         item['address_line_1'] = json_data['displayLocation']['street']
+        if(item['address_line_1']==item['city']):
+            item['city']=""
         item['address_raw'] = item['practice_name']+" "+item['address_line_1'] +" " +item['city']+ " "+item['state']+" "+ item['zip']
         yield self.generate_item(item, HospitalDetailItem)
