@@ -8,6 +8,7 @@ from scrapy import Field, Item
 
 class BaseItem(Item):
     url = Field()
+    website_id = Field()
     website = Field()
     unique_hash = Field()
     language = Field()
@@ -18,6 +19,9 @@ class BaseItem(Item):
     job_id = Field()
     gencrawl_id = Field()
     temp_fields = Field()
+    _cached_link = Field()
+    _profile_id = Field()
+
 
 
 

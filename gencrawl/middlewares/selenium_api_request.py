@@ -5,13 +5,15 @@ from gencrawl.middlewares.selenium_request import GenSeleniumRequest
 
 
 class GenSeleniumApiMiddleware():
+
     def process_request(self, request, spider):
         # if request is not a Selenium request, don't use this middleware
         if not isinstance(request, GenSeleniumRequest):
-            return None
+            return
         # to explicitly avoid using this middleware
         if request.meta.get('dont_selenium'):
             return
+
         data = {
             "xurl": request.url,
             "xxpath": "",
@@ -26,7 +28,7 @@ class GenSeleniumApiMiddleware():
         meta['dont_proxy'] = True
         # to avoid repeated request loop
         meta['dont_selenium'] = True
-        meta['selenium_original_url'] = request.url
+        meta['_selenium_original_url'] = request.url
         request = request.replace(url=SELENIUM_URL, method='POST', headers=headers, body=json.dumps(data), meta=meta,
                                   dont_filter=True)
         return request
@@ -34,17 +36,19 @@ class GenSeleniumApiMiddleware():
     def process_response(self, request, response, spider):
         if not isinstance(request, GenSeleniumRequest):
             return response
-        original_url = request.meta['selenium_original_url']
+        original_url = request.meta.get('_selenium_original_url')
+        if not original_url:
+            return response
         del request.meta['dont_selenium']
         del request.meta['dont_proxy']
-        del request.meta['selenium_original_url']
+        del request.meta['_selenium_original_url']
 
         request = request.replace(url=original_url)
         try:
             body = response.json()['html']
             status = 200
         except:
-            body = ''
+            body = 'Issue in Selenium middleware'
             status = 405
         return HtmlResponse(
             original_url,
