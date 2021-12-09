@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from gencrawl.util.statics import Statics
 from psycopg2.extras import execute_values
 from psycopg2 import sql
+from datetime import datetime
 import json
 import logging
 
@@ -64,7 +65,7 @@ class DAL:
         if self.check_pc_table:
             query = """
                 select domain_id, profile_id, profile_urls, json_data, uc_s3_link from {}_master_table 
-                where gencrawl_status is null and domain_url = '{}'""".format(self.client, domain)
+                where gencrawl_status is null and c  = '{}'""".format(self.client, domain)
             self.logger.info(query)
             if limit > 0:
                 query = query + f"LIMIT {limit}"
@@ -90,6 +91,7 @@ class DAL:
         db_rows = [{k: item.get(column_mapping.get(k) or k) for k in columns} for item in items]
         for item, row in zip(items, db_rows):
             row['json_data'] = json.dumps(item).replace("'", "''")
+        pc_ids = [item['_profile_id'] for item in items if item.get('_profile_id')]
         connection = pg_session.bind.raw_connection()
         with connection.cursor() as cursor:
             query = sql.SQL("""INSERT INTO gencrawl_raw_output({fields}) VALUES %s;""").format(
@@ -98,6 +100,12 @@ class DAL:
             try:
                 execute_values(cur=cursor, sql=query,
                                argslist=[tuple(row.get(col) for col in columns) for row in db_rows])
+                if pc_ids:
+                    update_query = """UPDATE {}_master_table SET gencrawl_status='COMPLETED', 
+                    gencrawl_status_update_time='{}' where profile_id IN ('{}')
+                    """.format(self.client, datetime.now(), "','".join(pc_ids))
+                    self.logger.info("Updating status in {}_master_table table using profile_id".format(self.client))
+                    cursor.execute(update_query)
                 connection.commit()
             except Exception as error:
                 self.logger.error(str(error))
