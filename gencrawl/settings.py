@@ -100,7 +100,7 @@ DHC_DB_PASS = 'Dev#forage!2021'
 DHC_DB_HOST = 'forage-dev-db.cod4levdfbtz.ap-south-1.rds.amazonaws.com'
 DHC_DB_PORT = '5432'
 DHC_DB_NAME = 'dhc'
-DHC_CHECK_PC_TABLE = False
+DHC_CHECK_PC_TABLE = True
 
 GENCRAWL_DB_USER = 'postgres'
 GENCRAWL_DB_PASS = 'kapow123'

@@ -57,7 +57,6 @@ class DAL:
         session.close()
 
     def get_db_urls(self, domain, limit, url_key='url'):
-        domain = 'aboutsmh.org'
         results = []
         limit = int(limit)
         pg_session = self._create_session(self.engine)
