@@ -65,7 +65,7 @@ class DAL:
         if self.check_pc_table:
             query = """
                 select domain_id, profile_id, profile_urls, json_data, uc_s3_link from {}_master_table 
-                where gencrawl_status is null and c  = '{}'""".format(self.client, domain)
+                where gencrawl_status is null and domain_url = '{}'""".format(self.client, domain)
             self.logger.info(query)
             if limit > 0:
                 query = query + f"LIMIT {limit}"
