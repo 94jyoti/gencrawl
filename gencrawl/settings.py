@@ -67,8 +67,7 @@ RES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'res')
 SPIDER_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'spiders')
 
 # environment
-# if job is running on zyte server
-if os.environ.get('SHUB_JOBKEY') or os.environ.get('ENVIRONMENT') == Statics.ENV_PROD:
+if os.environ.get('ENVIRONMENT') == Statics.ENV_PROD:
     ENVIRONMENT = Statics.ENV_PROD
 else:
     ENVIRONMENT = Statics.ENV_DEV
@@ -86,7 +85,7 @@ NFN_VALIDATION_FIELDS = []
 
 # db settings
 DB_PIPELINE_ENABLED = True
-DB_BATCH_SIZE = 50
+DB_BATCH_SIZE = 100
 
 NFN_DB_USER = 'postgres'
 NFN_DB_PASS = 'kapow123'

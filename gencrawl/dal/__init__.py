@@ -31,10 +31,11 @@ class DAL:
         }
         self.client_insert_columns = {
             "DHC": ['job_id', 'gencrawl_id', 'profile_id', 'website', 'search_url', 'doctor_url', 'http_status',
-                    'unique_hash', 'raw_address', 'raw_name', 'json_data']
+                    'unique_hash', 'raw_address', 'raw_name', 'json_data', 'domain_id', 'crawl_datetime']
         }
         self.client_column_mapping = {
-            "DHC": {"raw_name": "raw_full_name", "raw_address": "address_raw_1", "profile_id": "_profile_id"}
+            "DHC": {"raw_name": "raw_full_name", "raw_address": "address_raw_1", "profile_id": "_profile_id",
+                    "domain_id": "website_id"}
         }
 
     @staticmethod
