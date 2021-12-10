@@ -438,6 +438,7 @@ class DHCPipeline:
 
             if len(address) == 1:
                 address = address[0].rsplit(",", 2)
+                address = [a for a in address if a]
 
             if len(address) == 3:
                 item['address_line_1'], item['address_line_2'], item['address_line_3'] = address
