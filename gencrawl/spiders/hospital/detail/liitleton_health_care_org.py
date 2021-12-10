@@ -16,7 +16,9 @@ class LittleTonHealthCareOrg(HospitalDetailSpider):
         add_raw = items[0]['address_raw'].replace('\r',' ').replace('\n',' ').replace('\t',' ').replace('<br>',' ').replace('<p>',' ').strip()
         total_add_blocks = re.findall(r'(.*?\(\d+\)\s*\d+\-\d+)',add_raw)
         if not total_add_blocks:
-            total_add_blocks = total_add_blocks = re.findall(r'(.*?\d+\.\d+\.\d+)',add_raw)
+            total_add_blocks = re.findall(r'(.*?\d+\.\d+\.\d+)',add_raw)
+        if len(total_add_blocks) > 1 and total_add_blocks[1].strip().startswith('Fax:'):
+            total_add_blocks.pop(1)
         for item in total_add_blocks:
             item = item.replace('Currently seeing patients in:','').strip()
             items[0]['address'] = item
