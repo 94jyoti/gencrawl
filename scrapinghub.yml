@@ -3,6 +3,8 @@ projects:
     id: 533749
   dhc:
     id: 551976
+  dhc-prod:
+    id: 573025
  
 requirements:
   file: ./requirements.txt

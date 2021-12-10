@@ -31,7 +31,8 @@ CRAWLERA_APIKEY = 'd1d3dfa7dc4444a88a253a0263be5877'
 
 DOWNLOADER_MIDDLEWARES = {
     # engine
-    'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 550,
+    'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 540,
+    'gencrawl.middlewares.pc_middleware.PCMiddleware': 545,
     'gencrawl.middlewares.selenium_api_request.GenSeleniumApiMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
     # 'gencrawl.middlewares.selenium_request.GenSeleniumMiddleware': 800,
@@ -66,8 +67,7 @@ RES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'res')
 SPIDER_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'spiders')
 
 # environment
-# if job is running on zyte server
-if os.environ.get('SHUB_JOBKEY') or os.environ.get('ENVIRONMENT') == Statics.ENV_PROD:
+if os.environ.get('ENVIRONMENT') == Statics.ENV_PROD:
     ENVIRONMENT = Statics.ENV_PROD
 else:
     ENVIRONMENT = Statics.ENV_DEV
@@ -85,19 +85,21 @@ NFN_VALIDATION_FIELDS = []
 
 # db settings
 DB_PIPELINE_ENABLED = True
-DB_BATCH_SIZE = 50
+DB_BATCH_SIZE = 100
 
 NFN_DB_USER = 'postgres'
 NFN_DB_PASS = 'kapow123'
 NFN_DB_HOST = '65.2.58.32'
 NFN_DB_PORT = '5432'
 NFN_DB_NAME = 'postgres'
+NFN_CHECK_PC_TABLE = False
 
 DHC_DB_USER = 'devuser'
 DHC_DB_PASS = 'Dev#forage!2021'
 DHC_DB_HOST = 'forage-dev-db.cod4levdfbtz.ap-south-1.rds.amazonaws.com'
 DHC_DB_PORT = '5432'
 DHC_DB_NAME = 'dhc'
+DHC_CHECK_PC_TABLE = True
 
 GENCRAWL_DB_USER = 'postgres'
 GENCRAWL_DB_PASS = 'kapow123'
