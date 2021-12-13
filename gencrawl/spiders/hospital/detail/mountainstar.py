@@ -28,12 +28,16 @@ class MountainStarhospitalDetail(HospitalDetailSpider):
         item['last_name'] = json_data['physicianLastName']
         item['designation'] = json_data['physicianDesignation']
         if(item['middle_name'] is None):
-            item['middle_name']=""
+            #item['middle_name']=""
             item['raw_full_name'] = item['first_name'] +" "+item['last_name']+", " +item['designation']
         else:
             item['raw_full_name'] = item['first_name'] + " " + item['middle_name']+" "+item['last_name']+ ", " + item['designation']
           #  print("ndkcndk")
         provider_speciality=[]
+        item['first_name'] =""
+        item['middle_name'] = ""
+        #print("ejsvcsc", item['middle_name'])
+        item['last_name'] = ""
         for spe in json_data['providerSpecialties']:
             provider_speciality.append(spe['specialty'])
         item['speciality']=",".join(provider_speciality)
@@ -58,6 +62,7 @@ class MountainStarhospitalDetail(HospitalDetailSpider):
                 temp_item[count]['city'] = ""
             temp_item[count]['address_raw'] = temp_item[count]['practice_name'] + " " + temp_item[count]['address_line_1'] + " " + temp_item[count]['city'] + " " + \
                                   temp_item[count]['state'] + " " + temp_item[count]['zip']
+            print(temp_item[count])
             yield self.generate_item(temp_item[count], HospitalDetailItem)
 
 
