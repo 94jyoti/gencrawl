@@ -21,23 +21,38 @@ class FhnOrg(HospitalDetailSpider):
     
     def parse_locations(self, response):
         items = response.meta['items']
+
+        try:
+            items[0]['practice_name'] = response.xpath("//h1/text()").extract()[0]
+        except:
+            items[0]['practice_name'] = ''
         try:
             items[0]['address_line_1'] = response.xpath("//h2[contains(text(),'Contact Us')]/following::text()[1]").extract()[0]
         except:
             items[0]['address_line_1'] = ''
         
         try:
-            items[0]['address_line_2'] = response.xpath("//h2[contains(text(),'Contact Us')]/following::text()[2]").extract()[0]
+            address_line_2 = response.xpath("//h2[contains(text(),'Contact Us')]/following::text()[2]").extract()[0]
         except:
-            items[0]['address_line_2'] = ''
+            address_line_2 = ''
         try:
-            items[0]['address'] = items[0]['address_line_1'] + ' ' + items[0]['address_line_2']
+            items[0]['address'] = items[0]['address_line_1'] + ' ' + address_line_2
         except:
             items[0]['address'] = ''
         try:
-            items[0]['zip'] = items[0]['address_line_2'].split()[-1]
+            items[0]['zip'] = address_line_2.split()[-1]
         except:
             items[0]['zip'] = ''
+
+        try:
+            items[0]['state'] = address_line_2.split(',')[1].split()[0]
+        except:
+            items[0]['state'] = ''
+
+        try:
+            items[0]['city'] = address_line_2.split(',')[0]
+        except:
+            items[0]['city'] = ''
         try:
             items[0]['phone'] = response.xpath("//div[h2[contains(text(),'Contact Us')]]//a[contains(@href,'tel')]/text()").extract()[0]
         except:

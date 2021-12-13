@@ -110,10 +110,8 @@ class BaseSpider(Spider):
         elif db_limit:
             domain = Utility.get_allowed_domains([self.config['website']])[0]
             db_obj = DAL(self.settings, self.client)
-            fund_urls = db_obj.get_db_urls(domain, db_limit)
-            self.logger.info(f"{len(fund_urls)} URLs fetched from mini crawler")
-            for url in fund_urls:
-                objs.append({self.url_key: url})
+            objs = db_obj.get_db_urls(domain, db_limit, url_key=self.url_key)
+            self.logger.info(f"{len(objs)} URLs fetched from mini crawler")
         else:
             urls = self.config.get("start_urls", [])
             for url in urls:
