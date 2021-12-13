@@ -58,7 +58,7 @@ class DAL:
     def _close_session(self, session):
         session.close()
 
-    def get_db_urls(self, domain, limit, url_key='url'):
+    def get_db_urls(self, domain, limit, url_key='url', env=None):
         results = []
         limit = int(limit)
         pg_session = self._create_session(self.engine)
@@ -75,7 +75,7 @@ class DAL:
                 r.update(r.pop("_jsn"))
 
         # if pc table doesn't have results/page downloaded, check in mini crawler table
-        if not results:
+        if not results and env != Statics.ENV_PROD:
             query = self.client_input_queries[self.client].format(domain, domain, domain)
             if limit > 0:
                 query = query + f"LIMIT {limit}"
