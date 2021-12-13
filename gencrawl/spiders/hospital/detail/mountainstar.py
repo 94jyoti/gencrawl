@@ -21,15 +21,18 @@ class MountainStarhospitalDetail(HospitalDetailSpider):
         file.close()
         data = re.findall("var physician = (.*?);",response.text)[0]
         json_data = json.loads(data)
-        #print(json_data)
+        print(json_data)
         item['first_name'] = json_data['physicianFirstName']
         item['middle_name'] = json_data['physicianMiddleInitial']
+        print("ejsvcsc",item['middle_name'])
         item['last_name'] = json_data['physicianLastName']
         item['designation'] = json_data['physicianDesignation']
         if(item['middle_name'] is None):
+            item['middle_name']=""
             item['raw_full_name'] = item['first_name'] +" "+item['last_name']+", " +item['designation']
         else:
-            item['raw_full_name'] = item['first_name'] + " " + item['middle_name']+" "+item['last_name']+ ",rapy cra " + item['designation']
+            item['raw_full_name'] = item['first_name'] + " " + item['middle_name']+" "+item['last_name']+ ", " + item['designation']
+          #  print("ndkcndk")
         provider_speciality=[]
         for spe in json_data['providerSpecialties']:
             provider_speciality.append(spe['specialty'])
