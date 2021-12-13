@@ -21,8 +21,12 @@ class SinaiChicagoOrg(HospitalDetailSpider):
 
     def parse_locations(self, response):
         items = response.meta['items']
-        try:
-            items[0]['affiliation'] = re.findall(r'hospital_affiliations.*?li\>(.*?)<',response.text)[0]
-        except:
-            items[0]['affiliation'] = ''
-        yield self.generate_item(items[0], HospitalDetailItem)
+        for item in items:
+            try:
+                item['affiliation'] = re.findall(r'\"hospital_affiliations\"\:(.*?)\,',response.text\
+                                        )[0].replace('""','').replace('"','').\
+                                        replace('\r','').replace('\n',''\
+                                        ).replace('\t','').replace('\\r\\n','').replace('\\t','').strip()
+            except:
+                item['affiliation'] = ''
+            yield self.generate_item(item, HospitalDetailItem)
