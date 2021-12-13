@@ -206,6 +206,8 @@ class DHCPipeline:
             raw_name = raw_name.split(",")[0]
 
         designations = item.get('designation') or []
+        if isinstance(designations, str):
+            designations = [designations]
         multi_designations = [d for d in designations if len(d.split()) > 1]
         for m in multi_designations:
             raw_name = "".join(raw_name.rsplit(m, 1))
