@@ -10,7 +10,6 @@ class HospitalDetailItem(BaseItem):
     last_name = Field()
     suffix = Field()
     designation = Field()
-    search_url = Field()
     doctor_url = Field()
     speciality = Field()
     affiliation = Field()

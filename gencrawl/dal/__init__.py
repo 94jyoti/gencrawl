@@ -64,13 +64,13 @@ class DAL:
         pg_session = self._create_session(self.engine)
         if self.check_pc_table:
             query = """
-                select domain_id, profile_id, profile_urls, json_data, uc_s3_link from {}_master_table 
+                select domain_id, profile_id, profile_urls, json_data, uc_s3_link, search_url from {}_master_table 
                 where gencrawl_status is null and domain_url = '{}'""".format(self.client, domain)
             self.logger.info(query)
             if limit > 0:
                 query = query + f"LIMIT {limit}"
             results = [{"website_id": str(int(x[0])), "_profile_id": x[1], url_key: x[2], '_cached_link': x[4],
-                        "_jsn": x[3] or {}} for x in pg_session.execute(query)]
+                        "search_url": x[5], "_jsn": x[3] or {}} for x in pg_session.execute(query)]
             for r in results:
                 r.update(r.pop("_jsn"))
 

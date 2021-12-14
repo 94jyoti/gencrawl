@@ -21,6 +21,7 @@ class BaseItem(Item):
     temp_fields = Field()
     _cached_link = Field()
     _profile_id = Field()
+    search_url = Field()
 
 
 
