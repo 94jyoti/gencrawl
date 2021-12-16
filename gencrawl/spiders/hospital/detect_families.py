@@ -18,6 +18,13 @@ import requests
 class FamilyDetectorSpider(HospitalDetailSpider):
 
     name = "hospital_detail_auto_family_triaging"
+    custom_settings = {
+        "ITEM_PIPELINES": {
+            'gencrawl.pipelines.validation_pipeline.ValidationPipeline': None,
+            'gencrawl.pipelines.dupefilter_pipeline.DupeFilterPipeline': None,
+            'gencrawl.pipelines.db_pipeline.DBPipeline': 500
+        }
+    }
 
     def __init__(self, config, *args, **kwargs):
         super().__init__(config, *args, **kwargs)
@@ -36,20 +43,21 @@ class FamilyDetectorSpider(HospitalDetailSpider):
         return results
 
     def get_all_websites(self):
-        url = "https://docs.google.com/spreadsheets/d/1zOeT2OZ4lroqy7Ukt59iaaStxjsl3aYeADenbdii07o/export?format=csv&id=1zOeT2OZ4lroqy7Ukt59iaaStxjsl3aYeADenbdii07o&gid=0"
+        url = "https://docs.google.com/spreadsheets/u/1/d/1zOeT2OZ4lroqy7Ukt59iaaStxjsl3aYeADenbdii07o/export?format=csv&id=1zOeT2OZ4lroqy7Ukt59iaaStxjsl3aYeADenbdii07o&gid=486472030"
         all_websites = {}
         for row in Utility.read_csv_from_response(requests.get(url)):
             website = row['Website']
-            doctor_url = row['DoctorUrl']
+            doctor_url = row['qpkey']
             if doctor_url:
                 all_websites[website] = doctor_url
-
+        self.logger.info("Total websites fetched - {}".format(len(all_websites)))
         return all_websites
 
     def start_requests(self):
         all_websites = self.get_all_websites()
         db_rows = self.get_all_configs_from_db()
         all_config_names = []
+        self.logger.info("Total configs fetched - {}".format(len(db_rows)))
         for row in db_rows:
             config = row['config']
             config_name = config['pg_id']
@@ -57,15 +65,10 @@ class FamilyDetectorSpider(HospitalDetailSpider):
             parent = row['parent']
             if not parent:
                 self.all_configs.append(config)
-            else:
-                self.logger.info(f"Ignore config - {config_name} because its a part of family - {parent}")
 
         for website, doctor_url in all_websites.items():
-            self.logger.info("Website ---- " + website)
             config = f"financial_detail_{Utility.get_config_name(website)}_us"
-            self.logger.info("Config ---- " + config)
             if config in all_config_names:
-                self.logger.info("the current config is already configured, hence skipping it.")
                 continue
 
             meta = {"website": website, "doctor_url": doctor_url, "config": config}
@@ -90,15 +93,18 @@ class FamilyDetectorSpider(HospitalDetailSpider):
             item = self.get_items_or_req(response, default_item=None)[0]
             if item.get("address_raw"):
                 item = self.pipeline.process_item(item, self)
+                to_yield = False
                 for key in ['city', 'state', 'zip']:
                     if item.get(key):
-                        nitem = dict(deepcopy(item))
-                        nitem['website'] = website
-                        nitem['doctor_url'] = doctor_url
-                        nitem['gencrawl_id'] = config
-                        nitem['address_raw'] = ''
-                        yield nitem
-
+                        to_yield = True
+                        break
+                if to_yield:
+                    nitem = dict(deepcopy(item))
+                    nitem['website'] = website
+                    nitem['doctor_url'] = doctor_url
+                    nitem['gencrawl_id'] = config['pg_id']
+                    nitem['address_raw'] = ''
+                    yield nitem
 
 
 
