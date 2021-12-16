@@ -10,11 +10,11 @@ class ArheartComHospitalDetail(HospitalDetailSpider):
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
         items = deepcopy(items)
+        print(items)
 
         connector_urls = response.xpath('//li[@class="location"]/a/@href').getall()
 
         if not connector_urls:
-
             yield self.generate_item(items, HospitalDetailItem)
 
         else:
