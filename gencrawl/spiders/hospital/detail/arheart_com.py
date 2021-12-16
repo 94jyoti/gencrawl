@@ -9,7 +9,7 @@ class ArheartComHospitalDetail(HospitalDetailSpider):
 
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
-        items = deepcopy(items[0])
+        items = deepcopy(items)
 
         connector_urls = response.xpath('//li[@class="location"]/a/@href').getall()
 

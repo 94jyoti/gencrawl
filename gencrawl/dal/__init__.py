@@ -58,24 +58,24 @@ class DAL:
     def _close_session(self, session):
         session.close()
 
-    def get_db_urls(self, domain, limit, url_key='url'):
+    def get_db_urls(self, domain, limit, url_key='url', env=None):
         results = []
         limit = int(limit)
         pg_session = self._create_session(self.engine)
         if self.check_pc_table:
             query = """
-                select domain_id, profile_id, profile_urls, json_data, uc_s3_link from {}_master_table 
+                select domain_id, profile_id, profile_urls, json_data, uc_s3_link, search_url from {}_master_table 
                 where gencrawl_status is null and domain_url = '{}'""".format(self.client, domain)
             self.logger.info(query)
             if limit > 0:
                 query = query + f"LIMIT {limit}"
             results = [{"website_id": str(int(x[0])), "_profile_id": x[1], url_key: x[2], '_cached_link': x[4],
-                        "_jsn": x[3] or {}} for x in pg_session.execute(query)]
+                        "search_url": x[5], "_jsn": x[3] or {}} for x in pg_session.execute(query)]
             for r in results:
                 r.update(r.pop("_jsn"))
 
         # if pc table doesn't have results/page downloaded, check in mini crawler table
-        if not results:
+        if not results and env != Statics.ENV_PROD:
             query = self.client_input_queries[self.client].format(domain, domain, domain)
             if limit > 0:
                 query = query + f"LIMIT {limit}"

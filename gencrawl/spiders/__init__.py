@@ -110,7 +110,7 @@ class BaseSpider(Spider):
         elif db_limit:
             domain = Utility.get_allowed_domains([self.config['website']])[0]
             db_obj = DAL(self.settings, self.client)
-            objs = db_obj.get_db_urls(domain, db_limit, url_key=self.url_key)
+            objs = db_obj.get_db_urls(domain, db_limit, url_key=self.url_key, env=self.environment)
             self.logger.info(f"{len(objs)} URLs fetched from mini crawler")
         else:
             urls = self.config.get("start_urls", [])
@@ -125,8 +125,15 @@ class BaseSpider(Spider):
     def make_request(self, url, callback=None, method=Statics.CRAWL_METHOD_DEFAULT, headers=None, cookies=None,
                      meta=None, body=None, wait_time=Statics.WAIT_TIME_DEFAULT, wait_until=None,
                      iframe=None, dont_filter=False):
+
         headers = headers or dict()
         meta = meta or dict()
+        # if there was cached link for the original request and the current request is not original request i.e. a
+        # request made in custom spider
+        # then, remove the cache link
+        if meta.get("_cached_link") and "depth" in meta and meta['depth'] >= 0:
+            meta.pop("_cached_link")
+
         # for backward compatibility
         method = method.lower()
         if method == Statics.CRAWL_METHOD_SELENIUM:
