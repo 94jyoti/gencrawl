@@ -8,7 +8,7 @@ class WellStarOrg(HospitalDetailSpider):
 
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
-        items = deepcopy(items)
+        items = deepcopy(items[0])
 
         urls_without_domain = response.xpath('//div[@class="contact-number"]'
                                              '/following-sibling::a[contains(text(),"Learn More")]/@href').getall()
@@ -21,7 +21,7 @@ class WellStarOrg(HospitalDetailSpider):
                 url_without_domain_split = url_without_domain.split()
                 url_without_domain_join = url_without_domain_split[0] + '%20' + url_without_domain_split[1]
                 connector_url = 'https://www.wellstar.org/' + "".join(url_without_domain_join)
-                yield self.make_request(connector_url, callback=self.parse_locations, meta={"items": items[0]},
+                yield self.make_request(connector_url, callback=self.parse_locations, meta={"items": items},
                                         dont_filter=True)
 
     def parse_locations(self, response):
