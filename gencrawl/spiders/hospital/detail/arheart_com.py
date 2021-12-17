@@ -22,7 +22,7 @@ class ArheartComHospitalDetail(HospitalDetailSpider):
                                         dont_filter=True)
 
     def parse_address_fields(self, response):
-        items = response.meta['items']
+        items = response.meta['item']
         items = deepcopy(items)
         items['address_raw'] = response.xpath('//aside[@id="secondary"]//div[contains(@class,"location")]').get()
 
