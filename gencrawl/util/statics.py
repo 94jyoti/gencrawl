@@ -66,9 +66,6 @@ class Statics:
                           'selector', 'proxy']
     IGNORE_INPUT_FIELDS = ['temp_fields', 'http_status', 'job_id', 'crawl_datetime']
 
-    # messages
-    RETRY_CONDITION_MSG = "RETRY_CONDITION_MATCHED"
-
     # environement
     ENV_PROD = 'PRODUCTION'
     ENV_DEV = 'DEVELOPMENT'
@@ -77,5 +74,20 @@ class Statics:
     CLIENT_NFN = "NFN"
     CLIENT_DHC = "DHC"
     CLIENT_GENCRAWL = "GENCRAWL"
+
+    # RESPONSE CODES
+    RESPONSE_CODE_OK = 200
+    RESPONSE_CODE_PC_FAIL = 601
+    RESPONSE_CODE_SELENIUM_FAIL = 602
+
+    # Messages
+    MESSAGE_PC_FAIL = 'Issue in PC middleware'
+    MESSAGE_SELENIUM_FAIL = 'Issue in Selenium middleware'
+    MESSAGE_RETRY_CONDITION = "RETRY_CONDITION_MATCHED"
+    MESSAGE_PC_FAIL_RETRY = "RETRY_PC_RESPONSE_EXCEPTION"
+
+    # Encodings
+    ENCODING_DEFAULT = "utf-8"
+
 
 

@@ -1,5 +1,6 @@
 import json
 from scrapy.http import HtmlResponse
+from gencrawl.util.statics import Statics
 
 
 # people checker middleware
@@ -39,14 +40,15 @@ class PCMiddleware():
         request = request.replace(url=original_url)
         try:
             body = response.json().get("all_body", {}).get("page_source")
-            status = 200
+            body = str.encode(body)
+            status = Statics.RESPONSE_CODE_OK
         except:
-            body = 'Issue in PC middleware'
-            status = 405
+            body = Statics.MESSAGE_PC_FAIL
+            status = Statics.RESPONSE_CODE_PC_FAIL
         return HtmlResponse(
             original_url,
             status=status,
-            body=str.encode(body),
-            encoding='utf-8',
+            body=body,
+            encoding=Statics.ENCODING_DEFAULT,
             request=request,
         )

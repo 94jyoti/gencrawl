@@ -9,22 +9,21 @@ class ArheartComHospitalDetail(HospitalDetailSpider):
 
     def get_items_or_req(self, response, default_item=None):
         items = super().get_items_or_req(response, default_item)
-        items = deepcopy(items)
+        items = deepcopy(items[0])
 
         connector_urls = response.xpath('//li[@class="location"]/a/@href').getall()
 
         if not connector_urls:
-
             yield self.generate_item(items, HospitalDetailItem)
 
         else:
             for connector_url in connector_urls:
-                yield self.make_request(connector_url, callback=self.parse_address_fields, meta={"item": items[0]},
+                yield self.make_request(connector_url, callback=self.parse_address_fields, meta={"item": items},
                                         dont_filter=True)
 
     def parse_address_fields(self, response):
-        item = response.meta['item']
-        item = deepcopy(item)
-        item['address_raw'] = response.xpath('//aside[@id="secondary"]//div[contains(@class,"location")]').get()
+        items = response.meta['item']
+        items = deepcopy(items)
+        items['address_raw'] = response.xpath('//aside[@id="secondary"]//div[contains(@class,"location")]').get()
 
-        yield self.generate_item(item, HospitalDetailItem)
+        yield self.generate_item(items, HospitalDetailItem)
