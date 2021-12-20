@@ -48,7 +48,7 @@ class FamilyDetectorSpider(HospitalDetailSpider):
         self.pipeline = DHCPipeline()
         self.max_length_to_parse = 5000
         self.fields_must = ["address_raw", "raw_full_name"]
-        self.fields_any = ['city', 'state', 'zip']
+        self.fields_any = ['city']
 
     def get_all_configs_from_db(self):
         engine = create_engine(
@@ -104,7 +104,7 @@ class FamilyDetectorSpider(HospitalDetailSpider):
         website = meta['website']
         doctor_url = meta['doctor_url']
         home_url = meta['home_url']
-        no_match_found = True
+        match_found = False
         for config in self.all_configs:
             # initialization needed to run extraction
             self.config = config
@@ -116,31 +116,36 @@ class FamilyDetectorSpider(HospitalDetailSpider):
             self.retry_condition = self.ext_codes.pop("retry_condition", None)
             self.pipeline.open_spider(self)
             items = self.get_items_or_req(response, default_item=None)
+            parsed_items = []
             to_yield = False
             for item in items:
-                must_fields = True
+                must_fields_present = True
                 for k in self.fields_must:
                     if not item.get(k):
-                        must_fields = False
-                if must_fields:
+                        must_fields_present = False
+
+                if must_fields_present:
                     if len(str(item)) <= self.max_length_to_parse:
-                        item = self.pipeline.process_item(item, self)
-                    for key in self.fields_any:
-                        if item.get(key):
-                            to_yield = True
-                            no_match_found = False
-                            break
+                        parsed_item = self.pipeline.process_item(item, self)
+                        parsed_items.append(parsed_item)
+                        for key in self.fields_any:
+                            if item.get(key):
+                                to_yield = True
+                                match_found = True
+                                break
             if to_yield:
-                for item in items:
+                for item in parsed_items:
                     nitem = dict(deepcopy(item))
                     nitem['website'] = website
                     nitem['config'] = home_url
                     nitem['doctor_url'] = doctor_url
                     nitem['parent_config'] = config['pg_id']
                     nitem['_cached_link'] = response.meta['_cached_link']
+                    nitem['address_raw'] = ''
+                    nitem['address_raw_1'] = ''
                     yield nitem
 
-        if no_match_found:
+        if not match_found:
             item = dict()
             item['website'] = website
             item['config'] = home_url
