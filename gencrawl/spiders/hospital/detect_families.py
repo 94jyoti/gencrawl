@@ -100,12 +100,11 @@ class FamilyDetectorSpider(HospitalDetailSpider):
                                     meta=meta, dont_filter=True)
 
     def parse_website(self, response):
-        open("w.html", "w").write(response.text)
         meta = response.meta
         website = meta['website']
         doctor_url = meta['doctor_url']
         home_url = meta['home_url']
-        blank_item = False
+        no_match_found = True
         for config in self.all_configs:
             # initialization needed to run extraction
             self.config = config
@@ -129,7 +128,7 @@ class FamilyDetectorSpider(HospitalDetailSpider):
                     for key in self.fields_any:
                         if item.get(key):
                             to_yield = True
-                            blank_item = True
+                            no_match_found = False
                             break
             if to_yield:
                 for item in items:
@@ -140,8 +139,18 @@ class FamilyDetectorSpider(HospitalDetailSpider):
                     nitem['parent_config'] = config['pg_id']
                     nitem['_cached_link'] = response.meta['_cached_link']
                     yield nitem
-        if blank_item:
-            yield {k: '' for k in nitem.keys()}
+
+        if no_match_found:
+            item = dict()
+            item['website'] = website
+            item['config'] = home_url
+            item['doctor_url'] = doctor_url
+            item['parent_config'] = "NO PARENT FOUND"
+            item['_cached_link'] = response.meta['_cached_link']
+            yield item
+
+        # blank item to give separation among different websites.
+        yield {k: '' for k in nitem.keys()}
 
 
 
