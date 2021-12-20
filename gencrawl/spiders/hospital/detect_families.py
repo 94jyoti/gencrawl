@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 """
 This spider will automatically detect websites that follow the same structure.
 It extract one page and apply all the configs to that.
-To run - scrapy crawl auto_family_triaging -a config=hospital_detail_abc_com_us
+To run - scrapy crawl auto_family_triaging -a config=hospital_detail_abc_com_us -o auto_triaging.jl
 """
 
 
@@ -33,7 +33,8 @@ class FamilyDetectorSpider(HospitalDetailSpider):
             'gencrawl.pipelines.db_pipeline.DBPipeline': None
         },
         "DOWNLOAD_DELAY": .5,
-        "CONCURRENT_REQUESTS_PER_DOMAIN":  16
+        "CONCURRENT_REQUESTS": 32,
+        "CONCURRENT_REQUESTS_PER_DOMAIN":  8
     }
 
     def __init__(self, config, *args, **kwargs):
@@ -45,6 +46,9 @@ class FamilyDetectorSpider(HospitalDetailSpider):
         self.input_url = kwargs.get("input_url") or "https://docs.google.com/spreadsheets/u/1/d/1zOeT2OZ4lroqy7Ukt59iaaStxjsl3aYeADenbdii07o/export?format=csv&id=1zOeT2OZ4lroqy7Ukt59iaaStxjsl3aYeADenbdii07o&gid=486472030"
         # TODO make this dynamic
         self.pipeline = DHCPipeline()
+        self.max_length_to_parse = 5000
+        self.fields_must = ["address_raw", "raw_full_name"]
+        self.fields_any = ['city', 'state', 'zip']
 
     def get_all_configs_from_db(self):
         engine = create_engine(
@@ -62,9 +66,10 @@ class FamilyDetectorSpider(HospitalDetailSpider):
         all_websites = {}
         for row in Utility.read_csv_from_response(requests.get(self.input_url)):
             website = row['Website']
-            doctor_url = row['qpkey']
+            doctor_url = row['Doctor URL']
+            _cached_link = row['Cached URL']
             if doctor_url:
-                all_websites[website] = doctor_url
+                all_websites[website] = {"doctor_url": doctor_url, "_cached_link": _cached_link}
         self.logger.info("Total websites fetched - {}".format(len(all_websites)))
         return all_websites
 
@@ -81,25 +86,26 @@ class FamilyDetectorSpider(HospitalDetailSpider):
             if not parent:
                 self.all_configs.append(config)
 
-        for website, doctor_url in all_websites.items():
+        for website, url_dict in all_websites.items():
+            doctor_url = url_dict['doctor_url']
+            _cached_link = url_dict['_cached_link']
             config = f"{self.domain}_{self.crawl_type}_{Utility.get_config_name(website)}_{self.country}"
             if config in all_config_names:
-                self.logger.info(f"Config - {config} already configured, skipping it.")
                 continue
 
             parsed_url = urlparse(doctor_url)
             home_url = parsed_url.scheme + "://" + parsed_url.netloc
-            meta = {"website": website, "doctor_url": doctor_url, "config": config, "home_url": home_url}
-            yield self.make_request(doctor_url, callback=self.parse, method=Statics.CRAWL_METHOD_SELENIUM,
+            meta = {"website": website, "doctor_url": doctor_url, "home_url": home_url, "_cached_link": _cached_link}
+            yield self.make_request(doctor_url, callback=self.parse_website, method=Statics.CRAWL_METHOD_SELENIUM,
                                     meta=meta, dont_filter=True)
 
-    def parse(self, response):
+    def parse_website(self, response):
+        open("w.html", "w").write(response.text)
         meta = response.meta
-        print(meta)
         website = meta['website']
         doctor_url = meta['doctor_url']
         home_url = meta['home_url']
-
+        blank_item = False
         for config in self.all_configs:
             # initialization needed to run extraction
             self.config = config
@@ -110,30 +116,32 @@ class FamilyDetectorSpider(HospitalDetailSpider):
             self.ext_codes = self.config['ext_codes']
             self.retry_condition = self.ext_codes.pop("retry_condition", None)
             self.pipeline.open_spider(self)
-
             items = self.get_items_or_req(response, default_item=None)
             to_yield = False
             for item in items:
-                if item.get("address_raw") and item.get("raw_full_name"):
-                    item = self.pipeline.process_item(item, self)
-                    for key in ['city', 'state', 'zip']:
+                must_fields = True
+                for k in self.fields_must:
+                    if not item.get(k):
+                        must_fields = False
+                if must_fields:
+                    if len(str(item)) <= self.max_length_to_parse:
+                        item = self.pipeline.process_item(item, self)
+                    for key in self.fields_any:
                         if item.get(key):
                             to_yield = True
+                            blank_item = True
                             break
-                if to_yield:
-                    break
-
             if to_yield:
                 for item in items:
                     nitem = dict(deepcopy(item))
                     nitem['website'] = website
-                    nitem['home_page_url'] = home_url
+                    nitem['config'] = home_url
                     nitem['doctor_url'] = doctor_url
                     nitem['parent_config'] = config['pg_id']
+                    nitem['_cached_link'] = response.meta['_cached_link']
                     yield nitem
-
-                blank_item = {k: '' for k in nitem.keys()}
-                yield blank_item
+        if blank_item:
+            yield {k: '' for k in nitem.keys()}
 
 
 
