@@ -22,6 +22,8 @@ class BaseItem(Item):
     _cached_link = Field()
     _profile_id = Field()
     search_url = Field()
+    client_id = Field()
+
 
 
 

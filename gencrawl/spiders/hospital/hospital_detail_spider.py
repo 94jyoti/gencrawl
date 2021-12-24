@@ -47,9 +47,6 @@ class HospitalDetailSpider(BaseSpider):
 
     def get_items_or_req(self, response, default_item=None):
         default_item = default_item or dict()
-        file = open("testeverytime.html", "w")
-        file.write(response.text)
-        file.close()
         parsed_items = []
         for item in self.prepare_items(response, default_item):
             parsed_items.append(self.generate_item(item, HospitalDetailItem))

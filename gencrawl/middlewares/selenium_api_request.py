@@ -2,6 +2,7 @@ import json
 from scrapy.http import HtmlResponse
 from gencrawl.settings import SELENIUM_URL
 from gencrawl.middlewares.selenium_request import GenSeleniumRequest
+from gencrawl.util.statics import Statics
 
 
 class GenSeleniumApiMiddleware():
@@ -46,14 +47,15 @@ class GenSeleniumApiMiddleware():
         request = request.replace(url=original_url)
         try:
             body = response.json()['html']
-            status = 200
+            body = str.encode(body)
+            status = Statics.RESPONSE_CODE_OK
         except:
-            body = 'Issue in Selenium middleware'
-            status = 405
+            body = Statics.MESSAGE_SELENIUM_FAIL
+            status = Statics.RESPONSE_CODE_SELENIUM_FAIL
         return HtmlResponse(
             original_url,
             status=status,
-            body=str.encode(body),
-            encoding='utf-8',
+            body=body,
+            encoding=Statics.ENCODING_DEFAULT,
             request=request,
         )
