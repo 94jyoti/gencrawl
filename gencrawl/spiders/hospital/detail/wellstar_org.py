@@ -28,7 +28,7 @@ class WellStarOrg(HospitalDetailSpider):
         items = response.meta["items"]
         item = deepcopy(items)
 
-        item['address_raw'] = response.xpath('//div[contains(@class,"address")]//div/a').get()
+        item['address_raw'] = response.xpath('//div[contains(@id,"location")]/div').get()
         item['phone'] = response.xpath('//p[contains(@class,"Phone")]/a').get()
         item['fax'] = response.xpath('//p[contains(@class,"Fax")]/a').get()
 
