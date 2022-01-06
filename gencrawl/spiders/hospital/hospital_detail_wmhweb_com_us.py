@@ -19,7 +19,7 @@ class WmhwebComHospitalDetail(HospitalDetailSpider):
         meta = response.meta
         
         for item in items:
-            print(item['address_raw'][0])
+            #print(item['practice_name'])
             #print(item)
             if item['address_raw'] == []:
                 item['address_raw']=(response.xpath("//h1/following::p[position()>=1][not(contains(.,'Medical School') or contains(.,'Residency')) ]").extract()[0]).replace(item['speciality'],"")
@@ -34,10 +34,15 @@ class WmhwebComHospitalDetail(HospitalDetailSpider):
                 continue
 
             item['address_raw'] = item['address_raw'].replace("Phone", "").replace(":", "")
+            #print("practice name",item['practice_name'])
+            #if(item['practice_name']==""):
 
 
 
-            #if item['address_raw'] == []:
+
+            if "practice_name" not in item.keys():
+                item['practice_name']=response.xpath("//div[@class='art-postcontent clearfix']/p[1][not(contains(.,'Street'))]/text()").extract()
+
 
 
             yield self.generate_item(item, HospitalDetailItem)
