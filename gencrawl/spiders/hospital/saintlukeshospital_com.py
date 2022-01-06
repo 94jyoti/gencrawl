@@ -27,5 +27,5 @@ class SaintlukeshospitalComHospitalDetail(HospitalDetailSpider):
             for i in temp_address:
                 if len(i)>10:
                     item_copy = copy.deepcopy(item)
-                    item_copy['address_raw'] = i.split('\n')
+                    item_copy['address_raw'] = i.split('\n') # ['444','address','city','zip']
                     yield self.generate_item(item_copy, HospitalDetailItem)
