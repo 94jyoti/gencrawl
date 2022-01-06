@@ -102,8 +102,8 @@ DHC_DB_NAME = 'dhc'
 DHC_CHECK_PC_TABLE = True
 
 GENCRAWL_DB_USER = 'postgres'
-GENCRAWL_DB_PASS = 'kapow123'
-GENCRAWL_DB_HOST = '65.2.58.32'
+GENCRAWL_DB_PASS = 'Forage2021'
+GENCRAWL_DB_HOST = 'forage-dev-db.cod4levdfbtz.ap-south-1.rds.amazonaws.com'
 GENCRAWL_DB_PORT = '5432'
 GENCRAWL_DB_NAME = 'gencrawl'
 
