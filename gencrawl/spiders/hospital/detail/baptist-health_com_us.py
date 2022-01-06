@@ -44,9 +44,4 @@ class BaptistHealthHospitalDetail(HospitalDetailSpider):
         items['phone']=""
         items['fax']=""
         items['address_raw'] = response.xpath('//p[contains(@class,"elementor-icon-box-description")]').get()
-
-
-
-
-
         yield self.generate_item(items, HospitalDetailItem)
