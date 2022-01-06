@@ -74,7 +74,8 @@ class BaseSpider(Spider):
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
         self.db_limit = kwargs.get("db_limit")
-        self.input = self._get_start_urls(self.urls, self.input_file, self.db_limit)
+        self.prod_only = kwargs.get("prod_only")
+        self.input = self._get_start_urls(self.urls, self.input_file, self.db_limit, prod_only=self.prod_only)
         self.job_id = str(uuid.uuid4())
         self.allowed_domains = config['allowed_domains']
         self.website = config['website']
@@ -91,7 +92,7 @@ class BaseSpider(Spider):
         self.all_url_keys = [Statics.URL_KEY_FINANCIAL_LISTING, Statics.URL_KEY_FINANCIAL_DETAIL]
         self.ignore_meta_fields = Statics.IGNORE_META_FIELDS
 
-    def _get_start_urls(self, urls, input_file, db_limit):
+    def _get_start_urls(self, urls, input_file, db_limit, prod_only=False):
         objs = list()
         if urls:
             for url in urls.split("|"):
@@ -110,7 +111,7 @@ class BaseSpider(Spider):
         elif db_limit:
             domain = Utility.get_allowed_domains([self.config['website']])[0]
             db_obj = DAL(self.settings, self.client)
-            objs = db_obj.get_db_urls(domain, db_limit, url_key=self.url_key, env=self.environment)
+            objs = db_obj.get_db_urls(domain, db_limit, url_key=self.url_key, prod_env=prod_only)
             self.logger.info(f"{len(objs)} URLs fetched from mini crawler")
         else:
             urls = self.config.get("start_urls", [])
