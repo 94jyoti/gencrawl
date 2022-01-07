@@ -19,13 +19,17 @@ class SaintlukeshospitalComHospitalDetail(HospitalDetailSpider):
 
         items = self.prepare_items(response, default_item)
         meta = response.meta
+
         for item in items:
             address_raw = ''.join(item['address_raw'])
             temp_address = re.findall('[A-Z].*[A-Z][A-Z] \d{5}',address_raw,re.DOTALL)
+            if len(temp_address)==1:
+                temp_address = item['address_raw']
+
             temp_address = ''.join(temp_address)
             temp_address = re.split('\d{3}-\d{3}-\d{4}',temp_address)
             for i in temp_address:
                 if len(i)>10:
                     item_copy = copy.deepcopy(item)
-                    item_copy['address_raw'] = i.split('\n') # ['444','address','city','zip']
+                    item_copy['address_raw'] = i.split('\n') 
                     yield self.generate_item(item_copy, HospitalDetailItem)
