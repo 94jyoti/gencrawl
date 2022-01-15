@@ -31,6 +31,8 @@ class PCMiddleware():
     def check_uc_reponse_valid(self, body):
         if '<h1>Resource Limit Is Reached</h1>' in body:
             return False
+        elif '<h1>504</h1>' in body:
+            return False
         return True
 
     def process_response(self, request, response, spider):
