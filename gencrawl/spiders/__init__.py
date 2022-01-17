@@ -74,7 +74,8 @@ class BaseSpider(Spider):
         self.urls = kwargs.get("urls")
         self.input_file = kwargs.get("input_file")
         self.db_limit = kwargs.get("db_limit")
-        self.prod_only = kwargs.get("prod_only")
+        # making True by default
+        self.prod_only = kwargs.get("prod_only", True)
         if self.environment == Statics.ENV_PROD:
             self.prod_only = True
         self.input = self._get_start_urls(self.urls, self.input_file, self.db_limit, prod_only=self.prod_only)
