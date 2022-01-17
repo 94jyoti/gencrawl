@@ -469,6 +469,11 @@ class DHCPipeline:
                     item['address_line_2'], item['address_line_3'] = item['address_line_2'].rsplit(",", 1)
 
         if item.get('address_line_1'):
+
+            if item['address_line_1'] == item.get("address_line_2"):
+                item['address_line_2'] = item.get("address_line_3")
+                item['address_line_3'] = None
+
             for text in self.address1_text_to_remove:
                 if item['address_line_1'].startswith(text):
                     item['address_line_1'] = item['address_line_1'].replace(text, "", 1).strip()
