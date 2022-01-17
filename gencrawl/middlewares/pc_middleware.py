@@ -47,11 +47,11 @@ class PCMiddleware():
         request = request.replace(url=original_url)
         try:
             body = response.json().get("all_body", {}).get("page_source")
-            body = str.encode(body)
             if self.check_uc_reponse_valid(body):
                 status = Statics.RESPONSE_CODE_OK
             else:
                 status = Statics.RESPONSE_CODE_PC_CAPTCHA
+            body = str.encode(body)
         except:
             body = Statics.MESSAGE_PC_FAIL
             status = Statics.RESPONSE_CODE_PC_FAIL
