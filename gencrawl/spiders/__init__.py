@@ -121,7 +121,12 @@ class BaseSpider(Spider):
         else:
             urls = self.config.get("start_urls", [])
             for url in urls:
-                objs.append({self.url_key: url})
+                if url.startswith("{"):
+                    obj = json.loads(url)
+                    obj = {k: v for k, v in obj.items() if k not in Statics.IGNORE_INPUT_FIELDS}
+                    objs.append(obj)
+                else:
+                    objs.append({self.url_key: url})
 
         if not objs:
             self.logger.error("Input not provided.")

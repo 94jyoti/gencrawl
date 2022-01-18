@@ -4,7 +4,6 @@ from datetime import datetime
 from gencrawl.util.statics import Statics
 import scrapy
 import json
-import xmltodict
 import copy
 from bs4 import BeautifulSoup
 import re
@@ -13,21 +12,14 @@ import re
 class KuakiniOrgHospitalDetail(HospitalDetailSpider):
     name = 'hospital_detail_kuakini_org_us'
 
-    def start_requests(self):
-        
-        static_url = "https://www.kuakini.org/wps/portal/public/Find-a-Doctor"
-        yield scrapy.Request(static_url, callback=self.parse_information, dont_filter=True)
-
-    def parse_information(self,response):
-        items = self.prepare_items(response)
+    def parse(self, response):
+        items = self.prepare_items(response, default_item=self.get_default_item(response))
         data = re.findall(r'({id.*);data_list\.push\(item\)',response.text)
         for d in data:
             d = d.replace("'",'').replace('"','').replace('/',' ')
-            raw_full_name = re.findall(r'toLowerCase\(\)\,name:(.*)\,specialty',d)
+            raw_full_name = re.findall(r'toLowerCase\(\)\,name:(.*)\,specialty', d)
             item_copy = copy.deepcopy(items[0])
-            item_copy['crawl_datetime']='11-01-2022'
-            item_copy['http_status']='200'
-            item_copy['job_id']=1
+            item_copy['doctor_url'] = ''
             item_copy['raw_full_name'] = ' '.join(raw_full_name[0].split(',')[:-1])
             item_copy['designation'] = raw_full_name[0].split(',')[-1]
             item_copy['speciality'] = re.findall(r"specialty:(\b[A-Za-z,\s]+\b)", d)
