@@ -215,15 +215,19 @@ class DHCPipeline:
         suffix = item.get('suffix') or ''
         raw_name = [r.strip() for r in raw_name.split() if r.strip()]
         raw_name = [r for r in raw_name if r not in designations and r != suffix]
-        if not item.get("first_name") and len(raw_name) > 0:
-            item['first_name'] = raw_name[0].strip()
-        if not item.get("last_name") and len(raw_name) > 1:
-            item['last_name'] = raw_name[-1].strip()
+        raw_name_1 = []
+        for r in raw_name:
+            for rgx in self.nick_name_rgx:
+                r = re.sub(rgx, '', r).strip()
+            if r:
+                raw_name_1.append(r)
+
+        if not item.get("first_name") and len(raw_name_1) > 0:
+            item['first_name'] = raw_name_1[0].strip()
+        if not item.get("last_name") and len(raw_name_1) > 1:
+            item['last_name'] = raw_name_1[-1].strip()
         if not item.get("middle_name"):
-            middle_name = " ".join(raw_name[1:-1])
-            if middle_name:
-                for rgx in self.nick_name_rgx:
-                    middle_name = re.sub(rgx, '', middle_name).strip()
+            middle_name = " ".join(raw_name_1[1:-1])
             item['middle_name'] = middle_name
         return item
 

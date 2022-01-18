@@ -85,7 +85,7 @@ NFN_VALIDATION_FIELDS = []
 
 # db settings
 DB_PIPELINE_ENABLED = True
-DB_BATCH_SIZE = 100
+DB_BATCH_SIZE = 10000
 
 NFN_DB_USER = 'postgres'
 NFN_DB_PASS = 'kapow123'
