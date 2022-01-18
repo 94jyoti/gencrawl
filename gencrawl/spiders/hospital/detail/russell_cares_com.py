@@ -26,7 +26,7 @@ class RussellCaresCom(HospitalDetailSpider):
             cleaned_add_raw =  re.sub(r'<.*?>',' ',items[0]['address_raw']).strip()
             practice_name = re.findall(r'(^[a-zA-Z]+.*?)\d+',cleaned_add_raw)
             if practice_name:
-                if 'Professional' in practice_name[0]:
+                if 'building' in practice_name[0].lower():
                     items[0]['practice_name'] = ''
                 else:
                     items[0]['practice_name'] = practice_name[0].replace('Address:','').strip()

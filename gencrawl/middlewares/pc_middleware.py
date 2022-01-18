@@ -28,6 +28,13 @@ class PCMiddleware():
         request = request.replace(url=cached_link, method='GET', meta=meta)
         return request
 
+    def check_uc_reponse_valid(self, body):
+        if '<h1>Resource Limit Is Reached</h1>' in body:
+            return False
+        elif '<h1>504</h1>' in body:
+            return False
+        return True
+
     def process_response(self, request, response, spider):
         original_url = request.meta.get('_pc_original_url')
         if not original_url:
@@ -40,8 +47,11 @@ class PCMiddleware():
         request = request.replace(url=original_url)
         try:
             body = response.json().get("all_body", {}).get("page_source")
+            if self.check_uc_reponse_valid(body):
+                status = Statics.RESPONSE_CODE_OK
+            else:
+                status = Statics.RESPONSE_CODE_PC_CAPTCHA
             body = str.encode(body)
-            status = Statics.RESPONSE_CODE_OK
         except:
             body = Statics.MESSAGE_PC_FAIL
             status = Statics.RESPONSE_CODE_PC_FAIL
