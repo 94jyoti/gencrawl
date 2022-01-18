@@ -495,7 +495,7 @@ class DHCPipeline:
                            for a in address_raw if a and a.strip(self.strip_by) and a.strip(self.strip_by) != '&nbsp']
 
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
-            address_raw = [unidecode.unidecode(a) for a in address_raw]
+            address_raw = [re.sub('\\s+', ' ', unidecode.unidecode(a)) for a in address_raw]
             if self.decision_tags.get("split_address_1_by_comma"):
                 a1 = address_raw[0]
                 address_raw = address_raw[1:]
