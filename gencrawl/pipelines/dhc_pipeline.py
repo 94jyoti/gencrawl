@@ -186,7 +186,6 @@ class DHCPipeline:
             if desig in raw_name:
                 multi_designations.append(desig)
                 raw_name = "".join(raw_name.rsplit(desig, 1))
-
         # parse the designations after first comma
         if ',' in raw_name:
             designation = raw_name.split(",", 1)[-1]
@@ -204,6 +203,10 @@ class DHCPipeline:
 
     def parse_name(self, item):
         raw_name = item.get('raw_full_name')
+        if raw_name:
+            raw_name = re.sub('\\s+', ' ', unidecode.unidecode(raw_name))
+            item['raw_full_name'] = raw_name
+
         if self.decision_tags.get("replace_comma_in_raw_name"):
             raw_name = raw_name.replace(",", " ").replace("  ", " ")
         if "," in raw_name:
@@ -418,7 +421,7 @@ class DHCPipeline:
             return item, address
 
         is_practice_name = False
-        if self.decision_tags.get("practice_may_in_address"):
+        if self.decision_tags.get("practice_may_in_address") or self.decision_tags.get("practice_may_in_addresses"):
             is_practice_name = self.check_practice_name((address[0]))
 
         if is_practice_name or self.decision_tags.get("practice_in_address"):
@@ -431,6 +434,22 @@ class DHCPipeline:
             practice_name = item.get("practice_name")
             if practice_name:
                 address = [a for a in address if a != practice_name]
+
+        # checking if practice has raw_full_name
+        if item.get("practice_name") and item.get('raw_full_name'):
+            parsed_practice = item['practice_name'].lower().replace(",", "").replace(".", "").replace("dr", "").strip()
+            parsed_raw_name = item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip()
+            if item['practice_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip() == item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip():
+                item['practice_name'] = ''
+        print(address)
+        # checking if address 1 has to be appended in practice
+        if self.decision_tags.get("practice_may_in_addresses"):
+            is_practice_name = self.check_practice_name(address[0])
+            if is_practice_name:
+                practice_name = address[0]
+                address = address[1:]
+                item['practice_name'] = item['practice_name'] + ", " + practice_name if item.get(
+                    "practice_name") else practice_name
 
         # logic to merge address line 1 in practice if matches merge text from DHC constant file
         if address and address[0] in self.practice_merging_texts:
@@ -509,16 +528,27 @@ class DHCPipeline:
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
             address_raw = [re.sub('\\s+', ' ', unidecode.unidecode(a)) for a in address_raw]
             if self.decision_tags.get("split_address_1_by_comma"):
-                a1 = address_raw[0]
-                address_raw = address_raw[1:]
-                for a in reversed(a1.split(",")):
-                    address_raw.insert(0, a.strip())
+                if self.decision_tags.get("practice_may_in_addresses"):
+                    a1 = address_raw[:2]
+                    address_raw = address_raw[2:]
+                else:
+                    a1 = address_raw[:1]
+                    address_raw = address_raw[1:]
+                for a2 in reversed(a1):
+                    for a in reversed(a2.split(",")):
+                        address_raw.insert(0, a.strip())
 
             if self.decision_tags.get("split_address_1_by_hyphen"):
-                a1 = address_raw[0]
-                address_raw = address_raw[1:]
-                for a in reversed(a1.split("-")):
-                    address_raw.insert(0, a.strip())
+                if self.decision_tags.get("practice_may_in_addresses"):
+                    a1 = address_raw[:2]
+                    address_raw = address_raw[2:]
+                else:
+                    a1 = address_raw[:1]
+                    address_raw = address_raw[1:]
+
+                for a2 in reversed(a1):
+                    for a in reversed(a2.split("-")):
+                        address_raw.insert(0, a.strip())
 
             item['address_raw_1'] = "___".join(address_raw)
             item, address_upto_idx = self.find_zip(item, address_raw)
