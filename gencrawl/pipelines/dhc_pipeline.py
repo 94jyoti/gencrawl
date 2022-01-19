@@ -52,12 +52,14 @@ class DHCPipeline:
         self.address_text_to_remove = set()
         self.address1_text_to_remove = set()
         self.multi_word_designations = set()
+        self.practice_merging_texts = set()
         for row in Utility.read_csv_from_response(resp):
             city, state, suffix, designation = row['City'], row['State'], row['Suffix'], row['Designation']
             text_to_remove, text_to_remove1 = row['Text To Remove'], row['Text To Remove From Address1 Start']
             practice_tag = row['Practice Tags']
             address_tag = row['Address Tags']
             multi_designation = row['Multi-Word Designation']
+            practice_merge_text = row['Text To Merge In Practice']
             if city:
                 us_cities.add(city.strip())
             if state:
@@ -76,6 +78,8 @@ class DHCPipeline:
                 self.address_tags.add(address_tag.strip())
             if multi_designation:
                 self.multi_word_designations.add(multi_designation.strip())
+            if practice_merge_text:
+                self.practice_merging_texts.add(practice_merge_text.strip())
 
         self.us_cities = sorted(us_cities, key=len, reverse=True)
         self.us_states = sorted(us_states, key=len, reverse=True)
@@ -427,6 +431,14 @@ class DHCPipeline:
             practice_name = item.get("practice_name")
             if practice_name:
                 address = [a for a in address if a != practice_name]
+
+        # logic to merge address line 1 in practice if matches merge text from DHC constant file
+        if address and address[0] in self.practice_merging_texts:
+            add1 = address.pop(0)
+            practice_name = item.get("practice_name")
+            practice_name = practice_name + ", " + add1 if practice_name else add1
+            item['practice_name'] = practice_name
+
         return item, address
 
     def find_address_lines(self, item, address):
