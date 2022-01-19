@@ -441,9 +441,15 @@ class DHCPipeline:
             parsed_raw_name = item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip()
             if item['practice_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip() == item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip():
                 item['practice_name'] = ''
-        print(address)
+
         # checking if address 1 has to be appended in practice
         if self.decision_tags.get("practice_may_in_addresses"):
+            if address[0] in self.practice_merging_texts:
+                add1 = address.pop(0)
+                practice_name = item.get("practice_name")
+                practice_name = practice_name + ", " + add1 if practice_name else add1
+                item['practice_name'] = practice_name
+                
             is_practice_name = self.check_practice_name(address[0])
             if is_practice_name:
                 practice_name = address[0]
