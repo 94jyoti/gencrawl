@@ -7,6 +7,7 @@ import re
 from gencrawl.settings import RES_DIR
 from lxml import html
 import unidecode
+from copy import deepcopy
 
 
 class DHCPipeline:
@@ -522,6 +523,15 @@ class DHCPipeline:
                     item['address_line_1'] = item['address_line_1'].replace(text, "", 1).strip()
         return item
 
+    def only_city_state_exists(self, item, address):
+        item_copy = deepcopy(item)
+        address_copy = deepcopy(address)
+        item_copy, address_copy = self.find_state(item_copy, address_copy)
+        _, address_copy = self.find_city(item, address_copy)
+        if not address_copy:
+            return True
+        return False
+
     def parse_fields_from_address(self, item):
         if item.get('address_raw'):
             address_raw = item['address_raw']
@@ -575,7 +585,10 @@ class DHCPipeline:
 
             if address:
                 address = [a for a in address if a not in self.skip_text_to_remove]
-            item, address = self.find_practice_name(item, address)
+
+            if not self.only_city_state_exists(item, address):
+                item, address = self.find_practice_name(item, address)
+
             item, address = self.find_state(item, address)
             item, address = self.find_city(item, address)
             item = self.find_address_lines(item, address)
