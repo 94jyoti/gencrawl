@@ -7,6 +7,7 @@ import re
 from gencrawl.settings import RES_DIR
 from lxml import html
 import unidecode
+from copy import deepcopy
 
 
 class DHCPipeline:
@@ -30,7 +31,7 @@ class DHCPipeline:
         phone_rgx = [r'(\(\d{3}\)[\.\-\s]\d{3}[\.\-\s]\d{4})', r'(\d{3}[\.\-\s]\d{3}[\.\s\-]\d{4})',
                      r'(\(\d{3}\)\d{3}[\.\-\s]\d{4})']
         self.phone_rgx = [re.compile(r) for r in phone_rgx]
-        nick_name_rgx = [r'"[a-zA-Z]+"', r'“[a-zA-Z]+”', r'\([a-zA-Z]+\)']
+        nick_name_rgx = [r'"[a-zA-Z]+"', r'“[a-zA-Z]+”', r'\([a-zA-Z]+\)', r"''[a-zA-Z]+''"]
         self.nick_name_rgx = [re.compile(r) for r in nick_name_rgx]
 
         address_line_rgx = [r'(\d+[A-Z]{1})', r'(\d+-\d+)', r'(\d+-[A-Z]{1})']
@@ -38,6 +39,8 @@ class DHCPipeline:
 
         self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
         self.fax_keywords = ["fax", "fx", "f:", "(f)"]
+
+        self.skip_text_to_remove = ["Fax:", "Fax", "fax", "fax:", "Phone:", "phone", "Phone", "Phone"]
 
         email_rgx = ['([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)']
         self.email_rgx = [re.compile(r) for r in email_rgx]
@@ -52,12 +55,14 @@ class DHCPipeline:
         self.address_text_to_remove = set()
         self.address1_text_to_remove = set()
         self.multi_word_designations = set()
+        self.practice_merging_texts = set()
         for row in Utility.read_csv_from_response(resp):
             city, state, suffix, designation = row['City'], row['State'], row['Suffix'], row['Designation']
             text_to_remove, text_to_remove1 = row['Text To Remove'], row['Text To Remove From Address1 Start']
             practice_tag = row['Practice Tags']
             address_tag = row['Address Tags']
             multi_designation = row['Multi-Word Designation']
+            practice_merge_text = row['Text To Merge In Practice']
             if city:
                 us_cities.add(city.strip())
             if state:
@@ -67,7 +72,8 @@ class DHCPipeline:
             if designation:
                 designations.add(designation.strip())
             if text_to_remove:
-                self.address_text_to_remove.add(text_to_remove.strip())
+                if text_to_remove.strip() not in self.skip_text_to_remove:
+                    self.address_text_to_remove.add(text_to_remove.strip())
             if text_to_remove1:
                 self.address1_text_to_remove.add(text_to_remove1)
             if practice_tag:
@@ -76,6 +82,8 @@ class DHCPipeline:
                 self.address_tags.add(address_tag.strip())
             if multi_designation:
                 self.multi_word_designations.add(multi_designation.strip())
+            if practice_merge_text:
+                self.practice_merging_texts.add(practice_merge_text.strip())
 
         self.us_cities = sorted(us_cities, key=len, reverse=True)
         self.us_states = sorted(us_states, key=len, reverse=True)
@@ -182,7 +190,6 @@ class DHCPipeline:
             if desig in raw_name:
                 multi_designations.append(desig)
                 raw_name = "".join(raw_name.rsplit(desig, 1))
-
         # parse the designations after first comma
         if ',' in raw_name:
             designation = raw_name.split(",", 1)[-1]
@@ -200,6 +207,10 @@ class DHCPipeline:
 
     def parse_name(self, item):
         raw_name = item.get('raw_full_name')
+        if raw_name:
+            raw_name = re.sub('\\s+', ' ', unidecode.unidecode(raw_name))
+            item['raw_full_name'] = raw_name
+
         if self.decision_tags.get("replace_comma_in_raw_name"):
             raw_name = raw_name.replace(",", " ").replace("  ", " ")
         if "," in raw_name:
@@ -215,15 +226,19 @@ class DHCPipeline:
         suffix = item.get('suffix') or ''
         raw_name = [r.strip() for r in raw_name.split() if r.strip()]
         raw_name = [r for r in raw_name if r not in designations and r != suffix]
-        if not item.get("first_name") and len(raw_name) > 0:
-            item['first_name'] = raw_name[0].strip()
-        if not item.get("last_name") and len(raw_name) > 1:
-            item['last_name'] = raw_name[-1].strip()
+        raw_name_1 = []
+        for r in raw_name:
+            for rgx in self.nick_name_rgx:
+                r = re.sub(rgx, '', r).strip()
+            if r:
+                raw_name_1.append(r)
+
+        if not item.get("first_name") and len(raw_name_1) > 0:
+            item['first_name'] = raw_name_1[0].strip()
+        if not item.get("last_name") and len(raw_name_1) > 1:
+            item['last_name'] = raw_name_1[-1].strip()
         if not item.get("middle_name"):
-            middle_name = " ".join(raw_name[1:-1])
-            if middle_name:
-                for rgx in self.nick_name_rgx:
-                    middle_name = re.sub(rgx, '', middle_name).strip()
+            middle_name = " ".join(raw_name_1[1:-1])
             item['middle_name'] = middle_name
         return item
 
@@ -410,7 +425,7 @@ class DHCPipeline:
             return item, address
 
         is_practice_name = False
-        if self.decision_tags.get("practice_may_in_address"):
+        if self.decision_tags.get("practice_may_in_address") or self.decision_tags.get("practice_may_in_addresses"):
             is_practice_name = self.check_practice_name((address[0]))
 
         if is_practice_name or self.decision_tags.get("practice_in_address"):
@@ -423,6 +438,35 @@ class DHCPipeline:
             practice_name = item.get("practice_name")
             if practice_name:
                 address = [a for a in address if a != practice_name]
+
+        # checking if practice has raw_full_name
+        if item.get("practice_name") and item.get('raw_full_name'):
+            parsed_practice = item['practice_name'].lower().replace(",", "").replace(".", "").replace("dr", "").strip()
+            parsed_raw_name = item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip()
+            if item['practice_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip() == item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip():
+                item['practice_name'] = ''
+
+        # checking if address 1 has to be appended in practice
+        if self.decision_tags.get("practice_may_in_addresses"):
+            if address and address[0] in self.practice_merging_texts:
+                add1 = address.pop(0)
+                practice_name = item.get("practice_name")
+                practice_name = practice_name + ", " + add1 if practice_name else add1
+                item['practice_name'] = practice_name
+
+            if address and self.check_practice_name(address[0]):
+                practice_name = address[0]
+                address = address[1:]
+                item['practice_name'] = item['practice_name'] + ", " + practice_name if item.get(
+                    "practice_name") else practice_name
+
+        # logic to merge address line 1 in practice if matches merge text from DHC constant file
+        if address and address[0] in self.practice_merging_texts:
+            add1 = address.pop(0)
+            practice_name = item.get("practice_name")
+            practice_name = practice_name + ", " + add1 if practice_name else add1
+            item['practice_name'] = practice_name
+
         return item, address
 
     def find_address_lines(self, item, address):
@@ -469,10 +513,24 @@ class DHCPipeline:
                     item['address_line_2'], item['address_line_3'] = item['address_line_2'].rsplit(",", 1)
 
         if item.get('address_line_1'):
+
+            if item['address_line_1'] == item.get("address_line_2"):
+                item['address_line_2'] = item.get("address_line_3")
+                item['address_line_3'] = None
+
             for text in self.address1_text_to_remove:
                 if item['address_line_1'].startswith(text):
                     item['address_line_1'] = item['address_line_1'].replace(text, "", 1).strip()
         return item
+
+    def only_city_state_exists(self, item, address):
+        item_copy = deepcopy(item)
+        address_copy = deepcopy(address)
+        item_copy, address_copy = self.find_state(item_copy, address_copy)
+        _, address_copy = self.find_city(item, address_copy)
+        if not address_copy:
+            return True
+        return False
 
     def parse_fields_from_address(self, item):
         if item.get('address_raw'):
@@ -486,18 +544,29 @@ class DHCPipeline:
                            for a in address_raw if a and a.strip(self.strip_by) and a.strip(self.strip_by) != '&nbsp']
 
             address_raw = [a for a in address_raw if a not in self.address_text_to_remove]
-            address_raw = [unidecode.unidecode(a) for a in address_raw]
+            address_raw = [re.sub('\\s+', ' ', unidecode.unidecode(a)) for a in address_raw]
             if self.decision_tags.get("split_address_1_by_comma"):
-                a1 = address_raw[0]
-                address_raw = address_raw[1:]
-                for a in reversed(a1.split(",")):
-                    address_raw.insert(0, a.strip())
+                if self.decision_tags.get("practice_may_in_addresses"):
+                    a1 = address_raw[:2]
+                    address_raw = address_raw[2:]
+                else:
+                    a1 = address_raw[:1]
+                    address_raw = address_raw[1:]
+                for a2 in reversed(a1):
+                    for a in reversed(a2.split(",")):
+                        address_raw.insert(0, a.strip())
 
             if self.decision_tags.get("split_address_1_by_hyphen"):
-                a1 = address_raw[0]
-                address_raw = address_raw[1:]
-                for a in reversed(a1.split("-")):
-                    address_raw.insert(0, a.strip())
+                if self.decision_tags.get("practice_may_in_addresses"):
+                    a1 = address_raw[:2]
+                    address_raw = address_raw[2:]
+                else:
+                    a1 = address_raw[:1]
+                    address_raw = address_raw[1:]
+
+                for a2 in reversed(a1):
+                    for a in reversed(a2.split("-")):
+                        address_raw.insert(0, a.strip())
 
             item['address_raw_1'] = "___".join(address_raw)
             item, address_upto_idx = self.find_zip(item, address_raw)
@@ -514,7 +583,12 @@ class DHCPipeline:
                 item = self.find_phone_and_fax(item, address_extra)
                 item = self.find_email(item, address_extra)
 
-            item, address = self.find_practice_name(item, address)
+            if address:
+                address = [a for a in address if a not in self.skip_text_to_remove]
+
+            if not self.only_city_state_exists(item, address):
+                item, address = self.find_practice_name(item, address)
+
             item, address = self.find_state(item, address)
             item, address = self.find_city(item, address)
             item = self.find_address_lines(item, address)

@@ -71,6 +71,20 @@ class DAL:
                 query = query + f"LIMIT {limit}"
             results = [{"website_id": str(int(x[0])), "_profile_id": x[1], url_key: x[2], '_cached_link': x[4],
                         "search_url": x[5], "_jsn": x[3] or {}, "client_id": x[6]} for x in pg_session.execute(query)]
+            # temporary check to remove doctors.*/providers.* from website name
+            if not results:
+                domain = domain.replace("doctors.", "").replace("providers.", "")
+                query = """
+                            select domain_id, profile_id, profile_urls, json_data, uc_s3_link, search_url, client_id
+                            FROM {}_master_table where gencrawl_status is null AND domain_url = '{}'""".format(
+                    self.client, domain)
+                self.logger.info(query)
+                if limit > 0:
+                    query = query + f"LIMIT {limit}"
+                results = [{"website_id": str(int(x[0])), "_profile_id": x[1], url_key: x[2], '_cached_link': x[4],
+                            "search_url": x[5], "_jsn": x[3] or {}, "client_id": x[6]} for x in
+                           pg_session.execute(query)]
+                
             for r in results:
                 r.update(r.pop("_jsn"))
 

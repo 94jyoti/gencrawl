@@ -79,6 +79,7 @@ class Statics:
     RESPONSE_CODE_OK = 200
     RESPONSE_CODE_PC_FAIL = 601
     RESPONSE_CODE_SELENIUM_FAIL = 602
+    RESPONSE_CODE_PC_INVALID = 603
 
     # Messages
     MESSAGE_PC_FAIL = 'Issue in PC middleware'
