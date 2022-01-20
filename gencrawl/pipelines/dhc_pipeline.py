@@ -39,6 +39,8 @@ class DHCPipeline:
         self.phone_keywords = ["tel", "ph", "telephone", "phone", "p:", "(p)"]
         self.fax_keywords = ["fax", "fx", "f:", "(f)"]
 
+        self.skip_text_to_remove = ["Fax:", "Fax", "fax", "fax:", "Phone:", "phone", "Phone", "Phone"]
+
         email_rgx = ['([\w\-\.]+@\w[\w\-]+\.+[\w\-]+)']
         self.email_rgx = [re.compile(r) for r in email_rgx]
 
@@ -69,7 +71,8 @@ class DHCPipeline:
             if designation:
                 designations.add(designation.strip())
             if text_to_remove:
-                self.address_text_to_remove.add(text_to_remove.strip())
+                if text_to_remove.strip() not in self.skip_text_to_remove:
+                    self.address_text_to_remove.add(text_to_remove.strip())
             if text_to_remove1:
                 self.address1_text_to_remove.add(text_to_remove1)
             if practice_tag:
@@ -570,6 +573,8 @@ class DHCPipeline:
                 item = self.find_phone_and_fax(item, address_extra)
                 item = self.find_email(item, address_extra)
 
+            if address:
+                address = [a for a in address if a not in self.skip_text_to_remove]
             item, address = self.find_practice_name(item, address)
             item, address = self.find_state(item, address)
             item, address = self.find_city(item, address)
