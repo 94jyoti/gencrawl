@@ -17,7 +17,12 @@ class PCMiddleware():
             return
 
         if request.meta.get("retry_times") and request.meta['retry_times'] > 0:
-            return
+            _retry_url = request.meta.get("_retry_url")
+            if _retry_url:
+                meta['dont_pc_cache'] = True
+                return request.replace(url=_retry_url, method='GET', meta=meta)
+            else:
+                return
 
         meta['dont_proxy'] = True
         # don't use selenium middleware for cache url
@@ -25,6 +30,7 @@ class PCMiddleware():
         # to avoid repeated request loop
         meta['dont_pc_cache'] = True
         meta['_pc_original_url'] = request.url
+        meta['_retry_url'] = request.url
         request = request.replace(url=cached_link, method='GET', meta=meta)
         return request
 
@@ -50,7 +56,7 @@ class PCMiddleware():
             if self.check_uc_reponse_valid(body):
                 status = Statics.RESPONSE_CODE_OK
             else:
-                status = Statics.RESPONSE_CODE_PC_CAPTCHA
+                status = Statics.RESPONSE_CODE_PC_INVALID
             body = str.encode(body)
         except:
             body = Statics.MESSAGE_PC_FAIL

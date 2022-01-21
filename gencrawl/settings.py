@@ -22,7 +22,7 @@ COOKIES_ENABLED = False
 AUTOTHROTTLE_ENABLED = False
 RETRY_ENABLED = True
 RETRY_TIMES = 5
-RETRY_HTTP_CODES = [400, 405, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429]
+RETRY_HTTP_CODES = [400, 405, 500, 502, 503, 504, 520, 522, 524, 408, 403, 429, 603, 602, 601]
 
 # proxy settings
 CRAWLERA_ENABLED = True
@@ -32,6 +32,7 @@ CRAWLERA_APIKEY = 'd1d3dfa7dc4444a88a253a0263be5877'
 DOWNLOADER_MIDDLEWARES = {
     # engine
     'gencrawl.middlewares.retry_middleware.CustomRetryMiddleware': 540,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 539,
     'gencrawl.middlewares.pc_middleware.PCMiddleware': 545,
     'gencrawl.middlewares.selenium_api_request.GenSeleniumApiMiddleware': 551,
     'scrapy_crawlera.CrawleraMiddleware': 610,
@@ -85,7 +86,7 @@ NFN_VALIDATION_FIELDS = []
 
 # db settings
 DB_PIPELINE_ENABLED = True
-DB_BATCH_SIZE = 100
+DB_BATCH_SIZE = 10000
 
 NFN_DB_USER = 'postgres'
 NFN_DB_PASS = 'kapow123'
