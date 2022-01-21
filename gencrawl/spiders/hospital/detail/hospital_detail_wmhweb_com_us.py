@@ -48,6 +48,9 @@ class WmhwebComHospitalDetail(HospitalDetailSpider):
                 for c,i in enumerate(other_address):
                     temp_items.append(deepcopy(item))
                     temp_items[c+1]['address_raw']=i
+            #print(item)
+            if "practice_name" in item.keys():
+                item['practice_name']=",".join(item['practice_name'])
 
 
         for item in temp_items:
