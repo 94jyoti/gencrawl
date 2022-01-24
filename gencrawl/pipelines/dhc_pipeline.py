@@ -440,11 +440,13 @@ class DHCPipeline:
                 address = [a for a in address if a != practice_name]
 
         # checking if practice has raw_full_name
-        if item.get("practice_name") and item.get('raw_full_name'):
-            parsed_practice = item['practice_name'].lower().replace(",", "").replace(".", "").replace("dr", "").strip()
-            parsed_raw_name = item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip()
-            if item['practice_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip() == item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip():
-                item['practice_name'] = ''
+        # if item.get("practice_name") and item.get('raw_full_name'):
+        #     parsed_practice = item['practice_name'].lower().replace(",", "").replace(".", "").replace("dr", "").strip()
+        #     parsed_raw_name = item['raw_full_name'].lower().replace(",", "").replace(".", "").replace("dr ", "").strip()
+        #     if item['practice_name'].lower().replace(",", "").replace(".", "").replace(
+        #     "dr ", "").strip() == item['raw_full_name'].lower().replace(",", "").replace(".", "").replace(
+        #     "dr ", "").strip():
+        #         item['practice_name'] = ''
 
         # checking if address 1 has to be appended in practice
         if self.decision_tags.get("practice_may_in_addresses"):
