@@ -39,6 +39,8 @@ class PCMiddleware():
             return False
         elif '<h1>504</h1>' in body:
             return False
+        elif '<title>Error</title>' in body:
+            return False
         return True
 
     def process_response(self, request, response, spider):
