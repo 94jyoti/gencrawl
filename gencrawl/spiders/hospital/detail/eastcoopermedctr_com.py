@@ -56,3 +56,4 @@ class EastcoopermedctrhospitalDetail(HospitalDetailSpider):
                 item['speciality'] = [i['Name'] for i in loaded_json['Specialties']]
                 item['affiliation'] = [i['Name'] for i in loaded_json['Affiliations']]
                 yield self.generate_item(item, HospitalDetailItem)
+                
