@@ -46,7 +46,7 @@ class FamilyDetectorSpider(HospitalDetailSpider):
         self.input_url = kwargs.get("input_url") or "https://docs.google.com/spreadsheets/u/1/d/1zOeT2OZ4lroqy7Ukt59iaaStxjsl3aYeADenbdii07o/export?format=csv&id=1zOeT2OZ4lroqy7Ukt59iaaStxjsl3aYeADenbdii07o&gid=486472030"
         # TODO make this dynamic
         self.pipeline = DHCPipeline()
-        self.max_length_to_parse = 5000
+        self.max_length_to_parse = 1000
         self.fields_must = ["address_raw", "raw_full_name"]
         self.fields_any = ['city']
 
@@ -86,11 +86,21 @@ class FamilyDetectorSpider(HospitalDetailSpider):
             if not parent:
                 self.all_configs.append(config)
 
+        auto_file = {}
+        for line in open("auto_triaging.jl"):
+            line = json.loads(line)
+            auto_file[line['website']] = 1
+        print(len(auto_file))
+
         for website, url_dict in all_websites.items():
             doctor_url = url_dict['doctor_url']
             _cached_link = url_dict['_cached_link']
             config = f"{self.domain}_{self.crawl_type}_{Utility.get_config_name(website)}_{self.country}"
             if config in all_config_names:
+                continue
+
+            if website in auto_file:
+                print("continuijg")
                 continue
 
             parsed_url = urlparse(doctor_url)
@@ -154,8 +164,6 @@ class FamilyDetectorSpider(HospitalDetailSpider):
             item['_cached_link'] = response.meta['_cached_link']
             yield item
 
-        # blank item to give separation among different websites.
-        yield {k: '' for k in nitem.keys()}
 
 
 
