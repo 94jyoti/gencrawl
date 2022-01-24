@@ -64,3 +64,4 @@ class MadriverhospitalComHospitalDetail(HospitalDetailSpider):
             
         if status==False:
             yield self.generate_item(items[0], HospitalDetailItem)
+            
