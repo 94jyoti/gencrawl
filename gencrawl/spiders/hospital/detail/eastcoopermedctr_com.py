@@ -45,9 +45,21 @@ class EastcoopermedctrhospitalDetail(HospitalDetailSpider):
                 item['designation'] = loaded_json['Title']
                 item['raw_full_name'] = item['first_name']+" "+ item['middle_name']+" " +item['last_name']+", "+item['designation']
                 item['npi'] = loaded_json['NationalProviderId']
-                item['address_line_1'] = address['Address1']
-                item['address_line_2'] = address['Address2']
-                item['address_line_3'] = ""
+
+                if "," in address['Address1']:
+                    item['address_line_1'] = address['Address1'].split(",")[0]
+                    item['address_line_2'] = address['Address1'].split(",")[1]
+                else:
+                    item['address_line_1'] = address['Address1']
+                    item['address_line_2'] = address['Address2']
+
+                if "," in address['Address2']:
+                    item['address_line_2'] = address['Address2'].split(",")[0]
+                    item['address_line_3'] = address['Address2'].split(",")[1]
+                else:
+                    item['address_line_2'] = address['Address2']
+                    item['address_line_3'] = ""
+
                 item['city'] = address['City']
                 item['state'] = address['State']
                 item['zip'] = address['Zip']
@@ -56,3 +68,4 @@ class EastcoopermedctrhospitalDetail(HospitalDetailSpider):
                 item['speciality'] = [i['Name'] for i in loaded_json['Specialties']]
                 item['affiliation'] = [i['Name'] for i in loaded_json['Affiliations']]
                 yield self.generate_item(item, HospitalDetailItem)
+                
