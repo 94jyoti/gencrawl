@@ -113,6 +113,8 @@ class DHCPipeline:
             return field
         elif isinstance(field, int) or isinstance(field, float):
             return str(field)
+        elif field and field.startswith("http"):
+            return field.strip()
         return Utility.sanitize(field)
 
     def parse_item(self, item):
