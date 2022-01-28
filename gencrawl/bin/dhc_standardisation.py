@@ -40,6 +40,12 @@ for dhc_id, items in data.items():
 					val = item[key]
 					val = val.strip("(").replace(") ", "-")
 					item[key] = val
+
+			item['zip'] = (item.get("zip") or '').split("-")[0]
+			pincode = item['zip']
+			if pincode and len(pincode) == 4:
+				item['zip'] = '0{}'.format(item['zip'])
+
 			row = {fieldnames[index]: item.get(key) for index, key in enumerate(keys)}
 			csv_writer.writerow(row)
 
