@@ -1,4 +1,5 @@
 from gencrawl.items.hospital.hospital_detail_item import HospitalDetailItem
+from gencrawl.spiders.hospital.hca_family_hospital_spider import HCAHospitalSpider
 from gencrawl.util.utility import Utility
 import requests
 import csv
@@ -113,6 +114,8 @@ class DHCPipeline:
             return field
         elif isinstance(field, int) or isinstance(field, float):
             return str(field)
+        elif field and field.startswith("http"):
+            return field.strip()
         return Utility.sanitize(field)
 
     def parse_item(self, item):
@@ -645,7 +648,9 @@ class DHCPipeline:
 
     def process_item(self, item, spider):
         if isinstance(item, HospitalDetailItem):
-            item = self.parse_fields_from_name(item)
+            # name parsing not required for HCA spiders
+            if not isinstance(spider, HCAHospitalSpider):
+                item = self.parse_fields_from_name(item)
             item = self.parse_fields_from_address(item)
             item = self.combine_address(item)
             item = self.parse_item(item)

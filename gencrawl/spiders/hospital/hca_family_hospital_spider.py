@@ -40,19 +40,16 @@ class HCAHospitalSpider(HospitalDetailSpider):
                              "startDate":datetime.now().strftime("%Y%m%d"),  "numberDaysOut":549,"gender":None,
                              "languages":None,"meta":{"page":1,"pageSize":self.page_size},"sortType":None,
                              "randomize":True}
+        nick_name_rgx = [r'"[a-zA-Z]+"', r'“[a-zA-Z]+”', r'\([a-zA-Z]+\)', r"''[a-zA-Z]+''", r"'[a-zA-Z]+'"]
+        self.nick_name_rgx = [re.compile(r) for r in nick_name_rgx]
         super().__init__(config, *args, **kwargs)
 
     def _get_start_urls(self, urls, input_file, db_limit, prod_only=False):
         objs = []
-        i=0
         with open(self.input_fp) as f:
             csv_reader = csv.DictReader(f)
             for line in csv_reader:
-                i += 1
-
                 objs.append(line)
-                # if i == 5:
-                #     break
         return objs
 
     def parse(self, response):
@@ -65,8 +62,6 @@ class HCAHospitalSpider(HospitalDetailSpider):
             content['randomizerSeed'] = re.search(r'sessionId = "(.*?)"', response.text).group(1)
         except:
             print("erorrrrrrrrrrrrrrrrrrrr")
-            print(response.meta)
-            open(f"{domain}.html", "w").write(response.text)
         meta['content'] = content
         meta['offset'] = self.page_size
         meta['post_url'] = post_url
@@ -83,19 +78,28 @@ class HCAHospitalSpider(HospitalDetailSpider):
             item['website'] = default_item['website']
             item['_profile_id'] = item['gencrawl_id']
             item['npi'] = jsn.get("physicianNpi")
+            # if item['npi'] not in temp:
+            #     continue
             if item['npi'] and len(item['npi'].strip()) != 10:
                 item['npi'] = ''
             item['first_name'] = jsn['physicianFirstName']
+            for rgx in self.nick_name_rgx:
+                item['first_name'] = re.sub(rgx, '', item['first_name']).strip()
+
             item['middle_name'] = jsn['physicianMiddleInitial']
             if item['middle_name'] and (" " + item['middle_name']) in item['first_name']:
                 item['middle_name'] = ''
+            elif item['middle_name']:
+                for rgx in self.nick_name_rgx:
+                    item['middle_name'] = re.sub(rgx, '', item['middle_name']).strip()
             item['last_name'] = jsn['physicianLastName']
+            for rgx in self.nick_name_rgx:
+                item['last_name'] = re.sub(rgx, '', item['last_name']).strip()
             item['designation'] = jsn['physicianDesignation']
             item['raw_full_name'] = " ".join(
                 [a for a in [item['first_name'], item['middle_name'], item['last_name']] if a])
             if item['designation']:
                 item['raw_full_name'] = item['raw_full_name'] + ", " + item['designation']
-            print(item['last_name'])
             last_name = item['last_name'].replace(", ", " ").replace(" ,", " ").replace(",", " ").split(" ")
             if len(last_name) > 1:
                 for s in suffix:

@@ -32,6 +32,20 @@ for dhc_id, items in data.items():
 		csv_writer = csv.DictWriter(w, fieldnames=fieldnames)
 		csv_writer.writeheader()
 		for item in items:
+			if item.get("designation") and "," in item['designation']:
+				item['designation'] = item['designation'].replace(", ", ",").replace(",", ", ")
+
+			for key in ['phone', 'fax']:
+				if item.get(key):
+					val = item[key]
+					val = val.strip("(").replace(") ", "-")
+					item[key] = val
+
+			item['zip'] = (item.get("zip") or '').split("-")[0]
+			pincode = item['zip']
+			if pincode and len(pincode) == 4:
+				item['zip'] = '0{}'.format(item['zip'])
+
 			row = {fieldnames[index]: item.get(key) for index, key in enumerate(keys)}
 			csv_writer.writerow(row)
 
