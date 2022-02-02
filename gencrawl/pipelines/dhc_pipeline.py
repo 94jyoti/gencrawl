@@ -214,6 +214,13 @@ class DHCPipeline:
             raw_name = re.sub('\\s+', ' ', unidecode.unidecode(raw_name))
             item['raw_full_name'] = raw_name
 
+        dr_tags = ['Dr.', 'dr.', 'Dr ', 'dr ']
+        for dr in dr_tags:
+            raw_name = raw_name.strip()
+            if raw_name.startswith(dr):
+                raw_name = raw_name.replace(dr, '', 1).strip()
+                break
+
         if self.decision_tags.get("replace_comma_in_raw_name"):
             raw_name = raw_name.replace(",", " ").replace("  ", " ")
         if "," in raw_name:
