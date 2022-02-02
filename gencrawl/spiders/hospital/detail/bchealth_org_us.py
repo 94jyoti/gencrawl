@@ -22,5 +22,5 @@ class Bchealth_Org_us(HospitalDetailSpider):
             while '' in designation_data:
                 designation_data.remove('')
             item['designation']=",".join(designation_data)
-
+            item['raw_full_name']=item['raw_full_name']+","+item['designation']
             yield self.generate_item(item, HospitalDetailItem)
