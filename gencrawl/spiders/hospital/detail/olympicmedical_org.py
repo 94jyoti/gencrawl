@@ -19,7 +19,12 @@ class OlympicmedicalOrgHospitalDetail(HospitalDetailSpider):
             # addresses = re.findall(r'([\d\D]+)Directions &amp; More', cleaned_add_raw)
             for address in cleaned_add_raw:
                 if address:
-                    practice_name = (re.match(r'([^\d]*)', address)).group(1)
-                    items['practice_name'] = practice_name
-                    items['address_raw'] = ''.join(address.replace("amp;", "").replace(practice_name, ""))
-                    yield self.generate_item(items, HospitalDetailItem)
+                    practice_name = re.match(r'([^\d]*)', address)
+                    if practice_name:
+                        practice_name = practice_name.group(1)
+                        items['practice_name'] = practice_name
+                        items['address_raw'] = ''.join(address.replace("amp;", "").replace(practice_name, ""))
+                        yield self.generate_item(items, HospitalDetailItem)
+                    else:
+                        items['address_raw'] = ''.join(address.replace("amp;", ""))
+                        yield self.generate_item(items, HospitalDetailItem)
