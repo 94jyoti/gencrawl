@@ -3,8 +3,8 @@ from gencrawl.spiders.hospital.hospital_detail_spider import HospitalDetailSpide
 from copy import deepcopy
 import re
 
-class OlympicmedicalOrgHospitalDetail(HospitalDetailSpider):
 
+class OlympicmedicalOrgHospitalDetail(HospitalDetailSpider):
     name = 'hospital_detail_olympicmedical_org_us'
 
     def get_items_or_req(self, response, default_item={}):
@@ -12,7 +12,6 @@ class OlympicmedicalOrgHospitalDetail(HospitalDetailSpider):
         items = deepcopy(items[0])
 
         raw_address = response.xpath('//div[@id="ProviderTabContent3"]').getall()
-
         if raw_address:
             cleaned_add_raw = re.sub(r'<.*?>', ' ', "".join(raw_address)).strip()
             cleaned_add_raw = cleaned_add_raw.split('Directions &amp; More')
@@ -21,8 +20,6 @@ class OlympicmedicalOrgHospitalDetail(HospitalDetailSpider):
             for address in cleaned_add_raw:
                 if address:
                     practice_name = (re.match(r'([^\d]*)', address)).group(1)
-                    # print('sdgfgn',practice_name)
                     items['practice_name'] = practice_name
                     items['address_raw'] = ''.join(address.replace("amp;", "").replace(practice_name, ""))
                     yield self.generate_item(items, HospitalDetailItem)
-        # yield self.generate_item(items, HospitalDetailItem)
