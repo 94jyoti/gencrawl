@@ -12,6 +12,7 @@ class OlympicmedicalOrgHospitalDetail(HospitalDetailSpider):
         items = deepcopy(items[0])
 
         raw_address = response.xpath('//div[@id="ProviderTabContent3"]').getall()
+
         if raw_address:
             cleaned_add_raw = re.sub(r'<.*?>', ' ', "".join(raw_address)).strip()
             cleaned_add_raw = cleaned_add_raw.split('Directions &amp; More')
@@ -19,5 +20,9 @@ class OlympicmedicalOrgHospitalDetail(HospitalDetailSpider):
             # addresses = re.findall(r'([\d\D]+)Directions &amp; More', cleaned_add_raw)
             for address in cleaned_add_raw:
                 if address:
-                    items['address_raw'] = address.replace("amp;", "")
+                    practice_name = (re.match(r'([^\d]*)', address)).group(1)
+                    # print('sdgfgn',practice_name)
+                    items['practice_name'] = practice_name
+                    items['address_raw'] = ''.join(address.replace("amp;", "").replace(practice_name, ""))
                     yield self.generate_item(items, HospitalDetailItem)
+        # yield self.generate_item(items, HospitalDetailItem)
