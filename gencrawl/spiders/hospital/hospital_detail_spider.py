@@ -45,9 +45,18 @@ class HospitalDetailSpider(BaseSpider):
         else:
             return items
 
+    def apply_cleanup_in_selectors(self, item):
+        if not self.selector_cleanups:
+            return item
+        for key, cleanups in self.selector_cleanups:
+            item[key] = self.apply_cleanup_func(cleanups, key, item)
+        return item
+
     def get_items_or_req(self, response, default_item=None):
         default_item = default_item or dict()
         parsed_items = []
         for item in self.prepare_items(response, default_item):
             parsed_items.append(self.generate_item(item, HospitalDetailItem))
-        return self.prepare_mapped_items(response, parsed_items)
+        mapped_items = self.prepare_mapped_items(response, parsed_items)
+        for item in mapped_items:
+            yield self.apply_cleanup_in_selectors(item)
