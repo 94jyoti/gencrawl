@@ -58,5 +58,5 @@ class HospitalDetailSpider(BaseSpider):
         for item in self.prepare_items(response, default_item):
             parsed_items.append(self.generate_item(item, HospitalDetailItem))
         mapped_items = self.prepare_mapped_items(response, parsed_items)
-        for item in mapped_items:
-            yield self.apply_cleanup_in_selectors(item)
+        items = [self.apply_cleanup_in_selectors(item) for item in mapped_items]
+        return items
