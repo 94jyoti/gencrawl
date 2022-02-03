@@ -105,7 +105,6 @@ class DAL:
         db_rows = [{k: item.get(column_mapping.get(k) or k) for k in columns} for item in items]
         for item, row in zip(items, db_rows):
             row['json_data'] = json.dumps(item).replace("'", "''")
-        pc_ids = [item['_profile_id'] for item in items if item.get('_profile_id')]
         connection = pg_session.bind.raw_connection()
         with connection.cursor() as cursor:
             query = sql.SQL("""INSERT INTO gencrawl_raw_output({fields}) VALUES %s;""").format(
@@ -114,13 +113,28 @@ class DAL:
             try:
                 execute_values(cur=cursor, sql=query,
                                argslist=[tuple(row.get(col) for col in columns) for row in db_rows])
-                if pc_ids:
-                    update_query = """UPDATE {}_master_table SET gencrawl_status='COMPLETED',
-                    gencrawl_status_update_time='{}' where profile_id IN ('{}')
-                    """.format(self.client, datetime.now(), "','".join(pc_ids))
-                    self.logger.info("Updating status in {}_master_table table using profile_id".format(self.client))
-                    cursor.execute(update_query)
                 connection.commit()
             except Exception as error:
                 self.logger.error(str(error))
         self._close_session(pg_session)
+
+    def update_statuses(self, identifier):
+        if not identifier:
+            return
+
+        pg_session = self._create_session(self.engine)
+        connection = pg_session.bind.raw_connection()
+        with connection.cursor() as cursor:
+            try:
+                update_query = """UPDATE {}_master_table SET gencrawl_status='COMPLETED',
+                gencrawl_status_update_time='{}' where domain_id = '{}'
+                """.format(self.client, datetime.now(), identifier)
+                self.logger.info(update_query)
+                self.logger.info("Updating status in {}_master_table table using identifier - ".format(identifier))
+                cursor.execute(update_query)
+                connection.commit()
+            except Exception as error:
+                self.logger.error(str(error))
+        self._close_session(pg_session)
+
+
