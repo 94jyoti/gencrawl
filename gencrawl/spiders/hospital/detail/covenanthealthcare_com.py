@@ -16,7 +16,8 @@ class CovenanthealthcareComHospitalDetail(HospitalDetailSpider):
             if temp_practice:
                 items['address_raw'] = address
                 yield self.generate_item(items, HospitalDetailItem)
-
+            else:
+                yield self.generate_item(items, HospitalDetailItem)
 # this code is for reusable for purpose to discuss in dev call
                 # temp_address.append(address)
                 # temp.append(temp_address)
