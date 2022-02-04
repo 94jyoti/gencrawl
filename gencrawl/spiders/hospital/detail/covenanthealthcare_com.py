@@ -20,12 +20,13 @@ class CovenanthealthcareComHospitalDetail(HospitalDetailSpider):
                 if phone:
                     phone = phone.group(1)
                     items['phone'] = phone
+                    address = address.replace(phone, '')
                 if fax:
                     fax = fax.group(1)
                     items['fax'] = fax
-                items['address_raw'] = address.replace(phone, '').replace(fax, '')
-                items['address_raw'] = address
+                    address = address.replace(fax, '')
 
+                items['address_raw'] = address
                 yield self.generate_item(items, HospitalDetailItem)
 
 # this code is for reusable for purpose to discuss in dev call
