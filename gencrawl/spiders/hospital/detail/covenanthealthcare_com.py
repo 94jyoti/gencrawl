@@ -13,11 +13,21 @@ class CovenanthealthcareComHospitalDetail(HospitalDetailSpider):
         raw_address = response.xpath("//div[contains(@class,'physicians-location')]/div").getall()
         for address in raw_address:
             temp_practice = re.search(r'<div class="additional-location-fields">([\s\S]+)<br>', address)
+            phone = re.search(r'<span class="physician-phone">(.*?)<\/span>', address)
+            fax = re.search(r'<span class="physician-fax">(.*?)<\/span>', address)
+
             if temp_practice:
+                if phone:
+                    phone = phone.group(1)
+                    items['phone'] = phone
+                if fax:
+                    fax = fax.group(1)
+                    items['fax'] = fax
+                items['address_raw'] = address.replace(phone, '').replace(fax, '')
                 items['address_raw'] = address
+
                 yield self.generate_item(items, HospitalDetailItem)
-            else:
-                yield self.generate_item(items, HospitalDetailItem)
+
 # this code is for reusable for purpose to discuss in dev call
                 # temp_address.append(address)
                 # temp.append(temp_address)
