@@ -13,7 +13,6 @@ class TrigghospitalOrgHospitalDetail(HospitalDetailSpider):
         raw_address = response.xpath('//h2[contains(text(),"Facility/Office:")]/following-sibling::text()').getall()
         raw_address = ''.join(raw_address)
         addresses = re.findall(r'([\s\S]+?\d{5})', raw_address)
-        print(addresses)
         for address in addresses:
             if address:
                 practice_name = re.search(r'([^\d]*)', address)
