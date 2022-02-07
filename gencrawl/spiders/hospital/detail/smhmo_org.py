@@ -10,21 +10,24 @@ class SmhmoOrgHospitalDetail(HospitalDetailSpider):
     def get_items_or_req(self, response, default_item={}):
         items = super().get_items_or_req(response, default_item)
         items = deepcopy(items[0])
-        raw_address = response.xpath('(//div[@class="infobox"])[3]').getall()
-        for address in raw_address:
-            if address:
-                # ^(.* ?)\d
-                practice_match = re.search(r'^([\s\S]+?)\d', address)
-                if practice_match:
-                    practice_name = practice_match.group(1)
-                    address = address.replace(practice_name, '')
-                    practice_name = re.sub(r'<.*?>', '', practice_name).strip()
-                    practice_name = practice_name.replace('\r', '')
-                    practice_name = re.sub(' +', ' ', practice_name)
-                    practice_name = ','.join(practice_name.split('\n'))
-                    items['practice_name'] = practice_name
-                    items['address_raw'] = address
-                    yield self.generate_item(items, HospitalDetailItem)
+        raw_address = response.xpath('(//div[@class="infobox"])[3]').get()
+        practice_1 = response.xpath('(//div[@class="infobox"])[3]/p[1]/text()').get()
+        practice_2 = response.xpath('(//div[@class="infobox"])[3]/p[2]/text()').get()
+        practice_match_1 = re.search(r'(\D+)\d', str(practice_2))
 
-            else:
-                yield self.generate_item(items, HospitalDetailItem)
+        if practice_match_1:
+            practice_2 = practice_match_1.group(1)
+            raw_address = raw_address.replace(practice_2, '').replace(practice_1, '')
+            practice_name = practice_1 + ',' + practice_2
+
+        elif practice_2 and not any(char.isdigit() for char in practice_2):
+            raw_address = raw_address.replace(practice_2, '').replace(practice_1, '')
+            practice_name = practice_1 + ',' + practice_2
+
+        else:
+            raw_address = raw_address.replace(practice_1, '')
+            practice_name = practice_1
+
+        items['practice_name'] = practice_name
+        items['address_raw'] = raw_address
+        yield self.generate_item(items, HospitalDetailItem)
