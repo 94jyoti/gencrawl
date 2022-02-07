@@ -22,7 +22,8 @@ class TrigghospitalOrgHospitalDetail(HospitalDetailSpider):
                     items['address_raw'] = address.replace(practice_name, '')
                 else:
                     items['address_raw'] = address
-            yield self.generate_item(items, HospitalDetailItem)
+                yield self.generate_item(items, HospitalDetailItem)
+        yield self.generate_item(items, HospitalDetailItem)
 
 
         # print()
