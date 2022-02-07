@@ -24,7 +24,8 @@ class HospitalDetailSpider(BaseSpider):
                 if key in self.all_url_keys:
                     item[key] = response.urljoin(value)
             parsed_items.append(item)
-        return parsed_items
+        final_items = [self.apply_cleanup_in_selectors(item) for item in parsed_items]
+        return final_items
 
     def map_fields(self, index, total_len, item, fields_to_map, response=None):
         for field in fields_to_map:
@@ -57,6 +58,4 @@ class HospitalDetailSpider(BaseSpider):
         parsed_items = []
         for item in self.prepare_items(response, default_item):
             parsed_items.append(self.generate_item(item, HospitalDetailItem))
-        mapped_items = self.prepare_mapped_items(response, parsed_items)
-        items = [self.apply_cleanup_in_selectors(item) for item in mapped_items]
-        return items
+        return self.prepare_mapped_items(response, parsed_items)
