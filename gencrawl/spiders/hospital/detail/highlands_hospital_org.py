@@ -23,7 +23,7 @@ class HighlandsHospitalOrg(HospitalDetailSpider):
         
         city = re.findall(r'(\s\w+\,)\s[A-Z]{2}', items['address'])
         if state:
-            items['city'] = city.replace(',','').strip()
+            items['city'] = ''.join(city).replace(',','').strip()
         else:
             items['city'] = ''
 
