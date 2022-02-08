@@ -15,10 +15,21 @@ class HighlandsHospitalOrg(HospitalDetailSpider):
             phone_num = phone[-1].replace('\n','').strip()
         items['phone'] = phone_num
         zip = items['address'].split()[-1]
+        state = re.findall(r'([A-Z]{2})',items['address'])
+        if state:
+            items['state'] = state
+        else:
+            items['state'] = ''
+        
+        city = re.findall(r'(\s\w+\,)\s[A-Z]{2}', items['address'])
+        if state:
+            items['city'] = city.replace(',','').strip()
+        else:
+            items['city'] = ''
+
         if re.findall(r'\d\d\d\d\d',zip):
             items['zip'] = zip
-            items['state'] = items['address'].split()[-2]
         else:
             items['zip'] = ''
-            items['city'] = zip
+            
         yield self.generate_item(items, HospitalDetailItem)
