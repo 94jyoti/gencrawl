@@ -13,13 +13,10 @@ class BeebehealthcareorghospitalDetail(HospitalDetailSpider):
 
         items = self.prepare_items(response, default_item)
         for item in items:
-            print("address", item['address_raw'])
             try:
                 remove_from_address=re.findall('<span class="m-0 address">[\w].* Department.*?</span>',item['address_raw'].replace("\n",""))[0]
-                print(remove_from_address)
                 item['address_raw']=item['address_raw'].replace("\n","").replace(remove_from_address,"")
             except:
                 pass
-
 
             yield self.generate_item(item, HospitalDetailItem)
