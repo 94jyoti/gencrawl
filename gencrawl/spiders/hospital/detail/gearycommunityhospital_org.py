@@ -25,9 +25,6 @@ class GearycommunityhospitalOrgHospitalDetail(HospitalDetailSpider):
             extra_address = ''.join(extra_address[:2])
             temp_address.append(extra_address)
 
-        print('--------', temp_address)
-        print('++++++++', extra_address_2)
-
         if temp_address:
             for address in temp_address:
                 items['address_raw'] = address
