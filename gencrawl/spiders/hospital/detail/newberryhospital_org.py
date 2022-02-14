@@ -16,7 +16,7 @@ class NewberryhospitalOrgHospitalDetail(HospitalDetailSpider):
         raw_address_2 = [text for text in raw_address_2 if text not in '<p>\xa0</p>']
 
         if raw_address_1:
-            items['address_raw'] = raw_address_1
+            items['address_raw'] = raw_address_1.replace('Newberry Office:', '').replace('Chapin Office:', '')
             items['phone'] = response.xpath('//span[@class="phone"]//text()[contains(., "T")]').get()
             items['fax'] = response.xpath('//span[@class="phone"]//text()[contains(., "F")]').get()
 
@@ -25,8 +25,9 @@ class NewberryhospitalOrgHospitalDetail(HospitalDetailSpider):
         if raw_address_2:
             for i, address in enumerate(raw_address_2):
                 phone = response.xpath('//span[@class="phone"]//text()[contains(., "T")]').getall()
-                items['address_raw'] = address
+                items['address_raw'] = address.replace('Newberry Office:', '').replace('Chapin Office:', '')
                 items['phone'] = phone[i]
+                items['fax'] = response.xpath('//span[@class="phone"]//text()[contains(., "F")]').get()
                 yield self.generate_item(items, HospitalDetailItem)
 
         else:
