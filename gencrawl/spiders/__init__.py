@@ -91,6 +91,9 @@ class BaseSpider(Spider):
         self.navigation = self.config.get("navigation")
         self.pagination = self.config.get("pagination")
         self.ext_codes = self.config['ext_codes']
+        # [(key, cleanups)] for all key which has return type as selector
+        self.selector_cleanups = [(k, v['cleanup_functions']) for k, v in self.ext_codes.items() if v.get(
+            'return_type') == Statics.RETURN_TYPE_SELECTOR and v.get("cleanup_functions")]
         self.retry_condition = self.ext_codes.pop("retry_condition", None)
         self.default_return_type = Statics.RETURN_TYPE_DEFAULT
         self.default_selector = Statics.SELECTOR_DEFAULT
@@ -347,6 +350,11 @@ class BaseSpider(Spider):
         return items
 
     def apply_cleanup_func(self, clean_ups, key, obj):
+        if isinstance(obj.get(key), Selector):
+            return obj[key]
+        elif isinstance(obj.get(key), list) and obj[key] and isinstance(obj[key][0], Selector):
+            return obj[key]
+
         for clean_up in clean_ups:
             if not obj[key]:
                 break

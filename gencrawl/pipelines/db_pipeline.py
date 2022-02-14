@@ -15,6 +15,7 @@ class DBPipeline:
             raise NotConfigured
         self.settings = settings
         self.items = list()
+        self.website_id = None
 
     def open_spider(self, spider):
         self.client = spider.client
@@ -27,8 +28,11 @@ class DBPipeline:
         # dump if any items are pending
         if self.items:
             self.insert_items(self.items)
+        DAL(self.settings, self.client).update_statuses(self.website_id)
 
     def process_item(self, item, spider):
+        if not self.website_id:
+            self.website_id = item.get("website_id")
         self.items.append(item)
         # if len of items exceeds the batch size, insert to db and initialize it
         if len(self.items) >= spider.settings.get("DB_BATCH_SIZE"):

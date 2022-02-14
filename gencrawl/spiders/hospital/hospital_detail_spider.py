@@ -24,7 +24,8 @@ class HospitalDetailSpider(BaseSpider):
                 if key in self.all_url_keys:
                     item[key] = response.urljoin(value)
             parsed_items.append(item)
-        return parsed_items
+        final_items = [self.apply_cleanup_in_selectors(item) for item in parsed_items]
+        return final_items
 
     def map_fields(self, index, total_len, item, fields_to_map, response=None):
         for field in fields_to_map:
@@ -44,6 +45,13 @@ class HospitalDetailSpider(BaseSpider):
             return parsed_mapped_items
         else:
             return items
+
+    def apply_cleanup_in_selectors(self, item):
+        if not self.selector_cleanups:
+            return item
+        for key, cleanups in self.selector_cleanups:
+            item[key] = self.apply_cleanup_func(cleanups, key, item)
+        return item
 
     def get_items_or_req(self, response, default_item=None):
         default_item = default_item or dict()
