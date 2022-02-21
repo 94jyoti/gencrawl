@@ -8,6 +8,7 @@ class FinancialDetailSpider(BaseSpider):
     crawl_domain = Statics.DOMAIN_FINANCIAL
     url_key = Statics.URL_KEY_FINANCIAL_DETAIL
     name = f'{crawl_domain}_{Statics.CRAWL_TYPE_DETAIL}'
+    print("namememeem",name)
 
     @classmethod
     def from_crawler(cls, crawler, config, *args, **kwargs):
@@ -16,6 +17,7 @@ class FinancialDetailSpider(BaseSpider):
 
     def prepare_items(self, response, default_item=None):
         default_item = default_item or dict()
+        print("default item---",default_item)
         parsed_items = []
         items = self.exec_codes(response, default_obj=default_item)
         for item in items:

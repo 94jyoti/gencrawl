@@ -9,12 +9,14 @@ import urllib.parse
 
 
 class NuveenComDetail(FinancialDetailSpider):
-    name = 'financial_detail_nuveen_com'
+    name = 'financial_detail_nuveen_com_us'
 
     def get_items_or_req(self, response, default_item={}):
         items = self.prepare_items(response, default_item)
         item = items[0]
+        print(items)
         cusip_id = item['cusip']
+        print(cusip_id)
         item['share_class'] = item['fund_url'].split("=")[-1]
         fund_managers_list = []
 
@@ -28,9 +30,9 @@ class NuveenComDetail(FinancialDetailSpider):
         # print(item['share_class'])
         meta = response.meta
         meta['items'] = item
-        api_url = "https://api.nuveen.com/MF/ProductDetail/DistributionHistory/" + cusip_id
+        api_url = "https://api.nuveen.com/MF/ProductDetail/DistributionHistory/" +cusip_id
         item['api_url'] = api_url
-        r = self.make_request(api_url, callback=self.parse_performance_response, meta=meta)
+        r = self.make_request(api_url, callback=self.parse_performance_response, meta=meta,dont_filter=True)
         return r
 
     def parse_performance_response(self, response):

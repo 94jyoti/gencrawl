@@ -2,14 +2,20 @@ import requests
 import csv
 from io import BytesIO
 import io
+import sys
 import codecs
 import json
 import os
 import pandas as pd
+cdir = os.path.join(os.getcwd().split("gencrawl")[0], 'gencrawl')
 import numpy as np
-from gencrawl.util.statics import Statics
-from gencrawl.util.utility import Utility
-from gencrawl.settings import CONFIG_DIR, SPIDER_DIR
+sys.path.append(cdir)
+print(cdir)
+from Untitled.gencrawl.util.statics import Statics
+from Untitled.gencrawl.settings import CONFIG_DIR, SPIDER_DIR
+
+from Untitled.gencrawl.util.utility import Utility
+# from Untitled.gencrawl.settings import CONFIG_DIR, SPIDER_DIR
 
 
 class GoogleConfig:
@@ -18,11 +24,11 @@ class GoogleConfig:
         self.spider = None
         self.config_name = None
         # self.client = client or DEFAULT_CLIENT
-        self.client = Statics.CLIENT_DHC
+        self.client = Statics.CLIENT_NFN
         if self.client == Statics.CLIENT_DHC:
             self.google_link = "https://docs.google.com/spreadsheets/u/1/d/1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw/export?format=csv&id=1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw&gid=1934331278"
         else:
-            self.google_link = "https://docs.google.com/spreadsheets/u/1/d/1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw/export?format=csv&id=1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw&gid=1108971848"
+            self.google_link = "https://docs.google.com/spreadsheets/d/1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw/export?format=csv&id=1jnhZlAxHDAfBXoy6kZu9SQsdsNY-BarKx4G7t2wy7aw&gid=1108971848"
         self.spider_class_map = {"financial_parsed_config": "Financialparsed_configSpider",
                                  "financial_parsed_config_field_map": "Financialparsed_configFieldMapSpider",
                                  "hospital_parsed_config": "Hospitalparsed_configSpider"}
@@ -42,7 +48,7 @@ class GoogleConfig:
             website_formatted = website_formatted[:-1]
         website_formatted = website_formatted.replace('/', '_')
         website_formatted = website_formatted.replace('.', '_')
-        return 'hospital_detail_{0}_us'.format(website_formatted)
+        return 'financial_detail_{0}_us'.format(website_formatted)
 
     def download_csv_file(self, url):
         response = requests.get(url)
@@ -70,6 +76,7 @@ class GoogleConfig:
                 return []
             elems = elem.replace("\r\n", "\n").replace("\r", "\n").split("\n")
             elems = [e for e in elems if e and e.strip()]
+            print(elems)
             return elems
 
         parsed_config_list = dict()
@@ -89,12 +96,14 @@ class GoogleConfig:
         parsed_config['country'] = "US"
         parsed_config['language'] = "EN"
         parsed_config['proxy'] = "CRAWLERA(US)"
-        pg_id = "hospital_detail_huhealthcare_com_us"  # add pg_id here
+        parsed_config['crawl_type'] = "detail"
+        pg_id = "financial_detail_aamlive_com"  # add pg_id here
         parsed_config['pg_id'] = self.create_pg_id(website)
-        # parsed_config[crawl_type] = dict()
-        # parsed_config = parsed_config[crawl_type]
+        #parsed_config[crawl_type] = dict()
+        #parsed_config = parsed_config[crawl_type]
         parsed_config['spider'] = self.spider
         parsed_config["crawl_method"] = str(df.pop("Crawl Method")[0]).lower()
+        #parsed_config["crawl_type"] = str(df.pop("Crawl Type")[0]).lower()
         # if parsed_config['crawl_method'] == Statics.CRAWL_METHOD_SELENIUM:
         #     parsed_config['wait_time'] = Statics.WAIT_TIME_DEFAULT
         #     parsed_config['custom_settings'] = {
@@ -175,14 +184,27 @@ class GoogleConfig:
         for filename, jsn in configs.items():
             filename = filename + Statics.CONFIG_EXT
             fp = os.path.join(config_dir, filename)
+            print("save configs--------------------------",os.path.join(config_dir, filename))
             with open(fp, 'w') as w:
                 w.write(json.dumps(jsn, indent=4))
 
     def main(self, website, config_dir, env):
         website_df = self.filter_website_in_config(self.df, website)
+
+        print("wensite df",website_df)
         if not website_df.empty:
             p_configs = self.create_configs(website_df)
             # only write files in development env
+            #self.save_configs(p_configs,"/Users/sumitagrawal/Documents/GitHub/gencrawl/Untitled")
+            #with open(fp, 'w') as w:
+             #   w.write(json.dumps(jsn, indent=4))
+
+
+            print(p_configs)
+            file=open("json_nfn_test.json","a")
+            file.write(json.dumps(p_configs))
+            file.close()
             return p_configs
         else:
             print("No matched website- {} configuration found on google sheet.......".format(website))
+

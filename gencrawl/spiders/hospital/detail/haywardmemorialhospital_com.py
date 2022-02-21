@@ -31,18 +31,29 @@ class Haywardmemorialhospital_org_us(HospitalDetailSpider):
         temp_raw_name = response.xpath("//div[@id='providerLoop']/div//h2[1]/text()").extract()
         #print(temp_raw_name)
         for name in range(len(temp_raw_name)):
-            #print("rawfullnameeeeeee",item['raw_full_name'])
-            #print("temp name",temp_raw_name[name])
-            #print("dvsvsd",item['raw_full_name'].strip() in temp_raw_name[name].strip())
+            print("rawfullnameeeeeee",item['raw_full_name'])
+            print("temp name",temp_raw_name[name])
+            print("dvsvsd",item['raw_full_name'].strip() in temp_raw_name[name].strip())
 
-            if (item['raw_full_name'].strip() in temp_raw_name[name].strip()):
+            if("Al Bowman DPT" in item['raw_full_name'].strip()):
+                item['speciality']=["Physical Therapist","Physical Therapy"]
+            if ("Taylor Kunkel" in item['raw_full_name'].strip()):
+                item['speciality'] = ["Physical Therapist","Orthopedics", "Pediatrics", "Physical Therapy"]
+
+            if ("" in item['raw_full_name'].strip()):
+                item['speciality'] = ["Physical Therapist","Orthopedics", "Pediatrics", "Physical Therapy"]
+
+
+            elif("" in item['raw_full_name'].strip()):
+                item['speciality']=["Physical Therapist","Physical Therapy"]
+
+            elif (item['raw_full_name'].strip() in temp_raw_name[name].strip()):
                 item['raw_full_name'] = temp_raw_name[name]
                 #print("ifififififif")
                 item['speciality'] = response.xpath("//div[@id='providerLoop']/div[" + str(name + 1) + "]//following-sibling::p[position()<last()]//text()").extract()
                 #print(item['speciality'])
             elif(temp_raw_name[name].strip() in item['raw_full_name'].strip()):
-                item['speciality'] = response.xpath("//div[@id='providerLoop']/div[" + str(
-                    name + 1) + "]//following-sibling::p[position()<last()]//text()").extract()
+                item['speciality'] = response.xpath("//div[@id='providerLoop']/div[" + str(name + 1) + "]//following-sibling::p[position()<last()]//text()").extract()
         for i in range(len(item['speciality'])):
             item['speciality'][i]=item['speciality'][i].replace("\n","").strip()
         item['raw_full_name']=item['raw_full_name'].replace(",","").replace("Cert.","")

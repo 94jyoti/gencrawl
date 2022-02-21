@@ -8,3 +8,6 @@ class FinancialItem(BaseItem):
     nasdaq_ticker = Field()
     cusip = Field()
     share_class = Field()
+    job_id=Field()
+    gencrawl_id=Field()
+

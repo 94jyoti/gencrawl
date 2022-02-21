@@ -56,7 +56,8 @@ FEED_EXPORT_ENCODING = 'utf-8'
 LOG_LEVEL = 'DEBUG'
 
 # cache settings
-HTTPCACHE_ENABLED = True
+HTTPCACHE_ENABLED = False
+
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = 'httpcache'
 HTTPCACHE_IGNORE_HTTP_CODES = [400, 403, 404, 405, 408, 429, 500, 502, 503, 504, 520, 522, 524, 603]
@@ -77,12 +78,12 @@ else:
 ITEM_DUPEFILTER_ENABLED = True
 DHC_DUPEFILTER_FIELDS = ["website", "npi", "raw_full_name", "doctor_url", "speciality", "affiliation", "practice_name",
                          "address", "phone", "fax", "email"]
-NFN_DUPEFILTER_FIELDS = []
+NFN_DUPEFILTER_FIELDS = ["fund_url","instrument_name",'nasdaq_ticker']
 
 ITEM_VALIDATION_ENABLED = True
 VALIDATION_FIELDS = ["website", "crawl_datetime", "http_status", "job_id", "gencrawl_id"]
 DHC_VALIDATION_FIELDS = ['raw_full_name']
-NFN_VALIDATION_FIELDS = []
+NFN_VALIDATION_FIELDS = ['fund_url']
 
 # db settings
 DB_PIPELINE_ENABLED = True

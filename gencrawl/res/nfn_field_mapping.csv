@@ -111,3 +111,8 @@ fund_manager_firm,Fund Manager Firm
 fund_manager_years_of_experience_with_fund,Fund Manager Years of Experience with Fund
 average_duration,Average Duration
 average_duration_as_of_date,Average Duration As Of Date
+website,website
+crawl_datetime,crawl_datetime
+http_status,http_status
+job_id,job_id
+gencrawl_id,gencrawl_id
