@@ -1,0 +1,3 @@
+[submodule "gencrawl/spiders"]
+	path = gencrawl/spiders
+	url = https://github.com/94jyoti/spiders.git
