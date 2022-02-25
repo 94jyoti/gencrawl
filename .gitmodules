@@ -1,3 +1,9 @@
 [submodule "gencrawl/spiders"]
 	path = gencrawl/spiders
 	url = https://github.com/94jyoti/spiders.git
+[submodule "gencrawl_spiders"]
+	path = gencrawl_spiders
+	url = https://github.com/94jyoti/spiders.git
+[submodule "gencrawl/gencrawl_spiders"]
+	path = gencrawl/gencrawl_spiders
+	url = https://github.com/94jyoti/spiders.git
